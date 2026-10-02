@@ -420,30 +420,27 @@ def b64url(value):
     return base64.urlsafe_b64encode(value).decode("ascii").rstrip("=")
 
 
-def create_referral_token(agent_id):
+def create_referral_token(agent_id, ttl_seconds=14 * 24 * 60 * 60):
     with connect_db() as db:
         agent = db.execute(
-            "SELECT id, username, referral_code FROM agents WHERE id = ?", (agent_id,)
+            "SELECT id, referral_code FROM agents WHERE id = ?", (agent_id,)
         ).fetchone()
         if agent and agent["referral_code"]:
             return agent["referral_code"]
-        candidate = (
-            agent["username"]
-            if agent and agent["username"] and len(agent["username"]) <= 20
-            else None
-        )
-        if not candidate:
-            candidate = secrets.token_hex(4)
-        existing = db.execute(
-            "SELECT id FROM agents WHERE lower(referral_code) = lower(?) AND id != ?",
-            (candidate, agent_id),
-        ).fetchone()
-        if existing:
-            candidate = f"{candidate[:8]}_{secrets.token_hex(2)}"
-        db.execute(
-            "UPDATE agents SET referral_code = ? WHERE id = ?", (candidate, agent_id)
-        )
-        return candidate
+
+    payload = {
+        "agent_id": agent_id,
+        "expires": int(time.time()) + ttl_seconds,
+        "nonce": secrets.token_hex(8),
+    }
+    encoded = b64url(json.dumps(payload, separators=(",", ":")).encode("utf-8"))
+    signature = b64url(
+        hmac.new(signing_key(), encoded.encode("ascii"), hashlib.sha256).digest()
+    )
+    token = f"{encoded}.{signature}"
+    with connect_db() as db:
+        db.execute("UPDATE agents SET referral_code = ? WHERE id = ?", (token, agent_id))
+    return token
 
 
 def resolve_referral_token(token):
@@ -825,7 +822,10 @@ def handle_telegram_message(message):
     base_url = get_public_base_url()
 
     # Form the actual referral link of the agent / admin in our system
-    if admin.get("agent_id"):
+    if admin.get("type") == "global_admin" or (admin.get("admin_id") and str(admin["admin_id"]).upper().startswith("ADMIN")):
+        admin_ref = admin.get("admin_id") or get_setting("admin_custom_id") or "admin"
+        personal_link = f"{base_url}/?ref={admin_ref}"
+    elif admin.get("agent_id"):
         ref_code = create_referral_token(admin["agent_id"])
         personal_link = f"{base_url}/?ref={ref_code}"
     else:
