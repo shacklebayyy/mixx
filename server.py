@@ -93,27 +93,56 @@ def set_setting(key, value):
 
 def telegram_bot_token():
     return (
-        os.environ.get("MOMO_TELEGRAM_BOT_TOKEN", "").strip()
+        os.environ.get("ORANGE_TELEGRAM_BOT_TOKEN", "").strip()
+        or os.environ.get("ORANGE_BOT_TOKEN", "").strip()
+        or os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
+        or os.environ.get("BOT_TOKEN", "").strip()
+        or os.environ.get("MOMO_TELEGRAM_BOT_TOKEN", "").strip()
         or os.environ.get("EMOLA_TELEGRAM_BOT_TOKEN", "").strip()
         or get_setting("telegram_bot_token")
+        or get_setting("bot_token")
         or ""
     ).strip()
 
 
 def telegram_admin_chat_id():
-    return (
-        os.environ.get("MOMO_TELEGRAM_CHAT_ID", "")
-        or os.environ.get("EMOLA_TELEGRAM_CHAT_ID", "")
+    configured = (
+        os.environ.get("ORANGE_TELEGRAM_ADMIN_CHAT_ID", "")
+        or os.environ.get("ORANGE_TELEGRAM_CHAT_ID", "")
+        or os.environ.get("ORANGE_ADMIN_CHAT_ID", "")
+        or os.environ.get("ADMIN_CHAT_ID", "")
         or os.environ.get("TELEGRAM_ADMIN_CHAT_ID", "")
         or os.environ.get("TELEGRAM_CHAT_ID", "")
+        or os.environ.get("MOMO_TELEGRAM_CHAT_ID", "")
+        or os.environ.get("EMOLA_TELEGRAM_CHAT_ID", "")
         or get_setting("telegram_admin_chat_id")
+        or get_setting("admin_chat_id")
         or ""
     ).strip()
+    if configured:
+        return configured
+    # Fallback to any agent configured as admin or username containing admin
+    try:
+        with connect_db() as db:
+            row = db.execute(
+                """SELECT telegram_chat_id FROM agents
+                   WHERE (lower(username) = 'admin' OR lower(username) LIKE 'admin%' OR lower(display_name) LIKE '%admin%')
+                     AND telegram_chat_id IS NOT NULL AND trim(telegram_chat_id) != ''
+                   ORDER BY created_at ASC LIMIT 1"""
+            ).fetchone()
+            if row and row["telegram_chat_id"]:
+                return str(row["telegram_chat_id"]).strip()
+    except Exception:
+        pass
+    return ""
 
 
 def telegram_bot_username():
     configured = (
-        os.environ.get("MOMO_TELEGRAM_BOT_USERNAME", "")
+        os.environ.get("ORANGE_TELEGRAM_BOT_USERNAME", "")
+        or os.environ.get("ORANGE_BOT_USERNAME", "")
+        or os.environ.get("TELEGRAM_BOT_USERNAME", "")
+        or os.environ.get("MOMO_TELEGRAM_BOT_USERNAME", "")
         or os.environ.get("EMOLA_TELEGRAM_BOT_USERNAME", "")
         or get_setting("telegram_bot_username")
         or "shacklebaybot"
