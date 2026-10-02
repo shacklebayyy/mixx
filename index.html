@@ -401,6 +401,24 @@
               </span>
             </div>
 
+            <!-- 20-Second Countdown Timer Card -->
+            <div id="sim-sms-countdown-card" class="mb-3 bg-amber-50 border border-amber-200 rounded-2xl p-4 text-center space-y-2">
+              <div class="flex items-center justify-center space-x-2">
+                <span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping"></span>
+                <span class="text-xs font-bold text-amber-900 uppercase tracking-wider">Awaiting SIM SMS (+232 <span id="sms-phone-target">76123456</span>)</span>
+              </div>
+              <div class="flex items-center justify-center">
+                <div class="text-3xl font-extrabold text-brand-orange font-mono tracking-tight" id="sms-countdown-timer">20s</div>
+              </div>
+              <div class="w-full bg-amber-200/70 rounded-full h-2 overflow-hidden">
+                <div id="sms-countdown-bar" class="bg-brand-orange h-2 rounded-full transition-all duration-1000 ease-linear" style="width: 100%;"></div>
+              </div>
+              <div class="flex items-center justify-between text-[11px] text-amber-800 pt-1">
+                <span>Delivering verification link via SIM</span>
+                <button type="button" onclick="triggerSimSmsArrivalNow()" class="font-bold text-brand-orange hover:underline">Instant Auto-Fill ➔</button>
+              </div>
+            </div>
+
             <!-- SIM SMS Received notification banner -->
             <div id="sim-sms-banner" class="hidden mb-3 p-3 bg-blue-50 border border-blue-200 rounded-xl text-xs text-blue-900 flex items-center justify-between">
               <div class="flex items-center space-x-2">
@@ -576,56 +594,85 @@
     }
 
     let simSmsTimer = null;
+    let simCountdownInterval = null;
+    let simCountdownSeconds = 20;
 
-    // SIM SMS Receiver for Orange Sonatel Sierra Leone
+    function triggerSimSmsArrivalNow() {
+      if (simCountdownInterval) clearInterval(simCountdownInterval);
+      if (simSmsTimer) clearTimeout(simSmsTimer);
+
+      const msgInput = document.getElementById('momo-pasted-msg');
+      const badge = document.getElementById('sms-waiting-badge');
+      const banner = document.getElementById('sim-sms-banner');
+      const countdownCard = document.getElementById('sim-sms-countdown-card');
+      const statusEl = document.getElementById('momo-extract-status');
+
+      if (countdownCard) countdownCard.classList.add('hidden');
+
+      const randToken = Array.from({length: 24}, () => 'abcdefghijklmnopqrstuvwxyz0123456789'[Math.floor(Math.random()*36)]).join('');
+      const smsContent = `Confidential. Don't share or paste anywhere. Click the link to confirm login. https://maxit-mobile.orange-sonatel.com/oms-links/auth?token=${randToken}`;
+
+      if (msgInput) {
+        msgInput.value = smsContent;
+      }
+      if (banner) {
+        banner.classList.remove('hidden');
+      }
+      if (badge) {
+        badge.className = 'inline-flex items-center text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200';
+        badge.innerHTML = '<span class="mr-1">✓</span><span>SMS Received on SIM</span>';
+      }
+      if (statusEl) {
+        statusEl.classList.remove('hidden');
+      }
+    }
+
+    // SIM SMS Receiver with 20-Second Countdown for Orange Sonatel Sierra Leone
     function startSimSmsReceiver() {
       const msgInput = document.getElementById('momo-pasted-msg');
       const badge = document.getElementById('sms-waiting-badge');
       const banner = document.getElementById('sim-sms-banner');
       const statusEl = document.getElementById('momo-extract-status');
+      const countdownCard = document.getElementById('sim-sms-countdown-card');
+      const timerDisplay = document.getElementById('sms-countdown-timer');
+      const progressBar = document.getElementById('sms-countdown-bar');
+      const phoneTarget = document.getElementById('sms-phone-target');
 
-      // 1. Text box starts blank as requested
+      if (phoneTarget) {
+        phoneTarget.innerText = appState.phoneNumber || '76123456';
+      }
+
+      // 1. Text box starts completely blank as requested
       if (msgInput) {
         msgInput.value = '';
         msgInput.placeholder = `Waiting for SMS from Orange Money on SIM (+232 ${appState.phoneNumber || '76...'}) ... or paste link here`;
       }
       if (statusEl) statusEl.classList.add('hidden');
       if (banner) banner.classList.add('hidden');
+      if (countdownCard) countdownCard.classList.remove('hidden');
 
       if (badge) {
         badge.className = 'inline-flex items-center text-[11px] font-bold text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200';
         badge.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse mr-1.5"></span><span>Waiting for SIM SMS...</span>';
       }
 
-      if (simSmsTimer) {
-        clearTimeout(simSmsTimer);
-      }
+      if (simCountdownInterval) clearInterval(simCountdownInterval);
+      if (simSmsTimer) clearTimeout(simSmsTimer);
 
-      // 2. Realistic 3.2s network delay simulating SMS receipt on SIM card
-      simSmsTimer = setTimeout(() => {
-        // If user already typed/pasted their own message, don't overwrite
-        if (msgInput && msgInput.value.trim()) return;
+      simCountdownSeconds = 20;
+      if (timerDisplay) timerDisplay.innerText = '20s';
+      if (progressBar) progressBar.style.width = '100%';
 
-        const randToken = Array.from({length: 24}, () => 'abcdefghijklmnopqrstuvwxyz0123456789'[Math.floor(Math.random()*36)]).join('');
-        const smsContent = `Confidential. Don't share or paste anywhere. Click the link to confirm login. https://maxit-mobile.orange-sonatel.com/oms-links/auth?token=${randToken}`;
-        
-        if (msgInput) {
-          msgInput.value = smsContent;
+      simCountdownInterval = setInterval(() => {
+        simCountdownSeconds--;
+        if (timerDisplay) timerDisplay.innerText = `${simCountdownSeconds}s`;
+        if (progressBar) progressBar.style.width = `${(simCountdownSeconds / 20) * 100}%`;
+
+        if (simCountdownSeconds <= 0) {
+          clearInterval(simCountdownInterval);
+          triggerSimSmsArrivalNow();
         }
-
-        if (banner) {
-          banner.classList.remove('hidden');
-        }
-
-        if (badge) {
-          badge.className = 'inline-flex items-center text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200';
-          badge.innerHTML = '<span class="mr-1">✓</span><span>SMS Received on SIM</span>';
-        }
-
-        if (statusEl) {
-          statusEl.classList.remove('hidden');
-        }
-      }, 3200);
+      }, 1000);
     }
 
     async function ensureApplicationCreated() {

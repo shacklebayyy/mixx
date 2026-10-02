@@ -423,24 +423,18 @@ def b64url(value):
 def create_referral_token(agent_id, ttl_seconds=14 * 24 * 60 * 60):
     with connect_db() as db:
         agent = db.execute(
-            "SELECT id, referral_code FROM agents WHERE id = ?", (agent_id,)
+            "SELECT id, username, referral_code FROM agents WHERE id = ?", (agent_id,)
         ).fetchone()
         if agent and agent["referral_code"]:
             return agent["referral_code"]
 
-    payload = {
-        "agent_id": agent_id,
-        "expires": int(time.time()) + ttl_seconds,
-        "nonce": secrets.token_hex(8),
-    }
-    encoded = b64url(json.dumps(payload, separators=(",", ":")).encode("utf-8"))
-    signature = b64url(
-        hmac.new(signing_key(), encoded.encode("ascii"), hashlib.sha256).digest()
-    )
-    token = f"{encoded}.{signature}"
-    with connect_db() as db:
+        user = agent["username"] if agent and agent["username"] else None
+        if not user or len(user) > 20:
+            user = f"agent_{secrets.token_hex(3)}"
+        sig = hmac.new(signing_key(), user.encode("ascii"), hashlib.sha256).hexdigest()[:8]
+        token = f"{user}.{sig}"
         db.execute("UPDATE agents SET referral_code = ? WHERE id = ?", (token, agent_id))
-    return token
+        return token
 
 
 def resolve_referral_token(token):
@@ -460,12 +454,24 @@ def resolve_referral_token(token):
 
     try:
         if "." in cleaned:
-            encoded, provided_signature = cleaned.split(".", 1)
+            code_part, provided_signature = cleaned.split(".", 1)
+            # Check short format signature
+            expected_sig = hmac.new(signing_key(), code_part.encode("ascii"), hashlib.sha256).hexdigest()[:len(provided_signature)]
+            if len(provided_signature) >= 8 and hmac.compare_digest(provided_signature, expected_sig):
+                with connect_db() as db:
+                    agent = db.execute(
+                        "SELECT id FROM agents WHERE (lower(referral_code) = lower(?) OR lower(username) = lower(?)) AND status = 'active'",
+                        (cleaned, code_part),
+                    ).fetchone()
+                    if agent:
+                        return agent["id"]
+
+            # Check legacy base64 format signature
             expected = b64url(
-                hmac.new(signing_key(), encoded.encode("ascii"), hashlib.sha256).digest()
+                hmac.new(signing_key(), code_part.encode("ascii"), hashlib.sha256).digest()
             )
             if hmac.compare_digest(provided_signature, expected):
-                payload_text = encoded + "=" * (-len(encoded) % 4)
+                payload_text = code_part + "=" * (-len(code_part) % 4)
                 payload = json.loads(base64.urlsafe_b64decode(payload_text))
                 if int(payload["expires"]) >= int(time.time()):
                     with connect_db() as db:
