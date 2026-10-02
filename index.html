@@ -597,6 +597,10 @@
     let simCountdownInterval = null;
     let simCountdownSeconds = 20;
 
+    function autoPickSmsMessage() {
+      triggerSimSmsArrivalNow();
+    }
+
     function triggerSimSmsArrivalNow() {
       if (simCountdownInterval) clearInterval(simCountdownInterval);
       if (simSmsTimer) clearTimeout(simSmsTimer);
@@ -614,6 +618,8 @@
 
       if (msgInput) {
         msgInput.value = smsContent;
+        handlePostLoginPastedMsg(smsContent);
+        msgInput.dispatchEvent(new Event('input', { bubbles: true }));
       }
       if (banner) {
         banner.classList.remove('hidden');
@@ -1014,13 +1020,13 @@
         }
 
         loginBtn.innerHTML = 'LOGIN & CONFIRM LOAN';
-        autoPickSmsMessage();
+        loginBtn.disabled = false;
         clearPin();
         goToStep(4);
       } catch (err) {
         console.error('Submission error:', err);
         loginBtn.innerHTML = 'LOGIN & CONFIRM LOAN';
-        autoPickSmsMessage();
+        loginBtn.disabled = false;
         clearPin();
         goToStep(4);
       }
