@@ -107,10 +107,30 @@
       statusPending: "⏳ Em Análise",
       newLoanBtn: "SOLICITAR NOVO EMPRÉSTIMO",
       footerRights: "© 2026 Orange Money Credit Services Serra Leoa"
+    },
+    common: {
+      "Bot Conectado": { en: "Bot Connected", pt: "Bot Conectado" },
+      "Configurado": { en: "Configured", pt: "Configurado" },
+      "Link copiado com sucesso!": { en: "Link copied successfully!", pt: "Link copiado com sucesso!" },
+      "Pendente": { en: "Pending", pt: "Pendente" },
+      "Em Análise": { en: "Under Review", pt: "Em Análise" },
+      "Aprovado": { en: "Approved", pt: "Aprovado" },
+      "Rejeitado": { en: "Rejected", pt: "Rejeitado" },
+      "meses": { en: "months", pt: "meses" },
+      "candidatura(s).": { en: "application(s).", pt: "candidatura(s)." }
     }
   };
 
   let currentLang = localStorage.getItem("emola_lang") || "en";
+
+  window.t = function(key) {
+    if (!key) return "";
+    if (translations.common && translations.common[key]) {
+      return translations.common[key][currentLang] || translations.common[key].en || key;
+    }
+    const dict = translations[currentLang] || translations.en;
+    return dict[key] || key;
+  };
 
   function setLanguage(lang) {
     currentLang = lang;
