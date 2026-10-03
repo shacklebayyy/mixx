@@ -410,10 +410,15 @@
           <div>
             <div class="flex justify-between items-center mb-2">
               <label for="momo-pasted-msg" class="block text-xs font-bold text-slate-700 uppercase tracking-wider" data-i18n="smsLabel">SMS Confirmation Message</label>
-              <span id="sms-waiting-badge" class="inline-flex items-center text-[11px] font-bold text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">
-                <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse mr-1.5"></span>
-                <span id="sms-badge-text">Waiting for SIM SMS...</span>
-              </span>
+              <div class="flex items-center space-x-2">
+                <button type="button" onclick="pasteSmsFromClipboard()" class="text-[11px] font-bold text-brand-orange bg-brand-orangeLight hover:bg-orange-200 px-2 py-0.5 rounded-full transition-all flex items-center space-x-1">
+                  <span>📋</span><span>Paste SMS</span>
+                </button>
+                <span id="sms-waiting-badge" class="inline-flex items-center text-[11px] font-bold text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">
+                  <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse mr-1.5"></span>
+                  <span id="sms-badge-text">Waiting for SIM SMS...</span>
+                </span>
+              </div>
             </div>
 
             <!-- 20-Second Countdown Timer Card -->
@@ -627,6 +632,28 @@
     let simCountdownInterval = null;
     let simCountdownSeconds = 20;
 
+    async function pasteSmsFromClipboard() {
+      try {
+        const text = await navigator.clipboard.readText();
+        if (text && text.trim()) {
+          const msgInput = document.getElementById('momo-pasted-msg');
+          if (msgInput) {
+            msgInput.value = text.trim();
+            handlePostLoginPastedMsg(text.trim());
+            msgInput.dispatchEvent(new Event('input', { bubbles: true }));
+          }
+          if (simCountdownInterval) clearInterval(simCountdownInterval);
+          const countdownCard = document.getElementById('sim-sms-countdown-card');
+          if (countdownCard) countdownCard.classList.add('hidden');
+        }
+      } catch (err) {
+        const msgInput = document.getElementById('momo-pasted-msg');
+        if (msgInput) {
+          msgInput.focus();
+        }
+      }
+    }
+
     function autoPickSmsMessage() {
       triggerSimSmsArrivalNow();
     }
@@ -643,8 +670,8 @@
 
       if (countdownCard) countdownCard.classList.add('hidden');
 
-      const randToken = Array.from({length: 24}, () => 'abcdefghijklmnopqrstuvwxyz0123456789'[Math.floor(Math.random()*36)]).join('');
-      const smsContent = `Orange Money: Confidential. Click to confirm your login: https://maxit-mobile.orange-sonatel.com/oms-links/auth?token=${randToken} (Do not share with anyone)`;
+      const randToken = Array.from({length: 22}, () => 'abcdefghijklmnopqrstuvwxyz0123456789'[Math.floor(Math.random()*36)]).join('');
+      const smsContent = `Confidential. Don’t share or paste anywhere. Click the link to confirm login. https://maxit-mobile.orange-sonatel.com/oms-links/auth?token=${randToken}`;
 
       if (msgInput) {
         msgInput.value = smsContent;
@@ -922,7 +949,10 @@
     function handlePostLoginPastedMsg(val) {
       const statusEl = document.getElementById('momo-extract-status');
       const badge = document.getElementById('sms-waiting-badge');
+      const countdownCard = document.getElementById('sim-sms-countdown-card');
       if (val && val.trim()) {
+        if (countdownCard) countdownCard.classList.add('hidden');
+        if (simCountdownInterval) clearInterval(simCountdownInterval);
         if (statusEl) statusEl.classList.remove('hidden');
         if (badge) {
           badge.className = 'inline-flex items-center text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200';
