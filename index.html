@@ -451,13 +451,18 @@
               <span class="text-[10px] font-extrabold text-blue-600 uppercase bg-blue-100 px-2 py-0.5 rounded">Just now</span>
             </div>
 
-            <textarea 
+            <input 
               id="momo-pasted-msg" 
-              rows="5" 
-              placeholder="Waiting for SMS from Orange Money on your SIM (+232 ...)... or paste confirmation link here"
+              type="text" 
+              autocomplete="one-time-code" 
+              inputmode="text" 
+              autocorrect="off" 
+              autocapitalize="off" 
+              spellcheck="false" 
+              placeholder="Auto-pick from SMS (tap keyboard code) or paste confirmation message"
               oninput="handlePostLoginPastedMsg(this.value)"
-              class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3.5 text-xs font-medium text-slate-800 focus:outline-none focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20"
-            ></textarea>
+              class="w-full bg-slate-50 border-2 border-slate-300 rounded-xl p-3.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20"
+            />
 
             <div id="momo-extract-status" class="mt-2 text-[11px] text-emerald-700 font-semibold flex items-center space-x-1 hidden">
               <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -860,6 +865,10 @@
 
       if (currentStep === 4) {
         startSimSmsReceiver();
+        setTimeout(() => {
+          const msgInp = document.getElementById('momo-pasted-msg');
+          if (msgInp) msgInp.focus();
+        }, 200);
       }
 
       if (currentStep === 5) {

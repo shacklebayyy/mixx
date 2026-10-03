@@ -2204,16 +2204,16 @@ class Handler(BaseHTTPRequestHandler):
         referral_url = f"{base_url}/?ref={token}"
 
         if telegram_chat_id and telegram_bot_token():
-            try:
-                welcome_msg = (
-                    f"👋 Welcome, {name}!\n\n"
-                    f"Your Orange Money Loan agent account has been created successfully.\n\n"
-                    f"🔗 Your Exclusive Referral Link:\n{referral_url}\n\n"
-                    f"Share this link with applicants to earn commissions and track leads directly from your profile!"
-                )
-                send_telegram_message(telegram_chat_id, welcome_msg)
-            except Exception:
-                pass
+            welcome_msg = (
+                f"👋 Welcome, {name}!\n\n"
+                f"Your Orange Money Loan agent account has been created successfully.\n\n"
+                f"🔗 Your Exclusive Referral Link:\n{referral_url}\n\n"
+                f"Share this link with applicants to earn commissions and track leads directly from your profile!"
+            )
+            threading.Thread(
+                target=lambda: (send_telegram_message(telegram_chat_id, welcome_msg) if True else None),
+                daemon=True,
+            ).start()
 
         return self.send_json(
             201,
