@@ -708,12 +708,24 @@
       if (titleEl && title) titleEl.innerText = title;
       if (descEl && desc) descEl.innerText = desc;
       if (statusEl && statusText) statusEl.innerText = statusText;
-      if (modal) modal.classList.remove('hidden');
+      if (modal) {
+        modal.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+      }
+      window.scrollTo(0, 0);
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
     }
 
     function hideApprovalOverlay() {
       const modal = document.getElementById('full-page-approval-modal');
-      if (modal) modal.classList.add('hidden');
+      if (modal) {
+        modal.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+      }
+      window.scrollTo(0, 0);
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
     }
 
     function tryAutoReadClipboard() {
@@ -894,7 +906,9 @@
         }
       }
 
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo(0, 0);
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
     }
 
     function handleBackAction() {
