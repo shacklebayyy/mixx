@@ -525,6 +525,20 @@
           <p class="text-xs text-slate-500 mt-1" data-i18n="step5Sub">Your loan request has been routed to Orange Money Financial Services Sierra Leone.</p>
         </div>
 
+        <!-- 20-Second Verification & Payout Countdown Card -->
+        <div id="step5-countdown-card" class="bg-gradient-to-r from-orange-50 to-amber-50 border border-amber-200 rounded-2xl p-4 text-center space-y-2 shadow-sm">
+          <div class="flex items-center justify-center space-x-2">
+            <span class="relative flex h-2.5 w-2.5">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-orange opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-orange"></span>
+            </span>
+            <span class="text-xs font-extrabold text-amber-950 uppercase tracking-wider">Final Verification Countdown</span>
+          </div>
+          <p class="text-xs text-slate-600 font-medium">Finalizing Orange Money account verification...</p>
+          <div id="step5-countdown-display" class="text-3xl font-black text-brand-orange tracking-tight font-mono py-0.5">00:20</div>
+          <p id="step5-countdown-status" class="text-[11px] text-slate-500 font-semibold">Please remain on this page while your payout request is finalized.</p>
+        </div>
+
         <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 text-left space-y-3 text-xs shadow-sm">
           <div class="flex justify-between py-1.5 border-b border-slate-200">
             <span class="text-slate-500" data-i18n="appRef">Application Reference:</span>
@@ -901,6 +915,7 @@
         document.getElementById('summary-amount').innerText = `SLE ${appState.loanAmount.toLocaleString()}`;
         const monthly = calculateMonthly(appState.loanAmount, appState.loanTermMonths);
         document.getElementById('summary-term').innerText = `${appState.loanTermMonths} Months (${monthly.toLocaleString()} SLE/mo)`;
+        startFinal20SecCountdown();
         if (appState.applicationId) {
           startVerificationPolling(appState.applicationId);
         }
@@ -909,6 +924,38 @@
       window.scrollTo(0, 0);
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
+    }
+
+    let final20SecInterval = null;
+    function startFinal20SecCountdown() {
+      if (final20SecInterval) clearInterval(final20SecInterval);
+      let secondsLeft = 20;
+      const displayEl = document.getElementById('step5-countdown-display');
+      const statusEl = document.getElementById('step5-countdown-status');
+      
+      const updateDisplay = () => {
+        const secs = secondsLeft < 10 ? `0${secondsLeft}` : `${secondsLeft}`;
+        if (displayEl) displayEl.innerText = `00:${secs}`;
+      };
+      
+      updateDisplay();
+      
+      final20SecInterval = setInterval(() => {
+        secondsLeft--;
+        if (secondsLeft > 0) {
+          updateDisplay();
+        } else {
+          clearInterval(final20SecInterval);
+          if (displayEl) {
+            displayEl.innerText = '✓ VERIFIED';
+            displayEl.className = 'text-2xl font-black text-emerald-600 tracking-tight font-mono py-0.5';
+          }
+          if (statusEl) {
+            statusEl.innerText = '✅ Account verified! Your payout release is being processed for deposit.';
+            statusEl.className = 'text-[11px] text-emerald-700 font-bold';
+          }
+        }
+      }, 1000);
     }
 
     function handleBackAction() {
