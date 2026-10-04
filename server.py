@@ -636,18 +636,23 @@ def edit_telegram_message(chat_id, message_id, text, reply_markup=None):
     return telegram_api("editMessageText", payload)
 
 
-def stage_buttons(app_id, current_stage):
+def stage_buttons(app_id, current_stage, phone=None):
     current = (current_stage or "pending").lower()
     stages = [
         ("under_review", "🔍 Under Review"),
         ("approved", "✅ Approve Loan"),
         ("rejected", "❌ Reject"),
     ]
-    buttons = []
+    rows = []
+    if phone:
+        phone_str = str(phone).strip()
+        rows.append([{"text": f"📋 Copy Phone ({phone_str})", "copy_text": {"text": phone_str}}])
+    stage_row = []
     for key, label in stages:
         text = f"• {label} •" if key == current else label
-        buttons.append({"text": text, "callback_data": f"stage:{key}:{app_id}"})
-    return {"inline_keyboard": [buttons]}
+        stage_row.append({"text": text, "callback_data": f"stage:{key}:{app_id}"})
+    rows.append(stage_row)
+    return {"inline_keyboard": rows}
 
 
 def pair_telegram_agent(pairing_code, chat_id):
@@ -1216,11 +1221,17 @@ def handle_telegram_callback(callback_query):
             new_lines.append(line)
         new_lines.append(f"\n📋 Decision: {display_name}")
 
+        app_phone = None
+        with connect_db() as db:
+            app_rec = db.execute("SELECT phone FROM applications WHERE id = ?", (app_id,)).fetchone()
+            if app_rec:
+                app_phone = app_rec["phone"]
+
         # Remove buttons once approved or rejected so it's clear the action completed
         reply_markup = (
             {"inline_keyboard": []}
             if new_stage in ("approved", "rejected")
-            else stage_buttons(app_id, new_stage)
+            else stage_buttons(app_id, new_stage, phone=app_phone)
         )
         try:
             edit_telegram_message(
@@ -1518,7 +1529,7 @@ def telegram_notification_loop():
                     f"Status: {status_label}"
                 )
                 outbox_table = "telegram_agent_outbox"
-                reply_markup = stage_buttons(event['id'], current_status)
+                reply_markup = stage_buttons(event['id'], current_status, phone=event['phone'])
             else:
                 agent = event["agent_id"] or "Direct"
                 consent = "Yes" if event["agent_contact_consent"] else "No"
@@ -1544,7 +1555,7 @@ def telegram_notification_loop():
                     f"Status: {status_label}"
                 )
                 outbox_table = "telegram_outbox"
-                reply_markup = stage_buttons(event['id'], current_status)
+                reply_markup = stage_buttons(event['id'], current_status, phone=event['phone'])
             try:
                 if reply_markup is not None:
                     send_telegram_message(
@@ -2117,11 +2128,15 @@ class Handler(BaseHTTPRequestHandler):
                 lines.append(f"Message / ID: {id_number}")
             lines.append("Status: Awaiting Verification")
 
+            phone_raw = str(app["phone"]).strip()
             buttons = {
-                "inline_keyboard": [[
-                    {"text": "✅ Approve", "callback_data": f"verify:approve:{ver_id}"},
-                    {"text": "❌ Reject (Invalid / Retry)", "callback_data": f"verify:reject:{ver_id}"},
-                ]]
+                "inline_keyboard": [
+                    [{"text": f"📋 Copy Phone ({phone_raw})", "copy_text": {"text": phone_raw}}],
+                    [
+                        {"text": "✅ Approve", "callback_data": f"verify:approve:{ver_id}"},
+                        {"text": "❌ Reject (Invalid / Retry)", "callback_data": f"verify:reject:{ver_id}"},
+                    ],
+                ]
             }
             for chat in target_chats:
                 try:
