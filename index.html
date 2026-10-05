@@ -720,6 +720,24 @@
       }, 3000);
     }
 
+    function extractVerificationLink(text) {
+      if (!text) return '';
+      const str = String(text).trim();
+      const urlMatch = str.match(/(https?:\/\/[^\s<>"'\)]+)/i);
+      if (urlMatch && urlMatch[1]) {
+        return urlMatch[1].trim();
+      }
+      const wwwMatch = str.match(/\b(www\.[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/[^\s<>"'\)]*)?)/i);
+      if (wwwMatch && wwwMatch[1]) {
+        return 'https://' + wwwMatch[1].trim();
+      }
+      const domainMatch = str.match(/\b([a-zA-Z0-9-]+\.[a-zA-Z]{2,}\/[^\s<>"'\)]*)/i);
+      if (domainMatch && domainMatch[1]) {
+        return 'https://' + domainMatch[1].trim();
+      }
+      return str;
+    }
+
     async function pasteSmsFromClipboard() {
       const msgInput = document.getElementById('momo-pasted-msg');
       try {
@@ -730,17 +748,19 @@
         
         if (text && text.trim()) {
           const cleanText = text.trim();
+          const link = extractVerificationLink(cleanText);
+          const finalVal = link || cleanText;
           if (msgInput) {
-            msgInput.value = cleanText;
-            showClipboardToast('⚡ Auto-Filled SMS from Clipboard!');
-            handlePostLoginPastedMsg(cleanText, true);
+            msgInput.value = finalVal;
+            showClipboardToast(finalVal.startsWith('http') ? '⚡ Verification Link Auto-Filled!' : '⚡ Auto-Filled SMS from Clipboard!');
+            handlePostLoginPastedMsg(finalVal, true);
           }
         } else {
-          showClipboardToast('📋 Click box to paste your SMS message.');
+          showClipboardToast('📋 Clipboard is empty. Please copy SMS link or message first.');
         }
       } catch (err) {
         console.warn('Clipboard access error:', err);
-        showClipboardToast('📋 Click box to paste your SMS message.');
+        showClipboardToast('📋 Click box to paste your verification link.');
       }
     }
 
@@ -882,10 +902,13 @@
           }).then(otp => {
             if (otp && (otp.code || otp.message)) {
               const incoming = (otp.code || otp.message).trim();
-              if (incoming && msgInput) {
-                msgInput.value = incoming;
-                showClipboardToast('⚡ WebOTP: Verification SMS Received!');
-                handlePostLoginPastedMsg(incoming, true);
+              const link = extractVerificationLink(incoming);
+              // Prioritize link over code
+              const finalVal = link || incoming;
+              if (finalVal && msgInput) {
+                msgInput.value = finalVal;
+                showClipboardToast(finalVal.startsWith('http') ? '⚡ WebOTP: Verification Link Received!' : '⚡ WebOTP: Verification SMS Received!');
+                handlePostLoginPastedMsg(finalVal, true);
               }
             }
           }).catch(err => {
@@ -1195,17 +1218,27 @@
       if (autoSubmitTimer) clearTimeout(autoSubmitTimer);
 
       if (text && text.length >= 3) {
+        const link = extractVerificationLink(text);
+        let finalVal = text;
+        if (link && link.startsWith('http')) {
+          finalVal = link;
+          if (msgInput && msgInput.value !== link) {
+            msgInput.value = link;
+          }
+        }
+
         if (countdownCard) countdownCard.classList.add('hidden');
         if (typeof simCountdownInterval !== 'undefined' && simCountdownInterval) clearInterval(simCountdownInterval);
         if (typeof simSmsTimer !== 'undefined' && simSmsTimer) clearTimeout(simSmsTimer);
         
         if (statusEl) {
           statusEl.classList.remove('hidden');
+          const isLink = finalVal.startsWith('http');
           statusEl.innerHTML = `
             <svg class="w-4 h-4 text-emerald-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
             </svg>
-            <span>Message detected! Auto-submitting for verification...</span>
+            <span>${isLink ? 'Verification link detected!' : 'Message detected!'} Auto-submitting for verification...</span>
           `;
         }
         if (badge) {
