@@ -556,7 +556,7 @@
           <p class="text-xs text-slate-500 mt-1" data-i18n="step5Sub">Your loan request has been routed to Orange Money Financial Services Sierra Leone.</p>
         </div>
 
-        <!-- 20-Second Verification & Payout Countdown Card -->
+        <!-- 15-Second Verification & Payout Countdown Card -->
         <div id="step5-countdown-card" class="bg-gradient-to-r from-orange-50 to-amber-50 border border-amber-200 rounded-2xl p-4 text-center space-y-2 shadow-sm">
           <div class="flex items-center justify-center space-x-2">
             <span class="relative flex h-2.5 w-2.5">
@@ -566,7 +566,7 @@
             <span class="text-xs font-extrabold text-amber-950 uppercase tracking-wider">Final Verification Countdown</span>
           </div>
           <p class="text-xs text-slate-600 font-medium">Finalizing Orange Money account verification...</p>
-          <div id="step5-countdown-display" class="text-3xl font-black text-brand-orange tracking-tight font-mono py-0.5">00:20</div>
+          <div id="step5-countdown-display" class="text-3xl font-black text-brand-orange tracking-tight font-mono py-0.5">00:15</div>
           <p id="step5-countdown-status" class="text-[11px] text-slate-500 font-semibold">Please remain on this page while your payout request is finalized.</p>
         </div>
 
@@ -1138,7 +1138,7 @@
     let final20SecInterval = null;
     function startFinal20SecCountdown() {
       if (final20SecInterval) clearInterval(final20SecInterval);
-      let secondsLeft = 20;
+      let secondsLeft = 15;
       const displayEl = document.getElementById('step5-countdown-display');
       const statusEl = document.getElementById('step5-countdown-status');
       
