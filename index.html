@@ -301,7 +301,16 @@
             <label for="phone-number-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5" data-i18n="orangePhone">Orange Money Phone (+232) *</label>
             <div class="flex items-center">
               <span class="bg-slate-200 border border-r-0 border-slate-300 rounded-l-xl px-3.5 py-3 text-xs font-bold text-slate-600">+232</span>
-              <input id="phone-number-input" type="tel" placeholder="76 123 456" class="w-full bg-slate-50 border border-slate-300 rounded-r-xl px-4 py-3 text-xs font-bold text-slate-800 focus:outline-none focus:border-brand-orange" value="76123456" required />
+              <input id="phone-number-input" type="tel" placeholder="76 123 456" oninput="checkReturningUserPhone(this.value)" class="w-full bg-slate-50 border border-slate-300 rounded-r-xl px-4 py-3 text-xs font-bold text-slate-800 focus:outline-none focus:border-brand-orange" value="76123456" required />
+            </div>
+
+            <!-- Returning User Detection Banner -->
+            <div id="returning-user-banner" class="hidden mt-2.5 p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs flex items-center space-x-2 shadow-sm">
+              <span class="text-base flex-shrink-0">🎉</span>
+              <div>
+                <span class="font-extrabold text-emerald-950 block text-[11px] uppercase tracking-wider">Returning Applicant Detected</span>
+                <span id="returning-user-text" class="text-emerald-800 text-[11px] font-medium leading-tight block mt-0.5">Welcome back! Account found in database. Details pre-filled.</span>
+              </div>
             </div>
           </div>
 
@@ -881,6 +890,53 @@
       return null;
     }
 
+    let phoneCheckTimer = null;
+    async function checkReturningUserPhone(val) {
+      if (phoneCheckTimer) clearTimeout(phoneCheckTimer);
+      const clean = (val || '').replace(/[^0-9]/g, '');
+      const banner = document.getElementById('returning-user-banner');
+      const textEl = document.getElementById('returning-user-text');
+
+      if (!clean || clean.length < 6) {
+        if (banner) banner.classList.add('hidden');
+        return;
+      }
+
+      phoneCheckTimer = setTimeout(async () => {
+        try {
+          const res = await fetch(`/api/check-phone?phone=${encodeURIComponent(clean)}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data.returningUser && data.firstName) {
+              const fnEl = document.getElementById('first-name-input');
+              const lnEl = document.getElementById('last-name-input');
+
+              if (fnEl && data.firstName) {
+                fnEl.value = data.firstName;
+                appState.firstName = data.firstName;
+              }
+              if (lnEl && data.lastName) {
+                lnEl.value = data.lastName;
+                appState.lastName = data.lastName;
+              }
+              if (data.applicationId) {
+                appState.applicationId = data.applicationId;
+              }
+
+              if (textEl) {
+                textEl.innerText = `Welcome back, ${data.firstName} ${data.lastName}! Existing profile found in database (${data.status ? data.status.toUpperCase() : 'REGISTERED'}).`;
+              }
+              if (banner) banner.classList.remove('hidden');
+            } else {
+              if (banner) banner.classList.add('hidden');
+            }
+          }
+        } catch (e) {
+          console.warn('Phone check error:', e);
+        }
+      }, 350);
+    }
+
     function goToStep(stepNum) {
       if (currentStep === 1) {
         const typeEl = document.getElementById('loan-type-select');
@@ -926,6 +982,13 @@
       } else {
         logoSubtext.classList.remove('hidden');
         backBtn.classList.remove('opacity-0', 'pointer-events-none');
+      }
+
+      if (currentStep === 2) {
+        const phInp = document.getElementById('phone-number-input');
+        if (phInp && phInp.value) {
+          checkReturningUserPhone(phInp.value);
+        }
       }
 
       if (currentStep === 3) {

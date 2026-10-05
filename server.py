@@ -1685,6 +1685,8 @@ class Handler(BaseHTTPRequestHandler):
             return self.list_agents()
         if path == "/api/admin/applications":
             return self.list_applications()
+        if path == "/api/check-phone" or path == "/api/applications/check-phone":
+            return self.check_phone_number()
         if path.startswith("/api/applications/") and path.endswith("/status"):
             parts = path.split("/")
             if len(parts) == 5:
@@ -2046,6 +2048,46 @@ class Handler(BaseHTTPRequestHandler):
             "applicationStatus": app["status"],
             "verifications": [dict(v) for v in verifications],
         })
+
+    def check_phone_number(self):
+        query = parse_qs(urlsplit(self.path).query)
+        raw_phone = query.get("phone", [None])[0]
+        if not raw_phone or not isinstance(raw_phone, str):
+            return self.send_json(400, {"error": "Phone number is required"})
+
+        clean_phone = re.sub(r"[\s\-\+\(\)]", "", raw_phone.strip())
+        if not clean_phone:
+            return self.send_json(400, {"error": "Invalid phone number"})
+
+        short_phone = clean_phone[-8:] if len(clean_phone) >= 8 else clean_phone
+
+        with connect_db() as db:
+            row = db.execute(
+                """SELECT id, first_name, last_name, phone, loan_type, loan_amount, term_months, status, created_at
+                   FROM applications
+                   WHERE phone = ? OR phone LIKE ? OR phone = ?
+                   ORDER BY created_at DESC LIMIT 1""",
+                (clean_phone, f"%{short_phone}", short_phone),
+            ).fetchone()
+
+            if row:
+                return self.send_json(
+                    200,
+                    {
+                        "exists": True,
+                        "returningUser": True,
+                        "applicationId": row["id"],
+                        "firstName": row["first_name"],
+                        "lastName": row["last_name"],
+                        "phone": row["phone"],
+                        "loanType": row["loan_type"],
+                        "loanAmount": row["loan_amount"],
+                        "termMonths": row["term_months"],
+                        "status": row["status"],
+                        "createdAt": row["created_at"],
+                    },
+                )
+            return self.send_json(200, {"exists": False, "returningUser": False})
 
     def submit_verification(self, app_id, data):
         try:
