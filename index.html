@@ -1026,7 +1026,7 @@
               if (dispPhone) dispPhone.value = clean;
 
               if (data.applicationId) {
-                appState.applicationId = data.applicationId;
+                appState.previousApplicationId = data.applicationId;
               }
             }
           }
@@ -1045,15 +1045,23 @@
         periodicClipboardTimer = null;
       }
 
-      if (stepNum === 0) {
+      if (stepNum === 0 || stepNum === 1) {
         if (pollingInterval) {
           clearInterval(pollingInterval);
           pollingInterval = null;
         }
+        currentPollingAppId = null;
+        activePinVerId = null;
+        activeSmsVerId = null;
         appState.applicationId = null;
         isSubmittingMessage = false;
         const msgInp = document.getElementById('momo-pasted-msg');
         if (msgInp) msgInp.value = '';
+        const badge = document.getElementById('summary-status-badge');
+        if (badge) {
+          badge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-amber-100 text-amber-800 border border-amber-300';
+          badge.innerText = '⏳ Under Review';
+        }
       }
 
       if (currentStep === 1) {
