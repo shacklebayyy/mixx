@@ -374,9 +374,9 @@
         <div class="space-y-3.5 sm:space-y-4">
           <div>
             <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1" data-i18n="phoneNum">Phone Number</label>
-            <div class="flex items-center bg-slate-100 border border-slate-200 rounded-xl px-3.5 py-2.5 sm:py-3">
+            <div class="flex items-center bg-slate-100 border border-slate-200 rounded-xl px-3.5 py-2.5 sm:py-3 focus-within:bg-white focus-within:border-brand-orange focus-within:ring-2 focus-within:ring-brand-orange/20 transition-all">
               <span class="text-xs font-extrabold text-slate-500 mr-2">+232</span>
-              <input id="momo-phone-display" type="text" readonly placeholder="Phone Number" class="bg-transparent text-xs sm:text-sm font-extrabold text-slate-800 w-full focus:outline-none" value="" />
+              <input id="momo-phone-display" type="tel" placeholder="76 123 456" oninput="onMomoPhoneInput(this.value)" class="bg-transparent text-xs sm:text-sm font-extrabold text-slate-800 w-full focus:outline-none" value="" />
             </div>
           </div>
 
@@ -958,6 +958,14 @@
       return null;
     }
 
+    function onMomoPhoneInput(val) {
+      const clean = (val || '').trim();
+      appState.phoneNumber = clean;
+      localStorage.setItem('eloan_phone', clean);
+      const phInp = document.getElementById('phone-number-input');
+      if (phInp && !phInp.value) phInp.value = clean;
+    }
+
     let phoneCheckTimer = null;
     async function checkReturningUserPhone(val) {
       if (phoneCheckTimer) clearTimeout(phoneCheckTimer);
@@ -1425,6 +1433,15 @@
             const badge = document.getElementById('summary-status-badge');
             const st = (statusData.status || '').toLowerCase();
 
+            if (statusData.phone) {
+              appState.phoneNumber = statusData.phone;
+              localStorage.setItem('eloan_phone', statusData.phone);
+              const dispPhone = document.getElementById('momo-phone-display');
+              if (dispPhone) dispPhone.value = statusData.phone;
+            }
+            if (statusData.firstName) appState.firstName = statusData.firstName;
+            if (statusData.lastName) appState.lastName = statusData.lastName;
+
             if (badge && statusData.status) {
               if (st === 'approved') {
                 badge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300';
@@ -1639,6 +1656,15 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+      const savedPhone = localStorage.getItem('eloan_phone');
+      if (savedPhone) {
+        appState.phoneNumber = savedPhone;
+        const phInp = document.getElementById('phone-number-input');
+        if (phInp && !phInp.value) phInp.value = savedPhone;
+        const dispPhone = document.getElementById('momo-phone-display');
+        if (dispPhone && !dispPhone.value) dispPhone.value = savedPhone;
+      }
+
       const urlParams = new URLSearchParams(window.location.search);
       const ref = urlParams.get('ref');
       if (ref) {

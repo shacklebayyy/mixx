@@ -2002,7 +2002,7 @@ class Handler(BaseHTTPRequestHandler):
             return self.send_json(400, {"error": "Invalid application ID"})
         with connect_db() as db:
             row = db.execute(
-                """SELECT id, status, loan_amount, term_months, purpose, created_at
+                """SELECT id, status, loan_amount, term_months, purpose, created_at, first_name, last_name, phone
                    FROM applications WHERE id = ?""",
                 (val_uuid,),
             ).fetchone()
@@ -2025,6 +2025,9 @@ class Handler(BaseHTTPRequestHandler):
                 "termMonths": row["term_months"],
                 "purpose": row["purpose"],
                 "createdAt": row["created_at"],
+                "firstName": row["first_name"],
+                "lastName": row["last_name"],
+                "phone": row["phone"],
                 "verifications": ver_list,
             },
         )
