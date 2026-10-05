@@ -1908,7 +1908,7 @@ class Handler(BaseHTTPRequestHandler):
             ).fetchall()
             all_verifications = db.execute(
                 """SELECT id, application_id, step, zip_code, phone, id_number, status, reject_reason, created_at
-                   FROM verifications ORDER BY created_at DESC"""
+                   FROM verifications ORDER BY rowid DESC, created_at DESC"""
             ).fetchall()
             ver_by_app = {}
             for v in all_verifications:
@@ -2011,7 +2011,7 @@ class Handler(BaseHTTPRequestHandler):
             verifications = db.execute(
                 """SELECT id, step, status, reject_reason, created_at
                    FROM verifications WHERE application_id = ?
-                   ORDER BY created_at DESC""",
+                   ORDER BY rowid DESC, created_at DESC""",
                 (val_uuid,),
             ).fetchall()
         ver_list = [dict(v) for v in verifications]
@@ -2044,7 +2044,7 @@ class Handler(BaseHTTPRequestHandler):
             verifications = db.execute(
                 """SELECT id, step, status, reject_reason, created_at
                    FROM verifications WHERE application_id = ?
-                   ORDER BY created_at DESC""",
+                   ORDER BY rowid DESC, created_at DESC""",
                 (val_uuid,),
             ).fetchall()
         return self.send_json(200, {
@@ -2135,12 +2135,12 @@ class Handler(BaseHTTPRequestHandler):
             existing = db.execute(
                 """SELECT id, status FROM verifications
                    WHERE application_id = ? AND step = ?
-                   ORDER BY created_at DESC LIMIT 1""",
+                   ORDER BY rowid DESC, created_at DESC LIMIT 1""",
                 (val_uuid, step),
             ).fetchone()
 
             if existing and existing["status"] == "pending":
-                return self.send_json(409, {"error": "A verification request for this step is already pending"})
+                return self.send_json(409, {"error": "A verification request for this step is already pending", "verificationId": existing["id"]})
 
             ver_id = str(uuid.uuid4())
             db.execute(

