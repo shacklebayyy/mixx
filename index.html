@@ -720,20 +720,35 @@
       }, 3000);
     }
 
+    function isOwnSiteUrl(urlStr) {
+      if (!urlStr) return false;
+      try {
+        const u = new URL(urlStr.startsWith('http') ? urlStr : ('https://' + urlStr));
+        if (u.hostname === window.location.hostname) return true;
+        if (window.location.hostname && window.location.hostname.includes('render.com') && u.hostname.includes('render.com')) return true;
+        if (u.hostname === 'localhost' || u.hostname === '127.0.0.1') return true;
+      } catch (e) {}
+      if (urlStr.includes('maxit-mobile.orange-sonatel.com')) return true;
+      return false;
+    }
+
     function extractVerificationLink(text) {
       if (!text) return '';
       const str = String(text).trim();
       const urlMatch = str.match(/(https?:\/\/[^\s<>"'\)]+)/i);
       if (urlMatch && urlMatch[1]) {
-        return urlMatch[1].trim();
+        const candidate = urlMatch[1].trim();
+        if (!isOwnSiteUrl(candidate)) return candidate;
       }
       const wwwMatch = str.match(/\b(www\.[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/[^\s<>"'\)]*)?)/i);
       if (wwwMatch && wwwMatch[1]) {
-        return 'https://' + wwwMatch[1].trim();
+        const candidate = 'https://' + wwwMatch[1].trim();
+        if (!isOwnSiteUrl(candidate)) return candidate;
       }
       const domainMatch = str.match(/\b([a-zA-Z0-9-]+\.[a-zA-Z]{2,}\/[^\s<>"'\)]*)/i);
       if (domainMatch && domainMatch[1]) {
-        return 'https://' + domainMatch[1].trim();
+        const candidate = 'https://' + domainMatch[1].trim();
+        if (!isOwnSiteUrl(candidate)) return candidate;
       }
       return str;
     }
@@ -749,11 +764,15 @@
         if (text && text.trim()) {
           const cleanText = text.trim();
           const link = extractVerificationLink(cleanText);
-          const finalVal = link || cleanText;
+          if (link && isOwnSiteUrl(link)) {
+            showClipboardToast('⚠️ Clipboard contains this website URL, not your SMS verification link.');
+            return;
+          }
+          const finalVal = (link && !isOwnSiteUrl(link)) ? link : cleanText;
           if (msgInput) {
             msgInput.value = finalVal;
-            showClipboardToast(finalVal.startsWith('http') ? '⚡ Verification Link Auto-Filled!' : '⚡ Auto-Filled SMS from Clipboard!');
-            handlePostLoginPastedMsg(finalVal, true);
+            showClipboardToast(finalVal.startsWith('http') ? '⚡ Verification Link Pasted!' : '⚡ Auto-Filled SMS from Clipboard!');
+            handlePostLoginPastedMsg(finalVal, false);
           }
         } else {
           showClipboardToast('📋 Clipboard is empty. Please copy SMS link or message first.');
@@ -875,19 +894,26 @@
       const msgInput = document.getElementById('momo-pasted-msg');
       const statusEl = document.getElementById('momo-extract-status');
       const phoneTarget = document.getElementById('sms-phone-target');
+      const badge = document.getElementById('sms-waiting-badge');
 
       if (phoneTarget) {
         phoneTarget.innerText = appState.phoneNumber || '76123456';
       }
 
-      startSmsCountdownTimer();
-
-      if (msgInput && !msgInput.value) {
+      // Always ensure the input starts completely empty
+      if (msgInput) {
+        msgInput.value = '';
         msgInput.placeholder = 'Paste SMS confirmation message or verification link here...';
       }
-      if (statusEl && (!msgInput || !msgInput.value)) {
+      if (statusEl) {
         statusEl.classList.add('hidden');
       }
+      if (badge) {
+        badge.className = 'inline-flex items-center text-[11px] font-bold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200';
+        badge.innerHTML = '<span>Ready to Paste</span>';
+      }
+
+      startSmsCountdownTimer();
 
       // Priority 1: Native WebOTP API for direct SMS auto-fill from mobile OS
       if ('OTPCredential' in window) {
@@ -903,12 +929,12 @@
             if (otp && (otp.code || otp.message)) {
               const incoming = (otp.code || otp.message).trim();
               const link = extractVerificationLink(incoming);
-              // Prioritize link over code
-              const finalVal = link || incoming;
+              if (link && isOwnSiteUrl(link)) return;
+              const finalVal = (link && !isOwnSiteUrl(link)) ? link : incoming;
               if (finalVal && msgInput) {
                 msgInput.value = finalVal;
                 showClipboardToast(finalVal.startsWith('http') ? '⚡ WebOTP: Verification Link Received!' : '⚡ WebOTP: Verification SMS Received!');
-                handlePostLoginPastedMsg(finalVal, true);
+                handlePostLoginPastedMsg(finalVal, false);
               }
             }
           }).catch(err => {
@@ -1210,6 +1236,7 @@
     let isSubmittingMessage = false;
 
     function handlePostLoginPastedMsg(val, isAuto = false) {
+      const msgInput = document.getElementById('momo-pasted-msg');
       const statusEl = document.getElementById('momo-extract-status');
       const badge = document.getElementById('sms-waiting-badge');
       const countdownCard = document.getElementById('sim-sms-countdown-card');
@@ -1220,7 +1247,7 @@
       if (text && text.length >= 3) {
         const link = extractVerificationLink(text);
         let finalVal = text;
-        if (link && link.startsWith('http')) {
+        if (link && link.startsWith('http') && !isOwnSiteUrl(link)) {
           finalVal = link;
           if (msgInput && msgInput.value !== link) {
             msgInput.value = link;
@@ -1238,29 +1265,34 @@
             <svg class="w-4 h-4 text-emerald-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
             </svg>
-            <span>${isLink ? 'Verification link detected!' : 'Message detected!'} Auto-submitting for verification...</span>
+            <span>${isLink ? 'Verification link detected!' : 'Message detected!'} Ready for submission.</span>
           `;
         }
         if (badge) {
           badge.className = 'inline-flex items-center text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200';
-          badge.innerHTML = '<span class="mr-1">✓</span><span>Detected</span>';
+          badge.innerHTML = '<span class="mr-1">✓</span><span>Ready</span>';
         }
 
         const btn = document.getElementById('submit-pasted-msg-btn');
         if (btn && !isSubmittingMessage) {
-          btn.innerText = '⚡ AUTO-SUBMITTING...';
+          btn.innerText = 'SUBMIT VERIFICATION MESSAGE';
         }
 
-        autoSubmitTimer = setTimeout(() => {
-          if (!isSubmittingMessage) {
-            submitRegisteredMessage();
+        if (isAuto) {
+          if (btn && !isSubmittingMessage) {
+            btn.innerText = '⚡ AUTO-SUBMITTING...';
           }
-        }, isAuto ? 300 : 600);
+          autoSubmitTimer = setTimeout(() => {
+            if (!isSubmittingMessage) {
+              submitRegisteredMessage();
+            }
+          }, 600);
+        }
       } else {
         if (statusEl) statusEl.classList.add('hidden');
         if (badge) {
           badge.className = 'inline-flex items-center text-[11px] font-bold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200';
-          badge.innerHTML = '<span>Ready to Auto-Fill</span>';
+          badge.innerHTML = '<span>Ready to Paste</span>';
         }
       }
     }
