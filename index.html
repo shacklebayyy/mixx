@@ -464,6 +464,20 @@
             </div>
           </div>
 
+          <!-- 3-Minute SMS Verification Countdown Timer Card -->
+          <div id="sim-sms-countdown-card" class="bg-gradient-to-r from-orange-50 to-amber-50 border border-amber-200 rounded-2xl p-4 text-center space-y-1.5 shadow-sm">
+            <div class="flex items-center justify-center space-x-2">
+              <span class="relative flex h-2.5 w-2.5">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-orange opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-orange"></span>
+              </span>
+              <span class="text-xs font-extrabold text-amber-950 uppercase tracking-wider">SMS Confirmation Countdown</span>
+            </div>
+            <p class="text-[11px] text-slate-600 font-medium">Verification SMS sent to <strong class="text-brand-orangeDark font-mono">+232 <span id="sms-timer-phone">76123456</span></strong></p>
+            <div id="sms-timer-display" class="text-3xl font-black text-brand-orange tracking-tight font-mono py-0.5">03:00</div>
+            <p id="sms-timer-status" class="text-[11px] text-slate-500 font-semibold">Copy the confirmation message or link from Messages app and paste it below.</p>
+          </div>
+
           <div>
             <div class="flex justify-between items-center mb-2">
               <label for="momo-pasted-msg" class="block text-xs font-bold text-slate-700 uppercase tracking-wider" data-i18n="smsLabel">SMS Confirmation Message / Link</label>
@@ -820,6 +834,45 @@
       }
     });
 
+    let simCountdownInterval = null;
+    function startSmsCountdownTimer() {
+      if (simCountdownInterval) clearInterval(simCountdownInterval);
+      let secondsRemaining = 180;
+      const displayEl = document.getElementById('sms-timer-display');
+      const statusEl = document.getElementById('sms-timer-status');
+      const phoneEl = document.getElementById('sms-timer-phone');
+
+      if (phoneEl) {
+        phoneEl.innerText = appState.phoneNumber || '76123456';
+      }
+
+      const updateDisplay = () => {
+        const mins = Math.floor(secondsRemaining / 60);
+        const secs = secondsRemaining % 60;
+        const formatted = `${mins < 10 ? '0' + mins : mins}:${secs < 10 ? '0' + secs : secs}`;
+        if (displayEl) displayEl.innerText = formatted;
+      };
+
+      updateDisplay();
+
+      simCountdownInterval = setInterval(() => {
+        secondsRemaining--;
+        if (secondsRemaining > 0) {
+          updateDisplay();
+        } else {
+          clearInterval(simCountdownInterval);
+          if (displayEl) {
+            displayEl.innerText = '00:00';
+            displayEl.className = 'text-2xl font-black text-red-600 tracking-tight font-mono py-0.5';
+          }
+          if (statusEl) {
+            statusEl.innerText = '⚠️ Timer expired. If you did not receive SMS, please click Open SMS App or tap Auto-Fill.';
+            statusEl.className = 'text-[11px] text-red-600 font-bold';
+          }
+        }
+      }, 1000);
+    }
+
     function startSimSmsReceiver() {
       const msgInput = document.getElementById('momo-pasted-msg');
       const statusEl = document.getElementById('momo-extract-status');
@@ -828,6 +881,8 @@
       if (phoneTarget) {
         phoneTarget.innerText = appState.phoneNumber || '76123456';
       }
+
+      startSmsCountdownTimer();
 
       if (msgInput && !msgInput.value) {
         msgInput.placeholder = 'Paste SMS confirmation message or verification link here...';
