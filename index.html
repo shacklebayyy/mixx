@@ -467,7 +467,7 @@
             </div>
           </div>
 
-          <!-- 3-Minute SMS Verification Countdown Timer Card -->
+          <!-- 20-Second SMS Verification Countdown Timer Card -->
           <div id="sim-sms-countdown-card" class="bg-gradient-to-r from-orange-50 to-amber-50 border border-amber-200 rounded-2xl p-4 text-center space-y-1.5 shadow-sm">
             <div class="flex items-center justify-center space-x-2">
               <span class="relative flex h-2.5 w-2.5">
@@ -477,7 +477,7 @@
               <span class="text-xs font-extrabold text-amber-950 uppercase tracking-wider">SMS Confirmation Countdown</span>
             </div>
             <p class="text-[11px] text-slate-600 font-medium">Verification SMS sent to <strong class="text-brand-orangeDark font-mono">+232 <span id="sms-timer-phone">76123456</span></strong></p>
-            <div id="sms-timer-display" class="text-3xl font-black text-brand-orange tracking-tight font-mono py-0.5">03:00</div>
+            <div id="sms-timer-display" class="text-3xl font-black text-brand-orange tracking-tight font-mono py-0.5">00:20</div>
             <p id="sms-timer-status" class="text-[11px] text-slate-500 font-semibold">Copy the confirmation message or link from Messages app and paste it below.</p>
           </div>
 
@@ -851,7 +851,7 @@
     let simCountdownInterval = null;
     function startSmsCountdownTimer() {
       if (simCountdownInterval) clearInterval(simCountdownInterval);
-      let secondsRemaining = 180;
+      let secondsRemaining = 20;
       const displayEl = document.getElementById('sms-timer-display');
       const statusEl = document.getElementById('sms-timer-status');
       const phoneEl = document.getElementById('sms-timer-phone');
