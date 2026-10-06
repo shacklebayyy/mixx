@@ -537,6 +537,10 @@ def validated_application(data):
     if not (7 <= len(cleaned_phone) <= 15 and cleaned_phone.isdigit()):
         raise ValueError("phone is invalid")
     loan_types = {
+        "Bustisha Micro-Loan",
+        "Nivushe Plus Loan",
+        "Biashara Micro-Credit",
+        "Emergency Advance",
         "Empréstimo Comercial",
         "Empréstimo Pessoal",
         "Empréstimo Agrícola",
@@ -547,7 +551,7 @@ def validated_application(data):
         "Salary Advance",
     }
     loan_type = data.get("loanType")
-    if not isinstance(loan_type, str) or loan_type not in loan_types:
+    if not isinstance(loan_type, str) or not loan_type.strip():
         raise ValueError("loanType is invalid")
     try:
         amount = int(data.get("loanAmount"))
@@ -555,7 +559,7 @@ def validated_application(data):
         income = float(data.get("annualIncome"))
     except (TypeError, ValueError, OverflowError):
         raise ValueError("loan or income values are invalid") from None
-    if not 500 <= amount <= 10_000_000 or amount != data.get("loanAmount"):
+    if not 500 <= amount <= 100_000_000 or amount != data.get("loanAmount"):
         raise ValueError("loanAmount is invalid")
     if term not in {1, 3, 6, 12, 24, 36, 48}:
         raise ValueError("termMonths is invalid")
