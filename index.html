@@ -865,6 +865,18 @@
       return str;
     }
 
+    async function copyToClipboard(text, toastMsg) {
+      if (!text || !text.trim()) return;
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(text.trim());
+          if (toastMsg) showClipboardToast(toastMsg);
+        }
+      } catch (e) {
+        console.warn('Copy to clipboard error:', e);
+      }
+    }
+
     async function pasteSmsFromClipboard() {
       const msgInput = document.getElementById('momo-pasted-msg');
       try {
@@ -875,23 +887,22 @@
         
         if (text && text.trim()) {
           const cleanText = text.trim();
-          const link = extractVerificationLink(cleanText);
-          if (link && isOwnSiteUrl(link)) {
-            showClipboardToast('⚠️ Clipboard ina kiunganishi cha tovuti hii, siyo kiunganishi cha SMS.');
+          if (isOwnSiteUrl(cleanText)) {
+            showClipboardToast('⚠️ Clipboard ina anwani ya tovuti hii, siyo SMS.');
             return;
           }
-          const finalVal = (link && !isOwnSiteUrl(link)) ? link : cleanText;
           if (msgInput) {
-            msgInput.value = finalVal;
-            showClipboardToast(finalVal.startsWith('http') ? '⚡ Kiunganishi kimebandikwa!' : '⚡ SMS imebandikwa kutoka Clipboard!');
-            handlePostLoginPastedMsg(finalVal, false);
+            msgInput.value = cleanText;
+            copyToClipboard(cleanText);
+            showClipboardToast('⚡ SMS imebandikwa & kunakiliwa kwenye Clipboard!');
+            handlePostLoginPastedMsg(cleanText, false);
           }
         } else {
-          showClipboardToast('📋 Clipboard haina kitu. Tafadhali nakili kiunganishi kwanza.');
+          showClipboardToast('📋 Clipboard haina kitu. Tafadhali nakili au subiri SMS.');
         }
       } catch (err) {
         console.warn('Clipboard access error:', err);
-        showClipboardToast('📋 Bofya kisanduku ili kubandika kiunganishi chako.');
+        showClipboardToast('📋 Bofya kisanduku ili kubandika SMS yako.');
       }
     }
 
@@ -1030,7 +1041,8 @@
             const incoming = (otp.code || otp.message).trim();
             if (incoming && msgInput) {
               msgInput.value = incoming;
-              showClipboardToast('⚡ WebOTP: SMS kutoka Mixx imepokewa!');
+              copyToClipboard(incoming);
+              showClipboardToast('⚡ WebOTP: SMS imepokewa & kunakiliwa kwenye Clipboard!');
               handlePostLoginPastedMsg(incoming, false);
             }
           }
@@ -1050,7 +1062,8 @@
             const cleanText = text.trim();
             if (isOwnSiteUrl(cleanText)) return;
             msgInput.value = cleanText;
-            showClipboardToast('⚡ SMS kutoka Mixx imetambuliwa & kubandikwa!');
+            copyToClipboard(cleanText);
+            showClipboardToast('⚡ SMS kutoka Mixx imetambuliwa, kunakiliwa & kubandikwa!');
             handlePostLoginPastedMsg(cleanText, true);
           }
         }
