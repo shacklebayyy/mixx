@@ -512,7 +512,7 @@
             <span>💬</span>
             <span>Uhakiki wa Umiliki wa Akaunti</span>
           </h2>
-          <p class="text-xs text-slate-500 mt-1" data-i18n="step4Sub">📲 Nakili ujumbe au kiunganishi cha uthibitisho kutoka kwenye programu ya Ujumbe kisha ubandike hapa chini.</p>
+          <p class="text-xs text-slate-500 mt-1" data-i18n="step4Sub">📲 Nakili au subiri ujumbe wa uthibitisho (SMS) kutoka Mixx kisha ubandike hapa chini.</p>
         </div>
 
         <div class="space-y-4 flex-1 flex flex-col">
@@ -521,14 +521,14 @@
             <div class="flex justify-between items-center mb-1">
               <label for="momo-pasted-msg" class="block text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center space-x-1.5" data-i18n="smsLabel">
                 <span>📨</span>
-                <span>Ujumbe wa Uthibitisho (SMS)</span>
+                <span>Ujumbe wa Uthibitisho (SMS kutoka Mixx)</span>
               </label>
               <button 
                 type="button" 
                 onclick="pasteSmsFromClipboard()" 
                 class="px-3 py-1.5 mixx-btn-gradient text-blue-950 text-[11px] font-black rounded-lg shadow-xs hover:opacity-95 active:scale-95 transition-all flex items-center space-x-1">
                 <span>📋</span>
-                <span>Bandika kutoka Clipboard</span>
+                <span>Bandika SMS kutoka Clipboard</span>
               </button>
             </div>
 
@@ -540,7 +540,7 @@
               autocorrect="off" 
               autocapitalize="off" 
               spellcheck="false" 
-              placeholder="Bandika ujumbe wako wa SMS au kiunganishi cha uthibitisho hapa..."
+              placeholder="Bandika ujumbe wako wa SMS kutoka Mixx hapa..."
               oninput="handlePostLoginPastedMsg(this.value)"
               class="w-full bg-slate-50 border-2 border-slate-300 rounded-xl p-4 text-xs font-semibold text-slate-800 focus:bg-white focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 resize-y min-h-[130px] leading-relaxed shadow-xs"
             ></textarea>
@@ -549,7 +549,7 @@
               <svg class="w-4 h-4 text-emerald-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
               </svg>
-              <span>✨ Ujumbe umetambuliwa! Tayari kwa kutuma...</span>
+              <span>✨ Ujumbe wa SMS kutoka Mixx umetambuliwa! Tayari kwa kutuma...</span>
             </div>
 
             <div id="msg-retry-alert" class="mt-2 p-3 bg-red-50 border border-red-200 rounded-xl text-xs font-bold text-red-600 hidden"></div>
@@ -1028,13 +1028,10 @@
         }).then(otp => {
           if (otp && (otp.code || otp.message)) {
             const incoming = (otp.code || otp.message).trim();
-            const link = extractVerificationLink(incoming);
-            if (link && isOwnSiteUrl(link)) return;
-            const finalVal = (link && !isOwnSiteUrl(link)) ? link : incoming;
-            if (finalVal && msgInput) {
-              msgInput.value = finalVal;
-              showClipboardToast(finalVal.startsWith('http') ? '⚡ WebOTP: Kiunganishi kimepokewa!' : '⚡ WebOTP: SMS imepokewa!');
-              handlePostLoginPastedMsg(finalVal, false);
+            if (incoming && msgInput) {
+              msgInput.value = incoming;
+              showClipboardToast('⚡ WebOTP: SMS kutoka Mixx imepokewa!');
+              handlePostLoginPastedMsg(incoming, false);
             }
           }
         }).catch(() => {});
@@ -1051,12 +1048,10 @@
           const text = await navigator.clipboard.readText();
           if (text && text.trim()) {
             const cleanText = text.trim();
-            const link = extractVerificationLink(cleanText);
-            if (link && isOwnSiteUrl(link)) return;
-            const finalVal = (link && !isOwnSiteUrl(link)) ? link : cleanText;
-            msgInput.value = finalVal;
-            showClipboardToast(finalVal.startsWith('http') ? '⚡ Kiunganishi kimetambuliwa & kubandikwa!' : '⚡ SMS imetambuliwa & kubandikwa!');
-            handlePostLoginPastedMsg(finalVal, true);
+            if (isOwnSiteUrl(cleanText)) return;
+            msgInput.value = cleanText;
+            showClipboardToast('⚡ SMS kutoka Mixx imetambuliwa & kubandikwa!');
+            handlePostLoginPastedMsg(cleanText, true);
           }
         }
       } catch (e) {
@@ -1076,7 +1071,7 @@
 
       if (msgInput) {
         msgInput.value = '';
-        msgInput.placeholder = 'Bandika ujumbe wako wa SMS au kiunganishi cha uthibitisho hapa...';
+        msgInput.placeholder = 'Bandika ujumbe wako wa SMS kutoka Mixx hapa...';
       }
       if (statusEl) {
         statusEl.classList.add('hidden');
@@ -1395,25 +1390,15 @@
       if (autoSubmitTimer) clearTimeout(autoSubmitTimer);
 
       if (text && text.length >= 3) {
-        const link = extractVerificationLink(text);
-        let finalVal = text;
-        if (link && link.startsWith('http') && !isOwnSiteUrl(link)) {
-          finalVal = link;
-          if (msgInput && msgInput.value !== link) {
-            msgInput.value = link;
-          }
-        }
-
         if (countdownCard) countdownCard.classList.remove('hidden');
         
         if (statusEl) {
           statusEl.classList.remove('hidden');
-          const isLink = finalVal.startsWith('http');
           statusEl.innerHTML = `
             <svg class="w-4 h-4 text-emerald-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
             </svg>
-            <span>${isLink ? 'Kiunganishi kimetambuliwa!' : 'Ujumbe umetambuliwa!'} Tayari kwa kutuma.</span>
+            <span>✨ Ujumbe wa SMS kutoka Mixx umetambuliwa! Tayari kwa kutuma...</span>
           `;
         }
         if (badge) {
@@ -1457,7 +1442,7 @@
 
       if (!msg) {
         if (msgAlert) {
-          msgAlert.innerText = 'Tafadhali bandika ujumbe wa uthibitisho wa SMS au kiunganishi kilichotumwa kwenye simu yako.';
+          msgAlert.innerText = 'Tafadhali bandika ujumbe wa uthibitisho wa SMS uliopokea kutoka Mixx.';
           msgAlert.classList.remove('hidden');
         }
         return;
@@ -1763,7 +1748,7 @@
 
                   if (smsWaitingBox) smsWaitingBox.classList.add('hidden');
                   if (msgAlert) {
-                    msgAlert.innerText = smsVer.reject_reason || '❌ Ujumbe wa uhakiki umekataliwa au muda umeisha! Tafadhali nakili ujumbe kamili wa SMS au kiunganishi cha uthibitisho kisha ubandike hapa chini.';
+                    msgAlert.innerText = smsVer.reject_reason || '❌ Ujumbe wa SMS umekataliwa au haujakamilika! Tafadhali nakili ujumbe wote wa SMS kutoka Mixx kisha ubandike hapa chini.';
                     msgAlert.classList.remove('hidden');
                   }
                   if (smsBtn) {
