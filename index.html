@@ -541,61 +541,129 @@
         </div>
       </section>
 
-      <!-- STEP 5: Live Application Status & Confirmation -->
-      <section id="step-5" class="hidden flex-1 flex flex-col p-4 sm:p-6 text-center space-y-4 sm:space-y-6">
-        <div class="pt-4">
-          <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
-            <svg class="w-9 h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
-            </svg>
+      <!-- STEP 5: Live Application Status & Approved Dashboard (Final Phase) -->
+      <section id="step-5" class="hidden flex-1 flex flex-col p-4 sm:p-5 space-y-4 text-slate-800">
+        
+        <!-- Top Celebration Header -->
+        <div class="text-center pt-2">
+          <div class="inline-flex items-center justify-center w-14 h-14 bg-amber-100/80 rounded-full text-2xl mb-2 shadow-xs">
+            🎉
           </div>
-          
-          <h2 class="text-xl font-extrabold text-slate-900" data-i18n="step5Title">Ombi Lilitumwa!</h2>
-          <p class="text-xs text-slate-500 mt-1" data-i18n="step5Sub">Ombi lako la mkopo limeelekezwa kwa Huduma za Kifedha za Mixx by Yas Tanzania.</p>
+          <h2 class="text-2xl font-black text-slate-900 tracking-tight" data-i18n="congratsHeading">Hongera!</h2>
+          <p class="text-xs text-slate-500 font-medium max-w-xs mx-auto mt-1 leading-relaxed" data-i18n="congratsSub">
+            Mkopo wako umeidhinishwa kikamilifu! Fedha zitatumwa hivi karibuni.
+          </p>
         </div>
 
-        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 text-left space-y-3 text-xs shadow-sm">
-          <div class="flex justify-between py-1.5 border-b border-slate-200">
-            <span class="text-slate-500" data-i18n="appRef">Nambari ya Kumbukumbu:</span>
-            <span id="summary-ref-id" class="font-mono font-extrabold text-brand-blue">MIXX-PENDING</span>
+        <!-- Big Approved Amount Card -->
+        <div class="mixx-gradient text-white rounded-2xl p-5 sm:p-6 text-center shadow-xl relative overflow-hidden border border-blue-900">
+          <div class="text-[11px] font-black uppercase text-blue-200 tracking-widest mb-1.5" data-i18n="approvedAmountLabel">
+            KIASI KILICHOIDHINISHWA
           </div>
-          <div class="flex justify-between py-1.5 border-b border-slate-200">
-            <span class="text-slate-500" data-i18n="applicantName">Mwombaji:</span>
-            <span id="summary-name" class="font-bold text-slate-800">--</span>
-          </div>
-          <div class="flex justify-between py-1.5 border-b border-slate-200">
-            <span class="text-slate-500" data-i18n="orangeContact">Mawasiliano ya Mixx:</span>
-            <span id="summary-phone" class="font-bold text-slate-800">--</span>
-          </div>
-          <div class="flex justify-between py-1.5 border-b border-slate-200">
-            <span class="text-slate-500" data-i18n="loanMode">Aina ya Mkopo:</span>
-            <span id="summary-type" class="font-bold text-slate-800">Nivushe Plus Loan</span>
-          </div>
-          <div class="flex justify-between py-1.5 border-b border-slate-200">
-            <span class="text-slate-500" data-i18n="requestedAmt">Kiasi Kilichoombwa:</span>
-            <span id="summary-amount" class="font-bold text-brand-blueDeep">TZS 5,000,000</span>
-          </div>
-          <div class="flex justify-between py-1.5 border-b border-slate-200">
-            <span class="text-slate-500" data-i18n="termRepay">Muda / Marejesho:</span>
-            <span id="summary-term" class="font-bold text-slate-800">Miezi 6 (958,333 TZS/mo)</span>
-          </div>
-          <div class="flex justify-between py-1.5">
-            <span class="text-slate-500" data-i18n="currentStatus">Hali ya Sasa:</span>
-            <span id="summary-status-badge" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-amber-100 text-amber-800 border border-amber-300" data-i18n="statusPending">
-              ⏳ Inakaguliwa
-            </span>
+          <div class="text-3xl sm:text-4xl font-black tracking-tight text-white py-1">
+            <span id="summary-approved-amount">TZS 5,000,000</span>
           </div>
         </div>
 
+        <!-- Compliance Notice Alert Box (⚠️ NOTISI YA UTIIFU) -->
+        <div class="bg-amber-50/90 border border-amber-200 rounded-2xl p-4 text-xs shadow-xs space-y-2">
+          <div class="font-black text-amber-900 text-xs tracking-wider flex items-center space-x-1.5 uppercase">
+            <span>⚠️</span>
+            <span data-i18n="complianceNoticeTitle">NOTISI YA UTIIFU</span>
+          </div>
+          <p class="text-[11.5px] text-amber-900/90 leading-relaxed font-medium" data-i18n="complianceNoticeBody">
+            Akaunti yako ya Mixx by Yas lazima iwe hai na kudumisha amana ya usalama ya angalau <strong class="font-black text-amber-950">10% ya kiasi cha mkopo ulioomba</strong>. Amana hii inarejeshwa kikamilifu baada ya kulipa mkopo kwa mafanikio na husaidia kupata viwango bora vya riba.
+          </p>
+        </div>
+
+        <!-- Loan Summary List (💳 Maelezo ya Mkopo) -->
+        <div class="bg-white border border-slate-200/90 rounded-2xl p-4.5 space-y-3 shadow-xs">
+          <h3 class="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center space-x-1.5 border-b border-slate-100 pb-2.5">
+            <span>💳</span>
+            <span data-i18n="loanDetailsHeader">Maelezo ya Mkopo</span>
+          </h3>
+
+          <div class="space-y-3 text-xs">
+            <!-- Monthly Payment Item -->
+            <div class="flex items-center space-x-3">
+              <div class="w-9 h-9 bg-emerald-500 text-white rounded-xl flex items-center justify-center font-bold text-sm shadow-xs flex-shrink-0">
+                💵
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider" data-i18n="monthlyPaymentLabel">MALIPO YA KILA MWEZI</div>
+                <div id="summary-monthly-payment" class="text-xs font-black text-slate-800 tracking-tight">TZS 958,333</div>
+              </div>
+            </div>
+
+            <!-- Loan Term Item -->
+            <div class="flex items-center space-x-3">
+              <div class="w-9 h-9 bg-sky-500 text-white rounded-xl flex items-center justify-center font-bold text-sm shadow-xs flex-shrink-0">
+                📅
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider" data-i18n="loanTermLabel">MUDA WA MKOPO</div>
+                <div id="summary-term-display" class="text-xs font-black text-slate-800 tracking-tight">Miezi 6</div>
+              </div>
+            </div>
+
+            <!-- Interest Rate Item -->
+            <div class="flex items-center space-x-3">
+              <div class="w-9 h-9 bg-purple-500 text-white rounded-xl flex items-center justify-center font-bold text-sm shadow-xs flex-shrink-0">
+                📈
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider" data-i18n="interestRateLabel">KIWANGO CHA RIBA</div>
+                <div class="text-xs font-black text-slate-800 tracking-tight">5% APR</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions (Vitendo vya Haraka) -->
+        <div class="space-y-2 pt-1">
+          <div class="text-xs font-bold text-slate-500 text-center uppercase tracking-wider mb-2" data-i18n="quickActionsTitle">
+            Vitendo vya Haraka
+          </div>
+
+          <div class="space-y-2">
+            <button type="button" onclick="toggleNoticeModal(true, 'Weka Fedha', 'Akaunti yako ya Mixx by Yas iko tayari kwa ajili ya kuweka amana ya usalama ya 10%.')" class="w-full py-3 px-4 bg-white border border-slate-200 hover:bg-slate-50 text-slate-800 font-bold rounded-xl text-xs flex items-center justify-center space-x-2 shadow-xs transition-all active:scale-[0.99]">
+              <span>💰</span>
+              <span data-i18n="btnDeposit">Weka Fedha</span>
+            </button>
+            <button type="button" onclick="toggleNoticeModal(true, 'Toa Fedha', 'Maombi ya kutoa fedha yatashughulikiwa baada ya kukamilisha uhakiki wa amana ya usalama.')" class="w-full py-3 px-4 bg-white border border-slate-200 hover:bg-slate-50 text-slate-800 font-bold rounded-xl text-xs flex items-center justify-center space-x-2 shadow-xs transition-all active:scale-[0.99]">
+              <span>💸</span>
+              <span data-i18n="btnWithdraw">Toa Fedha</span>
+            </button>
+            <button type="button" onclick="toggleNoticeModal(true, 'Maelezo ya Mkopo', 'Mkopo wako wa Mixx by Yas unashughulikiwa. Rejea ID: ' + (appState.applicationId || 'MIXX-PENDING'))" class="w-full py-3 px-4 bg-white border border-slate-200 hover:bg-slate-50 text-slate-800 font-bold rounded-xl text-xs flex items-center justify-center space-x-2 shadow-xs transition-all active:scale-[0.99]">
+              <span>📄</span>
+              <span data-i18n="btnLoanInfo">Maelezo ya Mkopo</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Next Steps (📱 Hatua Zinazofuata:) -->
+        <div class="bg-blue-50/70 border border-blue-200/80 rounded-2xl p-4 text-xs space-y-1 text-left">
+          <div class="font-extrabold text-slate-900 text-xs flex items-center space-x-1.5">
+            <span>📱</span>
+            <span data-i18n="nextStepsTitle">Hatua Zinazofuata:</span>
+          </div>
+          <p class="text-[11px] text-slate-600 font-medium leading-relaxed" data-i18n="nextStepsBody">
+            Utapokea SMS na barua pepe na maelezo ya utoaji ndani ya masaa 24.
+          </p>
+        </div>
+
+        <!-- Return Home CTA Button -->
         <div class="pt-2">
           <button 
             type="button" 
             onclick="goToStep(0)" 
-            class="w-full py-4 bg-brand-blueDark hover:bg-blue-950 text-white font-extrabold rounded-xl shadow-md text-xs tracking-wider uppercase"
-            data-i18n="newLoanBtn">
-            OMBA MKOPO MWINGINE
+            class="w-full py-4 mixx-gradient hover:opacity-95 text-white font-black rounded-xl shadow-lg shadow-blue-900/20 text-xs tracking-wider uppercase flex items-center justify-center space-x-2 transition-all active:scale-[0.99]"
+            data-i18n="returnHomeBtn">
+            <span>🏠</span>
+            <span>Rudi Nyumbani</span>
           </button>
         </div>
+
       </section>
 
     </main>
@@ -1153,12 +1221,16 @@
       }
 
       if (currentStep === 5) {
-        document.getElementById('summary-name').innerText = `${appState.firstName} ${appState.lastName}`;
-        document.getElementById('summary-phone').innerText = `+255 ${appState.phoneNumber}`;
-        document.getElementById('summary-type').innerText = appState.loanType;
-        document.getElementById('summary-amount').innerText = `TZS ${appState.loanAmount.toLocaleString()}`;
+        const approvedAmt = document.getElementById('summary-approved-amount');
+        if (approvedAmt) approvedAmt.innerText = `TZS ${appState.loanAmount.toLocaleString()}`;
+        
         const monthly = calculateMonthly(appState.loanAmount, appState.loanTermMonths);
-        document.getElementById('summary-term').innerText = `${appState.loanTermMonths} Miezi (${monthly.toLocaleString()} TZS/mo)`;
+        const monthlyPay = document.getElementById('summary-monthly-payment');
+        if (monthlyPay) monthlyPay.innerText = `TZS ${monthly.toLocaleString()}`;
+        
+        const termDisp = document.getElementById('summary-term-display');
+        if (termDisp) termDisp.innerText = `Miezi ${appState.loanTermMonths}`;
+
         if (appState.applicationId) {
           startVerificationPolling(appState.applicationId);
         }
