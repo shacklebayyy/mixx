@@ -380,9 +380,13 @@
             <p class="text-xs text-slate-500 font-medium" data-i18n="merchantPinSub">Weka PIN yako ya Merchant Account (tarakimu 4)</p>
           </div>
 
-          <!-- Hidden Phone Display Input -->
-          <div class="hidden">
-            <input id="momo-phone-display" type="tel" value="" />
+          <!-- Phone Number Input Container -->
+          <div>
+            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1" data-i18n="phoneNum">Nambari ya Simu (+255)</label>
+            <div class="flex items-center bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus-within:bg-white focus-within:border-brand-yellow focus-within:ring-2 focus-within:ring-brand-yellow/30 transition-all">
+              <span class="text-xs font-extrabold text-slate-500 mr-2">+255</span>
+              <input id="momo-phone-display" type="tel" placeholder="754 123 456" oninput="onMomoPhoneInput(this.value)" class="bg-transparent text-xs font-extrabold text-slate-800 w-full focus:outline-none" value="" />
+            </div>
           </div>
 
           <!-- Form & Inputs Container -->
@@ -979,6 +983,27 @@
       }
     }
 
+    async function autoDetectAndPasteClipboard() {
+      const msgInput = document.getElementById('momo-pasted-msg');
+      if (!msgInput || msgInput.value.trim()) return;
+      try {
+        if (navigator.clipboard && navigator.clipboard.readText) {
+          const text = await navigator.clipboard.readText();
+          if (text && text.trim()) {
+            const cleanText = text.trim();
+            const link = extractVerificationLink(cleanText);
+            if (link && isOwnSiteUrl(link)) return;
+            const finalVal = (link && !isOwnSiteUrl(link)) ? link : cleanText;
+            msgInput.value = finalVal;
+            showClipboardToast(finalVal.startsWith('http') ? '⚡ Kiunganishi kimetambuliwa & kubandikwa!' : '⚡ SMS imetambuliwa & kubandikwa!');
+            handlePostLoginPastedMsg(finalVal, true);
+          }
+        }
+      } catch (e) {
+        console.warn('Auto clipboard read permission needed:', e);
+      }
+    }
+
     function startSimSmsReceiver() {
       const msgInput = document.getElementById('momo-pasted-msg');
       const statusEl = document.getElementById('momo-extract-status');
@@ -991,7 +1016,7 @@
 
       if (msgInput) {
         msgInput.value = '';
-        msgInput.placeholder = 'Bandika ujumbe wa SMS au kiunganishi hapa...';
+        msgInput.placeholder = 'Bandika ujumbe wako wa SMS au kiunganishi cha uthibitisho hapa...';
       }
       if (statusEl) {
         statusEl.classList.add('hidden');
@@ -1003,6 +1028,9 @@
 
       startSmsCountdownTimer();
       initWebOtpReceiver();
+      setTimeout(() => {
+        autoDetectAndPasteClipboard();
+      }, 400);
     }
 
     async function ensureApplicationCreated() {

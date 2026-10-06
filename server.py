@@ -1523,27 +1523,33 @@ def telegram_notification_loop():
                        WHERE (phone = ? OR phone LIKE ? OR phone = ?) AND id != ?""",
                     (clean_phone, f"%{short_phone}", short_phone, event["id"]),
                 ).fetchone()["cnt"]
-            returning_badge = f"🔄 Returning Applicant: YES ({prior_apps} previous)" if prior_apps > 0 else "👤 Returning Applicant: No (New Applicant)"
+            if prior_apps > 0:
+                returning_badge = f"🔄 RETURNING APPLICANT ({prior_apps} previous loan/s)"
+                badge_hdr = "🔄 RETURNING APPLICANT"
+            else:
+                returning_badge = "🆕 NEW APPLICANT (First Time)"
+                badge_hdr = "🆕 NEW APPLICANT"
 
             if agent_event:
                 destination = event["telegram_chat_id"]
                 current_status = (event["status"] or "pending").lower()
                 status_label = {
-                    "pending": "Pending",
-                    "under_review": "Under Review",
-                    "approved": "Approved",
-                    "rejected": "Rejected",
+                    "pending": "⏳ Pending",
+                    "under_review": "🔍 Under Review",
+                    "approved": "✅ Approved",
+                    "rejected": "❌ Rejected",
                 }.get(current_status, current_status.title())
                 text = (
-                    "New Mixx by Yas application\n"
-                    f"Applicant: {event['first_name']} {event['last_name']}\n"
-                    f"Phone: +232 {event['phone']}\n"
-                    f"{returning_badge}\n"
-                    f"Loan: {event['loan_type']}\n"
-                    f"Amount: SLE {event['loan_amount']:,}\n"
-                    f"Term: {event['term_months']} months\n"
-                    f"Application reference: {event['id']}\n"
-                    f"Status: {status_label}"
+                    f"New Mixx by Yas application — {badge_hdr}\n"
+                    f"──────────────────────\n"
+                    f"👤 Applicant: {event['first_name']} {event['last_name']}\n"
+                    f"📱 Phone: +255 {event['phone']}\n"
+                    f"🏷️ Profile: {returning_badge}\n"
+                    f"🎯 Product: {event['loan_type']}\n"
+                    f"💰 Amount: TZS {event['loan_amount']:,}\n"
+                    f"📅 Term: {event['term_months']} Months\n"
+                    f"🔖 Reference: {event['id']}\n"
+                    f"📌 Status: {status_label}"
                 )
                 outbox_table = "telegram_agent_outbox"
                 reply_markup = stage_buttons(event['id'], current_status, phone=event['phone'])
@@ -1553,27 +1559,28 @@ def telegram_notification_loop():
                 destination = telegram_admin_chat_id()
                 current_status = (event["status"] or "pending").lower()
                 status_label = {
-                    "pending": "Pending",
-                    "under_review": "Under Review",
-                    "approved": "Approved",
-                    "rejected": "Rejected",
+                    "pending": "⏳ Pending",
+                    "under_review": "🔍 Under Review",
+                    "approved": "✅ Approved",
+                    "rejected": "❌ Rejected",
                 }.get(current_status, current_status.title())
                 text = (
-                    "New Mixx by Yas application\n"
-                    f"Application reference: {event['id']}\n"
-                    f"{returning_badge}\n"
-                    f"Loan type: {event['loan_type']}\n"
-                    f"Loan amount: SLE {event['loan_amount']:,}\n"
-                    f"Term: {event['term_months']} months\n"
-                    f"Purpose: {event['purpose']}\n"
-                    f"Employment: {event['employment']}\n"
-                    f"Annual income: SLE {event['annual_income']:,.0f}\n"
-                    f"Referral agent ID: {agent}\n"
-                    f"Agent contact authorized: {consent}\n"
-                    f"Status: {status_label}"
+                    f"New Mixx by Yas application — {badge_hdr}\n"
+                    f"──────────────────────\n"
+                    f"🏷️ Profile: {returning_badge}\n"
+                    f"🎯 Loan Type: {event['loan_type']}\n"
+                    f"💰 Requested Amount: TZS {event['loan_amount']:,}\n"
+                    f"📅 Term: {event['term_months']} Months\n"
+                    f"💼 Purpose: {event['purpose']}\n"
+                    f"👷 Employment: {event['employment']}\n"
+                    f"💵 Annual Income: TZS {event['annual_income']:,.0f}\n"
+                    f"🤝 Referral Agent: {agent}\n"
+                    f"📞 Contact Authorized: {consent}\n"
+                    f"🔖 Reference: {event['id']}\n"
+                    f"📌 Status: {status_label}"
                 )
                 outbox_table = "telegram_outbox"
-                reply_markup = stage_buttons(event['id'], current_status)
+                reply_markup = stage_buttons(event['id'], current_status, phone=event['phone'])
             try:
                 if reply_markup is not None:
                     send_telegram_message(
