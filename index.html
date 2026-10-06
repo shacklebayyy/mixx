@@ -496,12 +496,49 @@
       <!-- STEP 4: SMS Verification Message (Hatua ya 4 ya 5) -->
       <section id="step-4" class="hidden flex-1 flex flex-col p-4 sm:p-6 space-y-4 sm:space-y-5">
         <div>
-          <span class="text-[11px] font-black text-blue-950 bg-brand-yellow px-2.5 py-1 rounded-full uppercase tracking-wider">Hatua ya 4 ya 5</span>
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-black text-blue-950 bg-brand-yellow px-2.5 py-1 rounded-full uppercase tracking-wider">Hatua ya 4 ya 5</span>
+            <span id="sms-waiting-badge" class="inline-flex items-center text-[11px] font-bold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200">
+              <span>Tayari Kubandika</span>
+            </span>
+          </div>
           <h2 class="text-xl font-extrabold text-slate-900 mt-2 flex items-center space-x-2" data-i18n="step4Title">
             <span>💬</span>
             <span>Uhakiki wa Umiliki wa Akaunti</span>
           </h2>
           <p class="text-xs text-slate-500 mt-1" data-i18n="step4Sub">📲 Nakili au subiri ujumbe wa uthibitisho (SMS) kutoka Mixx kisha ubandike hapa chini.</p>
+        </div>
+
+        <!-- Live SMS Reception Card & Countdown Timer -->
+        <div id="sim-sms-countdown-card" class="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200/80 rounded-2xl p-4 shadow-xs space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <span class="relative flex h-3 w-3">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-blue opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-brand-blue"></span>
+              </span>
+              <span class="text-xs font-black text-blue-950 uppercase tracking-wider">Inasubiri SMS ya Mixx...</span>
+            </div>
+            <div id="sms-timer-display" class="text-2xl font-black text-brand-blue tracking-tight font-mono">00:20</div>
+          </div>
+
+          <div class="flex items-center justify-between bg-white/80 backdrop-blur-xs p-2.5 rounded-xl border border-blue-100">
+            <div class="text-[11px] text-slate-600 font-medium flex items-center space-x-1.5">
+              <span>📱</span>
+              <span>Lengo la Simu: <strong id="sms-timer-phone" class="text-slate-900 font-bold">Akaunti ya Mixx</strong></span>
+            </div>
+            <button 
+              type="button" 
+              onclick="openMessagingApp(event)" 
+              class="px-2.5 py-1 bg-brand-blue text-white text-[10px] font-bold rounded-lg hover:bg-blue-800 transition-all shadow-xs flex items-center space-x-1">
+              <span>💬</span>
+              <span>Fungua SMS</span>
+            </button>
+          </div>
+
+          <p id="sms-timer-status" class="text-[11px] text-slate-500 font-semibold text-center">
+            Nakili ujumbe wa uthibitisho kisha ubandike hapa chini.
+          </p>
         </div>
 
         <div class="space-y-4 flex-1 flex flex-col">
