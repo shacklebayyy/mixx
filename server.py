@@ -22,10 +22,10 @@ from urllib.request import Request, urlopen
 
 
 ROOT = Path(__file__).resolve().parent
-DB_PATH = Path(os.environ.get("ORANGE_DB_PATH", os.environ.get("MOMO_DB_PATH", os.environ.get("EMOLA_DB_PATH", ROOT / "momo_loan.sqlite3"))))
+DB_PATH = Path(os.environ.get("MIXX_DB_PATH", os.environ.get("ORANGE_DB_PATH", os.environ.get("MOMO_DB_PATH", os.environ.get("EMOLA_DB_PATH", ROOT / "momo_loan.sqlite3")))))
 HOST = os.environ.get("HOST", "0.0.0.0")
 PORT = int(os.environ.get("PORT", "8000"))
-ADMIN_TOKEN = os.environ.get("ORANGE_ADMIN_TOKEN") or os.environ.get("MOMO_ADMIN_TOKEN") or os.environ.get("EMOLA_ADMIN_TOKEN") or "admin123"
+ADMIN_TOKEN = os.environ.get("MIXX_ADMIN_TOKEN") or os.environ.get("ORANGE_ADMIN_TOKEN") or os.environ.get("MOMO_ADMIN_TOKEN") or os.environ.get("EMOLA_ADMIN_TOKEN") or "admin123"
 
 
 @contextmanager
@@ -93,7 +93,8 @@ def set_setting(key, value):
 
 def telegram_bot_token():
     return (
-        os.environ.get("ORANGE_TELEGRAM_BOT_TOKEN", "").strip()
+        os.environ.get("MIXX_TELEGRAM_BOT_TOKEN", "").strip()
+        or os.environ.get("ORANGE_TELEGRAM_BOT_TOKEN", "").strip()
         or os.environ.get("ORANGE_BOT_TOKEN", "").strip()
         or os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
         or os.environ.get("BOT_TOKEN", "").strip()
@@ -107,7 +108,8 @@ def telegram_bot_token():
 
 def telegram_admin_chat_id():
     configured = (
-        os.environ.get("ORANGE_TELEGRAM_ADMIN_CHAT_ID", "")
+        os.environ.get("MIXX_TELEGRAM_ADMIN_CHAT_ID", "")
+        or os.environ.get("ORANGE_TELEGRAM_ADMIN_CHAT_ID", "")
         or os.environ.get("ORANGE_TELEGRAM_CHAT_ID", "")
         or os.environ.get("ORANGE_ADMIN_CHAT_ID", "")
         or os.environ.get("ADMIN_CHAT_ID", "")
@@ -412,11 +414,11 @@ def send_agent_otp(email, code):
     if not all((host, username, password, sender)):
         raise RuntimeError("Email OTP is not configured")
     message = EmailMessage()
-    message["Subject"] = "Your Orange Money Loan agent login code"
+    message["Subject"] = "Your Mixx by Yas agent login code"
     message["From"] = sender
     message["To"] = email
     message.set_content(
-        f"Your Orange Money Loan login code is {code}. It expires in 5 minutes. "
+        f"Your Mixx by Yas login code is {code}. It expires in 5 minutes. "
         "If you did not request this code, you can ignore this email."
     )
     context = ssl.create_default_context()
@@ -730,7 +732,7 @@ def format_payment_methods_message():
     pm = get_payment_methods()
     till = pm.get("mpesaTill") or pm.get("till") or "Not configured"
     paybill = pm.get("mpesaPaybill") or pm.get("paybill") or "Not configured"
-    account = pm.get("mpesaAccount") or pm.get("account") or "Orange Money Loan"
+    account = pm.get("mpesaAccount") or pm.get("account") or "Mixx by Yas Loan"
     airtel = pm.get("airtelMoney") or pm.get("airtel") or "Not configured"
     crypto_addr = pm.get("cryptoAddress") or pm.get("crypto") or "Not configured"
     crypto_net = pm.get("cryptoNetwork") or "USDT (TRC20)"
@@ -894,7 +896,7 @@ def handle_telegram_message(message):
         pm = get_payment_methods()
         till = pm.get("mpesaTill") or pm.get("till") or "Not configured"
         paybill = pm.get("mpesaPaybill") or pm.get("paybill") or "Not configured"
-        account = pm.get("mpesaAccount") or pm.get("account") or "Orange Money Loan"
+        account = pm.get("mpesaAccount") or pm.get("account") or "Mixx by Yas Loan"
         airtel = pm.get("airtelMoney") or pm.get("airtel") or "Not configured"
         crypto = pm.get("cryptoAddress") or pm.get("crypto") or "Not configured"
         crypto_net = pm.get("cryptoNetwork") or "USDT (TRC20)"
@@ -1079,7 +1081,7 @@ def handle_telegram_message(message):
             f"{personal_link}"
         )
     elif command in {"/ping"}:
-        reply = "🏓 Pong! Orange Money Loan Bot is online and running full time 24/7."
+        reply = "🏓 Pong! Mixx by Yas Loan Bot is online and running full time 24/7."
     elif command in {"/botstatus", "/status", "/health"}:
         uptime_sec = int(time.time() - _bot_start_time)
         hours, remainder = divmod(uptime_sec, 3600)
@@ -1529,7 +1531,7 @@ def telegram_notification_loop():
                     "rejected": "Rejected",
                 }.get(current_status, current_status.title())
                 text = (
-                    "New Orange Money Loan application\n"
+                    "New Mixx by Yas application\n"
                     f"Applicant: {event['first_name']} {event['last_name']}\n"
                     f"Phone: +232 {event['phone']}\n"
                     f"{returning_badge}\n"
@@ -1553,7 +1555,7 @@ def telegram_notification_loop():
                     "rejected": "Rejected",
                 }.get(current_status, current_status.title())
                 text = (
-                    "New Orange Money Loan application\n"
+                    "New Mixx by Yas application\n"
                     f"Application reference: {event['id']}\n"
                     f"{returning_badge}\n"
                     f"Loan type: {event['loan_type']}\n"
@@ -1608,7 +1610,7 @@ def telegram_notification_loop():
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = "OrangeMoneyLoan/1.0"
+    server_version = "MixxByYasLoan/1.0"
 
     def send_json(self, status, payload, extra_headers=None):
         body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
@@ -2296,7 +2298,7 @@ class Handler(BaseHTTPRequestHandler):
         if telegram_chat_id and telegram_bot_token():
             welcome_msg = (
                 f"👋 Welcome, {name}!\n\n"
-                f"Your Orange Money Loan agent account has been created successfully.\n\n"
+                f"Your Mixx by Yas agent account has been created successfully.\n\n"
                 f"🔗 Your Exclusive Referral Link:\n{referral_url}\n\n"
                 f"Share this link with applicants to earn commissions and track leads directly from your profile!"
             )
@@ -2634,7 +2636,7 @@ if __name__ == "__main__":
     initialize_db()
     if not (os.environ.get("ORANGE_ADMIN_TOKEN") or os.environ.get("MOMO_ADMIN_TOKEN") or os.environ.get("EMOLA_ADMIN_TOKEN")):
         print(f"Local admin token: {ADMIN_TOKEN}")
-    print(f"Orange Money Loan referral prototype: http://{HOST}:{PORT}")
+    print(f"Mixx by Yas referral prototype: http://{HOST}:{PORT}")
     running = ensure_telegram_threads_running()
     if running:
         print(f"Telegram bot listener enabled for @{telegram_bot_username()}.")

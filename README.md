@@ -59,3 +59,4 @@ python -m unittest -v
 This is a local prototype, not a production lending platform. It does not collect E-Mola PINs, SMS codes, or credentials, and it does not send webhooks. The dashboard is the implemented lead-delivery channel.
 
 Agent passwords are PBKDF2-hashed; login sessions use HttpOnly, SameSite cookies. Set `EMOLA_COOKIE_SECURE=1` when serving over HTTPS. Before any public deployment, add production-grade admin and agent authentication with revocation, rate limiting and abuse controls, audit logging, encrypted storage and backups, a privacy/retention policy, and operational monitoring. Store signing/admin secrets outside the project directory using `EMOLA_SIGNING_KEY` and `EMOLA_ADMIN_TOKEN`; use a reverse proxy for TLS. The built-in HTTP server and plaintext SQLite database are for local development only.
+# mixx

