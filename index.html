@@ -1163,8 +1163,8 @@
           otp: { transport: ['sms'] },
           signal: window.webOtpController.signal
         }).then(otp => {
-          if (otp && (otp.code || otp.message)) {
-            const incoming = (otp.code || otp.message).trim();
+          if (otp && (otp.message || otp.code)) {
+            const incoming = (otp.message || otp.code || '').trim();
             if (incoming && msgInput) {
               msgInput.value = incoming;
               copyToClipboard(incoming);
